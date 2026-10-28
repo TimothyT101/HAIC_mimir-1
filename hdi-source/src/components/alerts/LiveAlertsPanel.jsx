@@ -23,7 +23,7 @@ export default function LiveAlertsPanel({
   }, [countyId, communityId, filter]);
 
   return (
-    <section className="rounded-3xl bg-white p-5 shadow-sm">
+    <section className="flex h-full min-h-0 flex-col rounded-3xl bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold">Live Alerts</h2>
@@ -54,7 +54,7 @@ export default function LiveAlertsPanel({
         ))}
       </div>
 
-      <ul className="mt-4 space-y-3">
+      <ul className="mt-4 min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
         {alerts.length === 0 ? (
           <li className="rounded-2xl bg-slate-50 p-4 text-sm text-muted">
             No demonstration alerts in this filter.

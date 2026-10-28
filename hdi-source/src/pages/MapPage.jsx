@@ -28,6 +28,7 @@ export default function MapPage() {
       return selected.history.map((item) => ({
         ...item,
         title: item.title,
+        verified: item.verified === true,
       }));
     }
     return alertsForCounty(countyId).map((item) => ({
@@ -36,6 +37,7 @@ export default function MapPage() {
       type: item.disasterType,
       level: item.level,
       source: item.source.split(" (")[0],
+      verified: item.verified === true,
     }));
   }, [selected, countyId]);
 
@@ -76,21 +78,25 @@ export default function MapPage() {
 
       <CountySelector value={countyId} onChange={handleCounty} />
 
-      <div className="grid gap-4 xl:grid-cols-[280px_minmax(0,1fr)_320px]">
+      <div className="grid items-start gap-4 xl:grid-cols-[280px_minmax(0,1fr)_320px]">
         <Legend />
-        <div className="min-h-[520px]">
+        <div className="h-[420px] w-full sm:h-[500px] lg:h-[560px]">
           <MapView
             countyId={countyId}
             selectedId={selectedId}
             onSelect={handleSelect}
           />
         </div>
-        <div className="space-y-4">
-          <CommunityPanel community={selected} onClose={() => update(countyId)} />
-          <LiveAlertsPanel
-            countyId={countyId}
-            onViewDetails={handleAlertDetails}
-          />
+        <div className="flex min-h-0 flex-col gap-4 xl:h-[560px]">
+          <div className="max-h-[240px] overflow-y-auto xl:max-h-[46%]">
+            <CommunityPanel community={selected} onClose={() => update(countyId)} />
+          </div>
+          <div className="min-h-0 flex-1 overflow-hidden">
+            <LiveAlertsPanel
+              countyId={countyId}
+              onViewDetails={handleAlertDetails}
+            />
+          </div>
         </div>
       </div>
 
@@ -106,6 +112,7 @@ export default function MapPage() {
                   type: item.disasterType,
                   level: item.level,
                   source: item.source.split(" (")[0],
+                  verified: item.verified === true,
                 })),
               ].filter(
                 (row, index, list) =>

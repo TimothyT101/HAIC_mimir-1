@@ -32,6 +32,12 @@ body {
 .leaflet-container {
   font-family: var(--font-sans);
   background: #0b3a4a;
+  height: 100%;
+  width: 100%;
+}
+
+.leaflet-container .leaflet-control-attribution {
+  font-size: 10px;
 }
 
 .community-marker {

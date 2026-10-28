@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import {
   CircleMarker,
   LayerGroup,
@@ -10,23 +10,95 @@ import {
   useMap,
 } from "react-leaflet";
 import L from "leaflet";
-import { Crosshair, Home, Minus, Plus } from "lucide-react";
+import { Home, Minus, Plus } from "lucide-react";
 import { getLevel } from "../../data/classification";
-import { getCounty, STATEWIDE_VIEW } from "../../data/counties";
+import { getCounty } from "../../data/counties";
 import { communitiesByCounty } from "../../data/communities";
 
-function FitCounty({ countyId }) {
+function fitBoundsFor(county) {
+  return L.latLngBounds(county.bounds);
+}
+
+function maxBoundsFor(county) {
+  return L.latLngBounds(county.maxBounds ?? county.bounds);
+}
+
+function applyCountyView(map, county, { animate = true } = {}) {
+  const fit = fitBoundsFor(county);
+  const limit = maxBoundsFor(county);
+
+  map.stop();
+  map.setMaxBounds(null);
+  map.setMinZoom(0);
+  map.invalidateSize({ animate: false });
+
+  const size = map.getSize();
+  if (size.x < 40 || size.y < 40) return;
+
+  const padding = L.point(28, 28);
+  const fittedMinZoom = map.getBoundsZoom(fit, false, padding);
+  const minZoom = Number.isFinite(fittedMinZoom)
+    ? fittedMinZoom
+    : (county.minZoom ?? 8);
+
+  map.setMaxZoom(county.maxZoom ?? 15);
+  map.fitBounds(fit, {
+    animate,
+    duration: 0.55,
+    padding: [24, 24],
+  });
+  map.setMinZoom(minZoom);
+  map.setMaxBounds(limit);
+  map.options.maxBoundsViscosity = 1;
+}
+
+function CountyCamera({ countyId }) {
   const map = useMap();
+  const countyIdRef = useRef(countyId);
+  countyIdRef.current = countyId;
+
   useEffect(() => {
     const county = getCounty(countyId);
-    map.flyTo(county.center, county.zoom, { duration: 0.8 });
+    let frame = 0;
+
+    const run = (animate) => {
+      applyCountyView(map, county, { animate });
+    };
+
+    const start = () => {
+      run(false);
+      frame = window.requestAnimationFrame(() => run(false));
+    };
+
+    if (map._loaded) start();
+    else map.whenReady(start);
+
+    const parent = map.getContainer().parentElement;
+    let lastWidth = 0;
+    let lastHeight = 0;
+    const observer = new ResizeObserver(() => {
+      if (countyIdRef.current !== countyId) return;
+      const size = map.getSize();
+      if (size.x < 40 || size.y < 40) return;
+      if (Math.abs(size.x - lastWidth) < 4 && Math.abs(size.y - lastHeight) < 4) return;
+      lastWidth = size.x;
+      lastHeight = size.y;
+      map.invalidateSize({ animate: false });
+      applyCountyView(map, getCounty(countyId), { animate: false });
+    });
+    if (parent) observer.observe(parent);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, [countyId, map]);
+
   return null;
 }
 
 function MapButtons({ countyId }) {
   const map = useMap();
-  const county = getCounty(countyId);
 
   return (
     <div className="absolute left-3 top-3 z-[1000] flex flex-col overflow-hidden rounded-xl bg-white shadow">
@@ -49,18 +121,10 @@ function MapButtons({ countyId }) {
       <button
         type="button"
         className="border-t border-slate-100 p-2 hover:bg-slate-50"
-        onClick={() => map.flyTo(county.center, county.zoom)}
-        aria-label="Reset county view"
+        onClick={() => applyCountyView(map, getCounty(countyId), { animate: true })}
+        aria-label="Reset island view"
       >
         <Home size={16} />
-      </button>
-      <button
-        type="button"
-        className="border-t border-slate-100 p-2 hover:bg-slate-50"
-        onClick={() => map.flyTo(STATEWIDE_VIEW.center, STATEWIDE_VIEW.zoom)}
-        aria-label="Statewide view"
-      >
-        <Crosshair size={16} />
       </button>
     </div>
   );
@@ -73,19 +137,28 @@ export default function MapView({
 }) {
   const communities = useMemo(() => communitiesByCounty(countyId), [countyId]);
   const county = getCounty(countyId);
+  const bounds = useMemo(() => fitBoundsFor(county), [county]);
+  const maxBounds = useMemo(() => maxBoundsFor(county), [county]);
 
   useEffect(() => {
     delete L.Icon.Default.prototype._getIconUrl;
   }, []);
 
   return (
-    <div className="relative h-full min-h-[420px] overflow-hidden rounded-3xl">
+    <div className="relative h-full w-full overflow-hidden rounded-3xl">
       <MapContainer
-        center={county.center}
-        zoom={county.zoom}
-        className="h-full min-h-[420px] w-full"
+        key={countyId}
+        bounds={bounds}
+        maxBounds={maxBounds}
+        maxBoundsViscosity={1}
+        minZoom={county.minZoom}
+        maxZoom={county.maxZoom}
+        zoomSnap={0.25}
+        zoomDelta={0.5}
+        className="h-full w-full"
         zoomControl={false}
         attributionControl
+        scrollWheelZoom
       >
         <LayersControl position="topright">
           <LayersControl.BaseLayer checked name="OpenStreetMap">
@@ -101,7 +174,7 @@ export default function MapView({
             />
           </LayersControl.BaseLayer>
         </LayersControl>
-        <FitCounty countyId={countyId} />
+        <CountyCamera countyId={countyId} />
         <MapButtons countyId={countyId} />
         <ScaleControl position="bottomleft" imperial />
         <LayerGroup>
@@ -131,7 +204,7 @@ export default function MapView({
           })}
         </LayerGroup>
       </MapContainer>
-      <div className="pointer-events-none absolute left-4 top-4 rounded-xl bg-slate-900/70 px-3 py-2 text-white">
+      <div className="pointer-events-none absolute bottom-10 left-3 rounded-xl bg-slate-900/70 px-3 py-2 text-white">
         <p className="text-sm font-semibold">{county.islandLabel}</p>
         <p className="text-xs text-white/80">{county.name}</p>
       </div>
