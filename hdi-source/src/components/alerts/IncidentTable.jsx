@@ -18,7 +18,7 @@ export default function IncidentTable({ title, rows }) {
           <thead className="bg-slate-50 text-xs uppercase tracking-wide text-muted">
             <tr>
               <th className="px-5 py-3">Date & Time</th>
-              <th className="px-5 py-3">Location / incident</th>
+              <th className="px-5 py-3">Location / card</th>
               <th className="px-5 py-3">Type</th>
               <th className="px-5 py-3">Level</th>
               <th className="px-5 py-3">Source</th>
@@ -28,7 +28,7 @@ export default function IncidentTable({ title, rows }) {
             {recentRows.length === 0 ? (
               <tr>
                 <td className="px-5 py-6 text-muted" colSpan={5}>
-                  No incidents reported in the past 3 days
+                  No exercise cards in the past 3 days
                 </td>
               </tr>
             ) : (
@@ -61,7 +61,7 @@ export default function IncidentTable({ title, rows }) {
                               : "bg-amber-50 text-amber-800"
                           }`}
                         >
-                          {verified ? "Verified" : "Demonstration"}
+                          {verified ? "Verified" : "Exercise"}
                         </span>
                       </span>
                     </td>

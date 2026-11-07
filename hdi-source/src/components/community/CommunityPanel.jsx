@@ -17,8 +17,9 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
       <section className="rounded-3xl bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold">Community details</h2>
         <p className="mt-2 text-sm text-muted">
-          Click a town marker for location details. Official weather products are in
-          Live NWS alerts. Demonstration classifications appear only in Planning scenario.
+          Click a town marker for location details. Official weather products are under
+          Live conditions. Planning scenario uses exercise classifications only — not live
+          warnings.
         </p>
       </section>
     );
@@ -76,7 +77,7 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
             {level.fullLabel}
           </p>
           <p className="mt-1 text-xs">
-            Demonstration planning classification — not an official warning.
+            HAIC planning classification (exercise) — not an official warning.
           </p>
         </div>
       )}
@@ -84,20 +85,24 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
       <div className="mt-4 space-y-3 text-sm">
         {mode === "planning" ? (
           <>
+            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
+              Exercise card only. Switch to <strong>Live conditions</strong> for real NWS
+              products.
+            </p>
             <p className="flex items-center gap-2 font-medium">
               <Flame size={16} className="text-orange-600" />
-              {community.disasterType}
+              Exercise hazard type: {community.disasterType}
             </p>
             <p>
-              <span className="font-semibold">Incident description. </span>
+              <span className="font-semibold">{community.incidentTitle}. </span>
               {community.incidentDescription}
             </p>
             <p>
-              <span className="font-semibold">Affected geographic area. </span>
+              <span className="font-semibold">Exercise focus area. </span>
               {community.affectedArea}
             </p>
             <div>
-              <p className="font-semibold">Potential impacts on residents</p>
+              <p className="font-semibold">Planning considerations (if this exercise were real)</p>
               <ul className="mt-1 list-disc space-y-1 pl-5 text-muted">
                 {community.potentialImpacts.map((item) => (
                   <li key={item}>{item}</li>

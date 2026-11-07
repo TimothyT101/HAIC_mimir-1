@@ -47,7 +47,7 @@ export function buildPlanningSummary({ community, assessment }) {
     mode: "deterministic",
     aiGenerated: false,
     text: [
-      `Planning scenario: ${disaster} affecting ${community.name}, ${community.island}, ${county.name}.`,
+      `Planning exercise scenario: ${disaster} mass-care planning for ${community.name}, ${community.island}, ${county.name} (not a live incident).`,
       vulnerabilityBits.join(". ") + ".",
       `Using documented rates, estimated shelter need is ${assessment.estimatedShelterNeed} people, transportation assistance ${assessment.transportAssist}, backup-power considerations ${assessment.electricityBackup}, water ${assessment.waterGallons} gallons, meals ${assessment.meals}, and language-access support contacts ${assessment.communicationSupport}.`,
       gapText,
