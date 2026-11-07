@@ -15,6 +15,7 @@ import { Home, Minus, Plus } from "lucide-react";
 import { getLevel } from "../../data/classification";
 import { getCounty } from "../../data/counties";
 import { communitiesByCounty } from "../../data/communities";
+import HazardOverlays from "./HazardOverlays";
 import TsunamiZones from "./TsunamiZones";
 
 function fitBoundsFor(county) {
@@ -236,6 +237,7 @@ export default function MapView({
               url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
             />
           </LayersControl.BaseLayer>
+          <HazardOverlays countyId={countyId} />
         </LayersControl>
         <CountyCamera countyId={countyId} />
         <MapButtons countyId={countyId} />

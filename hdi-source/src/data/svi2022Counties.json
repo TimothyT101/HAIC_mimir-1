@@ -1,0 +1,48 @@
+{
+  "source": "CDC/ATSDR Social Vulnerability Index 2022, U.S. county ranking",
+  "url": "https://onemap.cdc.gov/onemapservices/rest/services/SVI/CDC_ATSDR_Social_Vulnerability_Index_2022_USA/FeatureServer/1",
+  "retrievedAt": "2026-11-07",
+  "note": "RPL values are percentiles among U.S. counties (0–1). Higher means more social vulnerability. Kalawao is omitted from this prototype’s county selector.",
+  "counties": {
+    "hawaii": {
+      "countyId": "hawaii",
+      "name": "Hawaii County",
+      "stcnty": "15001",
+      "overall": 0.636,
+      "socioeconomic": 0.4502,
+      "household": 0.7894,
+      "minority": 0.9602,
+      "housingTransport": 0.4881
+    },
+    "honolulu": {
+      "countyId": "honolulu",
+      "name": "Honolulu County",
+      "stcnty": "15003",
+      "overall": 0.5708,
+      "socioeconomic": 0.2307,
+      "household": 0.2638,
+      "minority": 0.9854,
+      "housingTransport": 0.957
+    },
+    "kauai": {
+      "countyId": "kauai",
+      "name": "Kauai County",
+      "stcnty": "15007",
+      "overall": 0.3964,
+      "socioeconomic": 0.2367,
+      "household": 0.3446,
+      "minority": 0.9625,
+      "housingTransport": 0.4566
+    },
+    "maui": {
+      "countyId": "maui",
+      "name": "Maui County",
+      "stcnty": "15009",
+      "overall": 0.4938,
+      "socioeconomic": 0.2918,
+      "household": 0.4003,
+      "minority": 0.9605,
+      "housingTransport": 0.6032
+    }
+  }
+}

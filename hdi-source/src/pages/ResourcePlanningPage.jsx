@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import DisclaimerBanner from "../components/DisclaimerBanner";
 import { ACS_SOURCE, getCountyAcs, getPlaceAcs } from "../data/acsIndicators";
+import { SVI_SOURCE, formatSviPercentile, getCountySvi } from "../data/sviIndicators";
+import { cmistFromAcs } from "../lib/cmistFromAcs";
 import { COMMUNITIES, communitiesByCounty, getCommunity } from "../data/communities";
 import { COUNTIES } from "../data/counties";
 import { sheltersForCounty } from "../data/shelters";
@@ -39,6 +41,8 @@ export default function ResourcePlanningPage() {
   const community = getCommunity(communityId) ?? countyCommunities[0];
   const acs = getCountyAcs(countyId);
   const placeAcs = getPlaceAcs(community?.id);
+  const svi = getCountySvi(countyId);
+  const cmist = cmistFromAcs(placeAcs, community?.name);
   const shelters = sheltersForCounty(countyId);
 
   const assessment = useMemo(() => {
@@ -73,8 +77,6 @@ export default function ResourcePlanningPage() {
       setAiNote(error.message);
     }
   }
-
-  const v = community?.vulnerability;
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6">
@@ -177,7 +179,22 @@ export default function ResourcePlanningPage() {
             />
             <Stat label={`${acs.name} population`} value={formatNumber(acs.population)} />
             <Stat label={`${acs.name} no vehicle`} value={formatPercent(acs.noVehiclePct)} />
+            {svi ? (
+              <>
+                <Stat label={`${svi.name} SVI overall`} value={formatSviPercentile(svi.overall)} />
+                <Stat
+                  label="SVI housing / transportation theme"
+                  value={formatSviPercentile(svi.housingTransport)}
+                />
+              </>
+            ) : null}
           </div>
+          {svi ? (
+            <p className="mt-2 text-xs text-muted">
+              {SVI_SOURCE.name}, retrieved {SVI_SOURCE.retrievedAt}. Higher percentile means
+              more social vulnerability among U.S. counties. {SVI_SOURCE.note}
+            </p>
+          ) : null}
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
             {CMIST.map((item) => (
               <article key={item.key} className="rounded-2xl bg-forest-soft/60 p-4">
@@ -185,10 +202,7 @@ export default function ResourcePlanningPage() {
                   <item.icon size={16} />
                   {item.label}
                 </p>
-                <p className="mt-2 text-xs leading-5 text-slate-700">
-                  {v?.cmist?.[item.key] ?? "Unknown"}{" "}
-                  <span className="text-amber-800">(community note: demonstration)</span>
-                </p>
+                <p className="mt-2 text-xs leading-5 text-slate-700">{cmist[item.key]}</p>
               </article>
             ))}
           </div>

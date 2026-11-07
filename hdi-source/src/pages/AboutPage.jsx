@@ -42,10 +42,15 @@ export default function AboutPage() {
             opendata.hawaii.gov (last updated 2019) and is not operational status.
           </li>
           <li>
-            Hazard GIS: Hawaiʻi Statewide GIS tsunami evacuation polygons are
-            drawn on the Live Map from geodata.hawaii.gov (Hazards layer 11).
-            The PDF you may see with that dataset is metadata, not the map
-            geometry. Flood maps: FEMA MSC.
+            Hazard GIS: Hawaiʻi Statewide GIS on geodata.hawaii.gov. Tsunami
+            evacuation is layer 11. Flood hazard uses county DFIRM layers (FEMA
+            flood zones hosted by the State). Wildfire risk uses Fire Risk Areas
+            (layer 7). Layers can be toggled on the Live Map.
+          </li>
+          <li>
+            CDC/ATSDR Social Vulnerability Index 2022 county percentiles (U.S.
+            ranking) are shown on Resource Planning. They are county-scale, not
+            tract-scale, in this prototype.
           </li>
           <li>
             Census ACS place and county tables require an activated Census Data
@@ -58,10 +63,9 @@ export default function AboutPage() {
 
       <Section title="What the numbers mean">
         <p>
-          County QuickFacts / ACS values are aggregates. They describe groups, not
-          people. They must not be used to target individuals for rescue or to build
-          a medical registry. Community CMIST notes in the calculator are labeled
-          demonstration planning language.
+          County and place ACS values are aggregates. They describe groups, not
+          people. They must not be used to target individuals for rescue or to
+          build a medical registry. CMIST notes are written from those percents.
         </p>
         <ul>
           {ACS_SOURCE.notes.map((note) => (

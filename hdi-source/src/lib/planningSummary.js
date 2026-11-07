@@ -1,4 +1,5 @@
 import { getCountyAcs, getPlaceAcs } from "../data/acsIndicators";
+import { getCountySvi } from "../data/sviIndicators";
 import { getCounty } from "../data/counties";
 import { sheltersForCounty } from "../data/shelters";
 import { DISASTER_TYPES } from "./resourceCalculator";
@@ -26,6 +27,12 @@ export function buildPlanningSummary({ community, assessment }) {
   if (acs) {
     vulnerabilityBits.push(
       `County context: ${acs.name} is ${acs.olderAdultsPct}% age 65+ and ${acs.disabilityPct}% with a disability`
+    );
+  }
+  const svi = getCountySvi(community.countyId);
+  if (svi) {
+    vulnerabilityBits.push(
+      `CDC/ATSDR SVI 2022 overall percentile for ${svi.name} is ${Math.round(svi.overall * 100)} among U.S. counties (higher is more vulnerable)`
     );
   }
 
