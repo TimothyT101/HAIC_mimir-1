@@ -111,9 +111,9 @@ export default function AboutPage() {
           Live Map county colors follow NWS severity at county scale: Fine/Minor
           (green), Moderate (yellow), Severe (red), Extreme (dark red). Town markers
           stay uncolored because most NWS products name a county or zone, not a
-          single community. Planning scenario uses an exercise-only 1–5
-          classification overlay (not live warnings). Nearby towns are not
-          automatically elevated.
+          single community. Mass-care prep uses a static 1–5 readiness overlay for
+          ESF-6 planning (not live warnings). Nearby towns are not automatically
+          elevated.
         </p>
         <ul>
           {LEVEL_LIST.map((level) => (

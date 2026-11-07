@@ -18,8 +18,7 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
         <h2 className="text-lg font-semibold">Community details</h2>
         <p className="mt-2 text-sm text-muted">
           Click a town marker for location details. Official weather products are under
-          Live conditions. Planning scenario uses exercise classifications only — not live
-          warnings.
+          Live conditions. Mass-care prep shows static readiness cues — not live warnings.
         </p>
       </section>
     );
@@ -77,7 +76,7 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
             {level.fullLabel}
           </p>
           <p className="mt-1 text-xs">
-            HAIC planning classification (exercise) — not an official warning.
+            Mass-care prep classification — not an official warning. Use Live for NWS.
           </p>
         </div>
       )}
@@ -86,23 +85,23 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
         {mode === "planning" ? (
           <>
             <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
-              Exercise card only. Switch to <strong>Live conditions</strong> for real NWS
+              Prep overlay only. Switch to <strong>Live conditions</strong> for real NWS
               products.
             </p>
             <p className="flex items-center gap-2 font-medium">
               <Flame size={16} className="text-orange-600" />
-              Exercise hazard type: {community.disasterType}
+              Prep hazard focus: {community.disasterType}
             </p>
             <p>
               <span className="font-semibold">{community.incidentTitle}. </span>
               {community.incidentDescription}
             </p>
             <p>
-              <span className="font-semibold">Exercise focus area. </span>
+              <span className="font-semibold">Focus area. </span>
               {community.affectedArea}
             </p>
             <div>
-              <p className="font-semibold">Planning considerations (if this exercise were real)</p>
+              <p className="font-semibold">Mass-care planning considerations</p>
               <ul className="mt-1 list-disc space-y-1 pl-5 text-muted">
                 {community.potentialImpacts.map((item) => (
                   <li key={item}>{item}</li>

@@ -30,7 +30,7 @@ export default function Legend({ compact = false, variant = "planning" }) {
     return (
       <div className="rounded-2xl bg-white/95 p-4 shadow-lg">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
-          Exercise level
+          Prep level
         </p>
         <div className="flex flex-wrap gap-3">
           {LEVEL_LIST.map((level) => (
@@ -51,7 +51,7 @@ export default function Legend({ compact = false, variant = "planning" }) {
 
   return (
     <aside className="rounded-3xl bg-white p-5 shadow-sm">
-      <h2 className="text-lg font-semibold">Planning classification (exercise)</h2>
+      <h2 className="text-lg font-semibold">Mass-care prep classification</h2>
       <ul className="mt-4 space-y-4">
         {LEVEL_LIST.map((level) => (
           <li key={level.key} className="flex gap-3">

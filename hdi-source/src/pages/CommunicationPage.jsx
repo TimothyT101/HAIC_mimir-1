@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, Copy, HeartHandshake, Languages, Megaphone, Shield } from "lucide-react";
 import DisclaimerBanner from "../components/DisclaimerBanner";
@@ -12,15 +12,51 @@ import {
 } from "../data/communicationPathways";
 import { DISASTER_TYPES } from "../lib/resourceCalculator";
 
+const LANG_STORAGE_KEY = "haic-language-coverage";
+
+function loadCoveredLanguages() {
+  try {
+    const raw = window.localStorage.getItem(LANG_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return new Set(Array.isArray(parsed) ? parsed : []);
+  } catch {
+    return new Set();
+  }
+}
+
 export default function CommunicationPage() {
   const [phase, setPhase] = useState("before");
   const [hazardId, setHazardId] = useState("hurricane");
   const [copiedId, setCopiedId] = useState(null);
+  const [covered, setCovered] = useState(() => new Set());
+
+  useEffect(() => {
+    setCovered(loadCoveredLanguages());
+  }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(LANG_STORAGE_KEY, JSON.stringify([...covered]));
+    } catch {
+      /* ignore quota / private mode */
+    }
+  }, [covered]);
 
   const templates = useMemo(
     () => templatesFor({ phase, hazardId }),
     [phase, hazardId]
   );
+
+  const coveredCount = covered.size;
+
+  function toggleLanguage(id) {
+    setCovered((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
 
   async function copyTemplate(template) {
     const text = `${template.title}\nAudience: ${template.audience}\n\n${template.body}`;
@@ -71,31 +107,55 @@ export default function CommunicationPage() {
       </section>
 
       <section className="rounded-3xl bg-white p-5 shadow-sm">
-        <div className="flex items-start gap-3">
-          <Languages className="mt-0.5 text-forest" size={22} />
-          <div>
-            <h2 className="text-xl font-semibold">Priority languages checklist</h2>
-            <p className="mt-1 text-sm text-muted">
-              Pre-assign interpreters and plain-language lines before impact. Mark
-              each language covered for your County / VOAD desk.
-            </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <Languages className="mt-0.5 text-forest" size={22} />
+            <div>
+              <h2 className="text-xl font-semibold">Priority languages checklist</h2>
+              <p className="mt-1 text-sm text-muted">
+                Working desk tool: click each language when your County / VOAD team
+                has an interpreter or plain-language line ready <em>before</em> impact.
+                Saved in this browser only — not shared with DHS systems.
+              </p>
+            </div>
           </div>
+          <p className="rounded-full bg-forest-soft px-3 py-1 text-xs font-semibold text-forest">
+            {coveredCount} / {PRIORITY_LANGUAGES.length} covered
+          </p>
         </div>
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {PRIORITY_LANGUAGES.map((lang) => (
-            <li
-              key={lang.id}
-              className="flex items-start gap-3 rounded-2xl border border-slate-100 px-3 py-3 text-sm"
-            >
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border border-slate-300 text-[10px] text-muted">
-                ☐
-              </span>
-              <span>
-                <span className="font-semibold text-ink">{lang.label}</span>
-                <span className="mt-0.5 block text-xs text-muted">{lang.role}</span>
-              </span>
-            </li>
-          ))}
+          {PRIORITY_LANGUAGES.map((lang) => {
+            const isOn = covered.has(lang.id);
+            return (
+              <li key={lang.id}>
+                <button
+                  type="button"
+                  onClick={() => toggleLanguage(lang.id)}
+                  aria-pressed={isOn}
+                  className={`flex w-full items-start gap-3 rounded-2xl border px-3 py-3 text-left text-sm transition ${
+                    isOn
+                      ? "border-forest/40 bg-forest-soft/70"
+                      : "border-slate-100 hover:border-forest/30 hover:bg-slate-50"
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
+                      isOn
+                        ? "border-forest bg-forest text-white"
+                        : "border-slate-300 bg-white text-transparent"
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Check size={12} strokeWidth={3} />
+                  </span>
+                  <span>
+                    <span className="font-semibold text-ink">{lang.label}</span>
+                    <span className="mt-0.5 block text-xs text-muted">{lang.role}</span>
+                  </span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </section>
 
