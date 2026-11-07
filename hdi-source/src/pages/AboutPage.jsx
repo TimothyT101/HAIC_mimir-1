@@ -71,9 +71,11 @@ export default function AboutPage() {
 
       <Section title="Disaster classification">
         <p>
-          Marker colors are a prototype overlay. Nearby towns are not automatically
-          elevated. Official NWS alerts stay in the live feed, separate from those
-          scores.
+          Live Map county colors follow NWS severity at county scale: Fine/Minor
+          (green), Moderate (yellow), Severe (red), Extreme (dark red). Town markers
+          stay uncolored because most NWS products name a county or zone, not a
+          single community. Planning scenario still uses the demonstration 1–5
+          overlay. Nearby towns are not automatically elevated.
         </p>
         <ul>
           {LEVEL_LIST.map((level) => (

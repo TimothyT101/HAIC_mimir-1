@@ -30,9 +30,10 @@ export default function MethodologyPage() {
 
       <Section title="Disaster classification methodology">
         <p>
-          Each community has its own provisional level. Nearby towns are not
-          automatically raised because they are close to an incident. Official
-          alerts are stored separately from this score.
+          Live Map colors the four counties from official NWS severity (Fine/Minor,
+          Moderate, Severe, Extreme). Town markers stay as locations. Planning
+          scenario still uses demonstration community levels. Nearby towns are not
+          automatically raised because they are close to an incident.
         </p>
         <ul>
           {LEVEL_LIST.map((level) => (

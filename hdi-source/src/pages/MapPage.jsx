@@ -8,23 +8,29 @@ import CountySelector from "../components/map/CountySelector";
 import Legend from "../components/map/Legend";
 import MapView from "../components/map/MapView";
 import { DEMO_ALERTS } from "../data/alerts";
-import { COMMUNITIES, communitiesByCounty, getCommunity } from "../data/communities";
+import { COMMUNITIES, getCommunity } from "../data/communities";
 import { getCounty } from "../data/counties";
 import useHawaiiAlerts from "../hooks/useHawaiiAlerts";
 import { filterRecentIncidents } from "../lib/incidents";
+import { allCountyLiveStatuses } from "../lib/liveCountyStatus";
 
 export default function MapPage() {
   const [params, setParams] = useSearchParams();
   const countyId = params.get("county") || "honolulu";
   const mode = params.get("mode") === "planning" ? "planning" : "live";
-  const selectedId =
-    params.get("community") ||
-    (countyId === "honolulu" ? "ewa-beach" : communitiesByCounty(countyId)[0]?.id);
+  const selectedId = params.get("community");
   const [alert, setAlert] = useState(null);
   const liveFeed = useHawaiiAlerts();
 
   const county = getCounty(countyId);
-  const selected = getCommunity(selectedId);
+  const selectedCommunity = getCommunity(selectedId);
+  const selected = selectedCommunity?.countyId === countyId ? selectedCommunity : null;
+  const activeMarkerId = selected?.id;
+  const countyStatuses = useMemo(
+    () => allCountyLiveStatuses(liveFeed.alerts, liveFeed.status),
+    [liveFeed.alerts, liveFeed.status]
+  );
+  const countyStatus = countyStatuses[countyId];
 
   const liveCountyAlerts = useMemo(() => {
     return liveFeed.alerts.filter(
@@ -64,11 +70,14 @@ export default function MapPage() {
   }
 
   function handleCounty(id) {
-    const first = communitiesByCounty(id)[0];
-    update({ county: id, community: first?.id });
+    update({ county: id, community: null });
   }
 
   function handleSelect(communityId) {
+    if (!communityId) {
+      update({ community: null });
+      return;
+    }
     const community = getCommunity(communityId);
     update({ county: community?.countyId || countyId, community: communityId });
   }
@@ -110,14 +119,23 @@ export default function MapPage() {
         </div>
       </div>
 
-      <CountySelector value={countyId} onChange={handleCounty} />
+      <CountySelector
+        value={countyId}
+        onChange={handleCounty}
+        liveStatuses={mode === "live" ? countyStatuses : undefined}
+      />
+      {mode === "live" ? (
+        <div className="max-w-xl">
+          <Legend variant="nwsCounty" />
+        </div>
+      ) : null}
       <DisclaimerBanner compact />
 
       <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
         <div className="relative h-[420px] w-full sm:h-[500px] lg:h-[560px]">
           <MapView
             countyId={countyId}
-            selectedId={selectedId}
+            selectedId={activeMarkerId}
             onSelect={handleSelect}
             mode={mode}
             alertFeatures={mode === "live" ? alertFeatures : []}
@@ -140,6 +158,7 @@ export default function MapPage() {
             <CommunityPanel
               community={selected}
               mode={mode}
+              countyStatus={mode === "live" ? countyStatus : undefined}
               onClose={() => update({ community: null })}
             />
           </div>

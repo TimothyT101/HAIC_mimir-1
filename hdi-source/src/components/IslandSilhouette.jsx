@@ -5,9 +5,9 @@ const PATHS = {
   kauai: "M16 30c3-12 16-18 26-10 8 6 10 16 4 24-7 9-20 10-26 2-5-6-6-10-4-16z",
 };
 
-export default function IslandSilhouette({ island = "oahu", className = "h-8 w-8" }) {
+export default function IslandSilhouette({ island = "oahu", className = "h-8 w-8", style }) {
   return (
-    <svg viewBox="0 0 64 64" className={className} fill="currentColor" aria-hidden="true">
+    <svg viewBox="0 0 64 64" className={className} style={style} fill="currentColor" aria-hidden="true">
       <path d={PATHS[island] ?? PATHS.oahu} />
     </svg>
   );

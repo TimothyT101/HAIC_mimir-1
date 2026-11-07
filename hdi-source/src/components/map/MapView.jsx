@@ -9,6 +9,7 @@ import {
   TileLayer,
   Tooltip,
   useMap,
+  useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
 import { Home, Minus, Plus } from "lucide-react";
@@ -97,6 +98,48 @@ function CountyCamera({ countyId }) {
   }, [countyId, map]);
 
   return null;
+}
+
+function MapBackgroundClick({ onClear }) {
+  useMapEvents({
+    click() {
+      onClear?.();
+    },
+  });
+  return null;
+}
+
+function TownMarker({ community, selected, fillColor, onSelect }) {
+  return (
+    <CircleMarker
+      center={[community.lat, community.lng]}
+      radius={selected ? 12 : 9}
+      pane="markerPane"
+      pathOptions={{
+        color: "#fff",
+        weight: selected ? 3 : 2,
+        fillColor,
+        fillOpacity: 0.95,
+      }}
+      eventHandlers={{
+        click: (event) => {
+          L.DomEvent.stopPropagation(event.originalEvent);
+          if (selected) onSelect(null);
+          else onSelect(community.id);
+        },
+      }}
+    >
+      <Tooltip
+        direction="top"
+        offset={[0, -10]}
+        opacity={1}
+        permanent={selected}
+        sticky={!selected}
+      >
+        <span className="font-semibold">{community.name}</span>
+      </Tooltip>
+    </CircleMarker>
+  );
 }
 
 function MapButtons({ countyId }) {
@@ -188,6 +231,7 @@ export default function MapView({
         </LayersControl>
         <CountyCamera countyId={countyId} />
         <MapButtons countyId={countyId} />
+        <MapBackgroundClick onClear={() => onSelect(null)} />
         <ScaleControl position="bottomleft" imperial />
         <TsunamiZones countyId={countyId} />
         {alertCollection.features.length ? (
@@ -208,24 +252,13 @@ export default function MapView({
             const selected = community.id === selectedId;
             const fillColor = mode === "planning" ? level.color : "#1f4d3a";
             return (
-              <CircleMarker
-                key={community.id}
-                center={[community.lat, community.lng]}
-                radius={selected ? 14 : 10}
-                pathOptions={{
-                  color: "#fff",
-                  weight: selected ? 3 : 2,
-                  fillColor,
-                  fillOpacity: 0.95,
-                }}
-                eventHandlers={{
-                  click: () => onSelect(community.id),
-                }}
-              >
-                <Tooltip direction="top" offset={[0, -8]} opacity={1} permanent={selected}>
-                  <span className="font-semibold">{community.name}</span>
-                </Tooltip>
-              </CircleMarker>
+              <TownMarker
+                key={`${community.id}-${selected ? "on" : "off"}`}
+                community={community}
+                selected={selected}
+                fillColor={fillColor}
+                onSelect={onSelect}
+              />
             );
           })}
         </LayerGroup>

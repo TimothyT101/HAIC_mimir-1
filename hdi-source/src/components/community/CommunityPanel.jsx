@@ -11,7 +11,7 @@ import { getLevel } from "../../data/classification";
 import { getCounty } from "../../data/counties";
 import { formatTimestamp } from "../../lib/format";
 
-export default function CommunityPanel({ community, onClose, mode = "live" }) {
+export default function CommunityPanel({ community, onClose, mode = "live", countyStatus }) {
   if (!community) {
     return (
       <section className="rounded-3xl bg-white p-6 shadow-sm">
@@ -46,12 +46,19 @@ export default function CommunityPanel({ community, onClose, mode = "live" }) {
 
       {mode === "live" ? (
         <div className="mt-4 rounded-2xl bg-forest-soft px-4 py-3 text-sm text-forest">
-          <p className="font-semibold">Live conditions</p>
+          <p className="flex items-center gap-2 font-semibold">
+            {countyStatus ? (
+              <span
+                className="h-3 w-3 rounded-full"
+                style={{ background: countyStatus.color }}
+              />
+            ) : null}
+            {county.name}: {countyStatus?.label || "Live conditions"}
+          </p>
           <p className="mt-1 text-xs leading-5">
-            Official weather products are in the Live NWS alerts list. Town markers
-            are locations only. A colored Level score is a planning overlay — switch
-            to Planning scenario to see demonstration classifications. Marker color
-            does not mean an emergency is happening in {community.name}.
+            {countyStatus?.detail} Town dots are locations only — NWS products are
+            county or zone scale, not a score for {community.name}. Switch to
+            Planning scenario for the demonstration 1–5 overlay.
           </p>
         </div>
       ) : (
