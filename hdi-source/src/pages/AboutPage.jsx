@@ -175,6 +175,17 @@ petSupport   = round((pop÷2.92) × 0.39 × shelterRate × 1.7)
         </ul>
       </Section>
 
+      <Section title="Multilingual and trauma-informed pathways">
+        <p>
+          The Communication page provides a priority-language checklist, trusted-messenger
+          channels, and English message templates for before / during / after a hazard.
+          Templates are trauma-informed (lead with safety; affirm that seeking shelter is
+          about safety) and must be localized by County language-access partners — this
+          prototype does not machine-translate. Official alerts remain NWS / HIEMA /
+          county products.
+        </p>
+      </Section>
+
       <Section title="Coordination and AI">
         <p>
           The planning summary on the Resource Planning page is assembled from the

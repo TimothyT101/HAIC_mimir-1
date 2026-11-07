@@ -7,6 +7,7 @@ import PrototypeBadge from "./PrototypeBadge";
 const LINKS = [
   { to: "/map", label: "Live Map" },
   { to: "/resource-planning", label: "Resource Planning" },
+  { to: "/communication", label: "Communication" },
   { to: "/about", label: "About & Sources" },
 ];
 

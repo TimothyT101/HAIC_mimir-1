@@ -4,6 +4,7 @@ import {
   BookOpen,
   ChevronDown,
   ClipboardList,
+  Languages,
   Network,
   Shield,
   Users,
@@ -34,6 +35,12 @@ const FEATURES = [
     title: "Coordinated Response",
     body: "Generate planning reports for more effective emergency coordination.",
     to: "/resource-planning#coordination",
+  },
+  {
+    icon: Languages,
+    title: "Communication pathways",
+    body: "Trauma-informed, multilingual planning templates for before, during, and after.",
+    to: "/communication",
   },
 ];
 

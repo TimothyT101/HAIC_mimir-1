@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Bus,
   ClipboardList,
@@ -519,7 +519,12 @@ export default function ResourcePlanningPage() {
           {summary?.aiGenerated ? "AI summary" : "Deterministic planning summary — not AI-generated."}
           {" "}
           Partners below are matched to this scenario&apos;s estimated gaps (MATCH).
-          Counties lead; State ESF-6 supports.
+          Counties lead; State ESF-6 supports. For multilingual / trauma-informed message
+          templates, open{" "}
+          <Link className="font-medium text-forest hover:underline" to="/communication">
+            Communication pathways
+          </Link>
+          .
         </p>
         <div className="mt-4 space-y-3">
           {partners.map((partner) => (

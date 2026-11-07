@@ -59,6 +59,9 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
       "Official public alerts via HIEMA / county sirens / NOAA Weather Radio",
       "Partner conference bridge for VOAD, transit, and health",
       "Community messengers for limited-English-proficiency households",
+      "Pre-translate life-safety lines (Tagalog, Ilokano, Chuukese, Marshallese, Samoan, Chinese, Korean, Vietnamese, Japanese, Spanish, ʻŌlelo Hawaiʻi) + ASL where available",
+      "Trauma-informed tone: lead with safety; affirm seeking shelter is about safety, not enforcement",
+      "Use Communication pathways page templates; localize with certified / community language partners",
     ],
     proposedActions: [
       "Review shelter shortfall and identify overflow or hotel/non-congregate options.",
