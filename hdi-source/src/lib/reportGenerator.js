@@ -1,10 +1,8 @@
-import { getLevel } from "../data/classification";
 import { getCounty } from "../data/counties";
 import { matchPartners } from "../data/partners";
 import { DISASTER_TYPES } from "./resourceCalculator";
 
 export function buildPlanningReport({ community, assessment, generatedAt = new Date() }) {
-  const level = getLevel(community.provisionalLevel);
   const county = getCounty(community.countyId);
   const disasterLabel =
     DISASTER_TYPES.find((item) => item.id === assessment.disasterTypeId)?.label ??
@@ -24,7 +22,6 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
       name: community.name,
       county: county.name,
       island: community.island,
-      provisionalLevel: `${level.fullLabel} (planning exercise — not an official warning)`,
       disasterType: disasterLabel,
     },
     needs: [
@@ -67,7 +64,7 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
       "Review shelter shortfall and identify overflow or hotel/non-congregate options.",
       "Pre-assign transportation for the estimated no-vehicle share.",
       "Stage backup power support for the electricity-dependent planning estimate.",
-      "Keep this prototype classification visually separate from official alerts.",
+      "Confirm official NWS / county products separately from this planning estimate.",
     ],
   };
 }
@@ -84,7 +81,6 @@ export function reportToText(report) {
     "",
     `Community: ${report.community.name}`,
     `County / island: ${report.community.county} / ${report.community.island}`,
-    `Provisional classification: ${report.community.provisionalLevel}`,
     `Scenario disaster type: ${report.community.disasterType}`,
     "",
     "Identified resource needs",

@@ -3,25 +3,23 @@ import { formatTimestamp } from "../../lib/format";
 
 export default function AlertDetailsModal({ alert, onClose }) {
   if (!alert) return null;
-  const live = alert.verified === true || alert.sourceKind === "nws";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
       <div className="max-h-[90vh] w-full max-w-lg overflow-auto rounded-3xl bg-white p-6 shadow-xl">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p
-              className={`text-xs font-semibold uppercase tracking-wide ${
-                live ? "text-forest" : "text-amber-700"
-              }`}
-            >
-              {live
-                ? "Verified National Weather Service product"
-                : "Mass-care prep sample — not a live alert"}
+            <p className="text-xs font-semibold uppercase tracking-wide text-forest">
+              Verified National Weather Service product
             </p>
             <h3 className="mt-1 text-xl font-bold">{alert.officialTitle || alert.title}</h3>
           </div>
-          <button type="button" onClick={onClose} className="rounded-full p-1 hover:bg-slate-100" aria-label="Close">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-1 hover:bg-slate-100"
+            aria-label="Close"
+          >
             <X size={18} />
           </button>
         </div>
@@ -59,7 +57,9 @@ export default function AlertDetailsModal({ alert, onClose }) {
             <dd className="font-medium">{alert.source}</dd>
           </div>
         </dl>
-        <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-slate-700">{alert.summary}</p>
+        <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+          {alert.summary}
+        </p>
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import DisclaimerBanner from "../components/DisclaimerBanner";
 import { ACS_SOURCE } from "../data/acsIndicators";
-import { LEVEL_LIST } from "../data/classification";
 import { AFN_TRACT_SOURCE } from "../data/afnTracts";
 import {
   PUBLIC_SOURCE_LINKS,
@@ -106,22 +105,15 @@ export default function AboutPage() {
         </ul>
       </Section>
 
-      <Section title="Disaster classification">
+      <Section title="Live Map alerts">
         <p>
           Live Map county colors follow NWS severity at county scale: Fine/Minor
           (green), Moderate (yellow), Severe (red), Extreme (dark red). Town markers
-          stay uncolored because most NWS products name a county or zone, not a
-          single community. Mass-care prep uses a static 1–5 readiness overlay for
-          ESF-6 planning (not live warnings). Nearby towns are not automatically
-          elevated.
+          are locations only — most NWS products name a county or zone, not a single
+          community. Hazard layers and tract AFN overlays are toggled on the map.
+          ESF-6 needs modeling lives on Resource Planning (scenario dropdown), not as
+          a second map mode.
         </p>
-        <ul>
-          {LEVEL_LIST.map((level) => (
-            <li key={level.key}>
-              <strong>{level.fullLabel}.</strong> {level.description}
-            </li>
-          ))}
-        </ul>
       </Section>
 
       <Section title="Scenario differences and hazard ∩ tract demand">
