@@ -70,10 +70,15 @@ export default function AboutPage() {
           <code>.env.local</code> only. The key is never shipped to the browser.
         </p>
         <p>
-          Designated shelter locations are public civic facilities used for planning.
-          Hawaiʻi does not publish a standing open/closed shelter API. Counties announce
-          openings during events. An older statewide school list on Open Data (2019) is
-          not operational status.
+          Designated shelter / refuge locations on Resource Planning come from public
+          inventories: the Hawaiʻi Open Data State Civil Defense Hurricane Shelters CSV
+          (2019, with coordinates), the Honolulu DEM Oʻahu Hurricane Evacuation Shelter
+          List (Oct 18, 2018 FOI PDF), and the Kauaʻi KEMA Potential Shelter List.
+          Maui and Hawaiʻi Island facilities in the app currently use the Open Data CSV
+          plus county EMA/Civil Defense hubs for announcements. Hawaiʻi does not publish
+          a statewide open/closed shelter API — counties announce openings during events.
+          None of these lists confirm that a site is open right now, and capacities are
+          left blank unless a public source states them.
         </p>
         <p>
           <strong>Tract-level AFN mapping:</strong> Live Map can color all {436} Hawaiʻi

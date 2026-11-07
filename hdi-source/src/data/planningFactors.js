@@ -137,7 +137,15 @@ export const RED_CROSS_SHELTER_URL = "https://www.redcross.org/get-help/disaster
 export const HAWAII_GIS_HAZARDS_URL =
   "https://geodata.hawaii.gov/arcgis/rest/services/Hazards/MapServer";
 export const HONOLULU_DEM_URL = "https://www.honolulu.gov/dem/";
-export const OPEN_DATA_SHELTERS_URL = "https://opendata.hawaii.gov/";
+export const HONOLULU_SHELTER_LIST_URL =
+  "https://uipa.org/files/foi/476/OahuHurricaneEvacuationShelterList18OCT18FINAL.pdf";
+export const KAUAI_SHELTER_LIST_URL =
+  "https://www.kauai.gov/files/assets/public/v/1/emergency-management/documents/potential-shelter-list.pdf";
+export const MAUI_EMA_URL = "https://www.mauicounty.gov/76/Emergency-Management";
+export const HAWAII_CD_URL = "https://www.hawaiicounty.gov/departments/civil-defense";
+export const OPEN_DATA_SHELTERS_URL =
+  "https://opendata.hawaii.gov/dataset/state-civil-defense-hurricane-shelters";
+export const HONOLULU_LIVE_SHELTER_STATUS_URL = "https://p.veoci.com/hnlshelter";
 
 /**
  * Canonical clickable source list for About & Sources and Resource Planning.
@@ -227,13 +235,44 @@ export const PUBLIC_SOURCE_LINKS = [
     id: "honolulu-dem",
     label: "City & County of Honolulu Department of Emergency Management",
     url: HONOLULU_DEM_URL,
-    usedFor: "County EM / shelter announcement references",
+    usedFor: "County EM / hurricane refuge guidance",
   },
   {
-    id: "opendata",
-    label: "Hawaiʻi Open Data",
+    id: "honolulu-shelter-list",
+    label: "Honolulu DEM Oʻahu Hurricane Evacuation Shelter List (Oct 18, 2018 FOI)",
+    url: HONOLULU_SHELTER_LIST_URL,
+    usedFor: "Designated Oʻahu planning facilities (not live openings)",
+  },
+  {
+    id: "kauai-shelter-list",
+    label: "Kauaʻi KEMA Potential Shelter / Refuge Area List",
+    url: KAUAI_SHELTER_LIST_URL,
+    usedFor: "Designated Kauaʻi planning facilities (not live openings)",
+  },
+  {
+    id: "maui-ema",
+    label: "Maui County Emergency Management Agency",
+    url: MAUI_EMA_URL,
+    usedFor: "Maui County shelter announcements and EMA hub",
+  },
+  {
+    id: "hawaii-cd",
+    label: "Hawaiʻi County Civil Defense",
+    url: HAWAII_CD_URL,
+    usedFor: "Hawaiʻi Island shelter announcements and Civil Defense hub",
+  },
+  {
+    id: "opendata-shelters",
+    label: "Hawaiʻi Open Data — State Civil Defense Hurricane Shelters (CSV, 2019)",
     url: OPEN_DATA_SHELTERS_URL,
-    usedFor: "Legacy statewide school shelter list note (2019; not operational status)",
+    usedFor:
+      "Statewide designated-facility inventory with coordinates (planning only; not operational status)",
+  },
+  {
+    id: "honolulu-live-shelters",
+    label: "Honolulu live hurricane refuge / shelter status (Veoci)",
+    url: HONOLULU_LIVE_SHELTER_STATUS_URL,
+    usedFor: "Event-time openings for Oʻahu only — not a standing inventory",
   },
   {
     id: "osm",
