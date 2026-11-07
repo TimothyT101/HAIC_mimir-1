@@ -44,7 +44,7 @@ export default function MapPage() {
       verified: false,
       sourceKind: "exercise",
       officialTitle: item.officialTitle,
-      geometryLabel: "Exercise card — no live alert geometry",
+      geometryLabel: "Prep sample — no live alert geometry",
     }));
     return filterRecentIncidents(rows);
   }, [countyId]);
@@ -94,14 +94,15 @@ export default function MapPage() {
         <div>
           <h1 className="text-3xl font-bold text-forest">Live Map</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">
-            {county.islandLabel}. Live conditions show official NWS alerts. Planning
-            scenario shows HAIC exercise cards only — never live warnings.
+            {county.islandLabel}. <strong>Live conditions</strong> is the correct
+            operational view (official NWS). <strong>Mass-care prep</strong> adds
+            static town readiness cues for ESF-6 planning — not a fake emergency.
           </p>
         </div>
         <div className="inline-flex rounded-full bg-white p-1 shadow-sm" role="tablist" aria-label="Map data mode">
           {[
             ["live", "Live conditions"],
-            ["planning", "Planning scenario"],
+            ["planning", "Mass-care prep"],
           ].map(([id, label]) => (
             <button
               key={id}
@@ -142,7 +143,7 @@ export default function MapPage() {
             zoneNote={
               mode === "live"
                 ? zoneNote
-                : "Planning overlay: colored markers are exercise classifications only — not live warnings."
+                : "Mass-care prep: colored markers are static readiness cues for planning — not live NWS warnings."
             }
           />
           {mode === "planning" ? (

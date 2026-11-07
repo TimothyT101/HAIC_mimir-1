@@ -17,7 +17,7 @@ export default function AlertDetailsModal({ alert, onClose }) {
             >
               {live
                 ? "Verified National Weather Service product"
-                : "HAIC planning exercise — not a live alert"}
+                : "Mass-care prep sample — not a live alert"}
             </p>
             <h3 className="mt-1 text-xl font-bold">{alert.officialTitle || alert.title}</h3>
           </div>

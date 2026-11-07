@@ -18,12 +18,12 @@ export default function LiveAlertsPanel({
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-base font-semibold">
-            {live ? "Live NWS alerts" : "Planning exercise cards"}
+            {live ? "Live NWS alerts" : "Prep scenario cards"}
           </h2>
           <p className={`text-xs ${live ? "text-slate-500" : "text-amber-700"}`}>
             {live
               ? "Official National Weather Service products for Hawaiʻi"
-              : "HAIC exercise samples only — not live warnings"}
+              : "Static mass-care prep samples — switch to Live for real alerts"}
           </p>
         </div>
         <span
@@ -31,7 +31,7 @@ export default function LiveAlertsPanel({
             live ? "bg-emerald-50 text-forest" : "bg-amber-50 text-amber-800"
           }`}
         >
-          {live ? "Verified NWS" : "Exercise"}
+          {live ? "Verified NWS" : "Not live"}
         </span>
       </div>
 
@@ -58,7 +58,7 @@ export default function LiveAlertsPanel({
           <li className="rounded-2xl bg-slate-50 p-3 text-sm text-muted">
             {live
               ? "No active NWS alerts for Hawaiʻi."
-              : "No exercise cards in the recent window. Switch to Live conditions for real alerts."}
+              : "No prep samples in this window. Switch to Live conditions for real NWS alerts."}
           </li>
         ) : null}
         {alerts.map((alert) => (
