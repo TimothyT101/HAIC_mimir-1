@@ -1,5 +1,6 @@
 import { getLevel } from "../data/classification";
 import { getCounty } from "../data/counties";
+import { matchPartners } from "../data/partners";
 import { DISASTER_TYPES } from "./resourceCalculator";
 
 export function buildPlanningReport({ community, assessment, generatedAt = new Date() }) {
@@ -8,6 +9,10 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
   const disasterLabel =
     DISASTER_TYPES.find((item) => item.id === assessment.disasterTypeId)?.label ??
     community.disasterType;
+  const partners = matchPartners({
+    assessment,
+    disasterTypeId: assessment.disasterTypeId,
+  });
 
   return {
     title: `ESF-6 Planning Report — ${community.name}`,
@@ -31,29 +36,18 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
       { item: "Language / communication support contacts", value: assessment.communicationSupport },
       { item: "Water (gallons, planning horizon)", value: assessment.waterGallons },
       { item: "Meals (planning horizon)", value: assessment.meals },
-    ],
-    agencies: [
       {
-        name: "County emergency management / civil defense",
-        role: "Overall ESF-5/ESF-6 coordination, confirmation of official alerts, shelter opening decisions",
-      },
-      {
-        name: "Department of Human Services / mass care partners",
-        role: "Congregate care, functional needs support, and recovery referrals",
-      },
-      {
-        name: "American Red Cross and VOAD",
-        role: "Shelter operations, feeding, and family reunification support",
-      },
-      {
-        name: "Transit agency and paratransit providers",
-        role: "Transportation assistance for households without vehicles",
-      },
-      {
-        name: "Health care coalitions and utilities",
-        role: "Electricity-dependent medical needs and backup power",
+        item: "Pet / working-animal support (planning estimate)",
+        value: assessment.petSupport,
       },
     ],
+    agencies: partners.map((partner) => ({
+      name: partner.name,
+      role: partner.role,
+      cmist: partner.cmist.join(", "),
+      matchedNeeds: partner.matchedNeeds.join("; ") || "County / State coordination support",
+      decisionPoints: partner.decisionPoints,
+    })),
     verificationSteps: [
       "Confirm the official NWS, PTWC, or county warning product before any public message.",
       "Verify shelter capacities with the county mass-care lead — prototype numbers are sample planning values.",
@@ -93,8 +87,13 @@ export function reportToText(report) {
     "Identified resource needs",
     ...report.needs.map((need) => `- ${need.item}: ${need.value}`),
     "",
-    "Agencies and suggested responsibilities",
-    ...report.agencies.map((agency) => `- ${agency.name}: ${agency.role}`),
+    "Matched partners and responsibilities",
+    ...report.agencies.flatMap((agency) => [
+      `- ${agency.name}: ${agency.role}`,
+      agency.matchedNeeds ? `  Needs matched: ${agency.matchedNeeds}` : null,
+      agency.cmist ? `  CMIST focus: ${agency.cmist}` : null,
+      ...(agency.decisionPoints || []).map((step) => `  Decision: ${step}`),
+    ].filter(Boolean)),
     "",
     "Required verification steps",
     ...report.verificationSteps.map((step) => `- ${step}`),

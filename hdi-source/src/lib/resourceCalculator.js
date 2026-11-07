@@ -1,67 +1,37 @@
 /**
  * Transparent ESF-6 resource estimation.
- * All rates are documented planning assumptions for the HAIC prototype.
+ * Formulas prefer Hawaiʻi / federal public sources documented in planningFactors.js.
  * Resource Shortfall = max(0, Estimated Demand − Available Capacity)
  */
-import { getPlaceAcs } from "../data/acsIndicators";
+import { getCountyAcs, getPlaceAcs } from "../data/acsIndicators";
+import {
+  AVG_PETS_PER_PET_HOUSEHOLD,
+  DAYS_SOURCE,
+  EMPOWER_SOURCE,
+  FEMA_EVAC_SHELTER_URL,
+  getEmpowerCountyTotal,
+  getPetFactors,
+  HIEMA_SHELTER_GUIDANCE_URL,
+  MEAL_SOURCE,
+  PERSONS_PER_HOUSEHOLD,
+  PET_SOURCE,
+  PUBLIC_SOURCE_LINKS,
+  READY_KIT_URL,
+  READY_WATER_URL,
+  RED_CROSS_SHELTER_URL,
+  SCENARIO_FACTORS,
+  VISITOR_SHARE,
+  VISITOR_SOURCE,
+  WATER_SOURCE,
+} from "../data/planningFactors";
 
-export const DISASTER_TYPES = [
-  { id: "hurricane", label: "Hurricane" },
-  { id: "wildfire", label: "Wildfire" },
-  { id: "tsunami", label: "Tsunami" },
-  { id: "flood", label: "Flood" },
-];
+export const DISASTER_TYPES = Object.values(SCENARIO_FACTORS).map((item) => ({
+  id: item.id,
+  label: item.label,
+}));
 
-export const PLANNING_RATES = {
-  hurricane: {
-    shelterRate: 0.2,
-    transportAssistRate: 0.22,
-    electricityBackupRate: 0.06,
-    waterGallonsPerPersonDay: 1,
-    mealPerPersonDay: 3,
-    days: 5,
-    communicationSupportRate: 0.2,
-    exposure:
-      "Island-scale wind, rain, and coastal inundation. Assumes a larger share of households may lose power and need multi-day mass care.",
-    notes: "Assumes 20% shelter demand for a county-scale wind and flood event.",
-  },
-  wildfire: {
-    shelterRate: 0.08,
-    transportAssistRate: 0.12,
-    electricityBackupRate: 0.03,
-    waterGallonsPerPersonDay: 1,
-    mealPerPersonDay: 2,
-    days: 2,
-    communicationSupportRate: 0.12,
-    exposure:
-      "Localized wildland-urban interface and smoke. Inland and leeward communities can be affected without coastal inundation.",
-    notes: "Assumes 8% short-term displacement from smoke or immediate threat areas.",
-  },
-  tsunami: {
-    shelterRate: 0.15,
-    transportAssistRate: 0.2,
-    electricityBackupRate: 0.03,
-    waterGallonsPerPersonDay: 1,
-    mealPerPersonDay: 2,
-    days: 2,
-    communicationSupportRate: 0.18,
-    exposure:
-      "Coastal evacuation zones and harbors. Inland neighborhoods are not treated as inundated solely because they are nearby.",
-    notes: "Assumes 15% of the selected community may need movement out of mapped tsunami evacuation zones.",
-  },
-  flood: {
-    shelterRate: 0.07,
-    transportAssistRate: 0.14,
-    electricityBackupRate: 0.025,
-    waterGallonsPerPersonDay: 1,
-    mealPerPersonDay: 2,
-    days: 2,
-    communicationSupportRate: 0.1,
-    exposure:
-      "Stream, drainage, and low-lying floodplain exposure. Demand is lower than a hurricane and more localized than a tsunami watch.",
-    notes: "Assumes 7% of residents in stream-adjacent housing may need short-term shelter.",
-  },
-};
+/** @deprecated Prefer SCENARIO_FACTORS — kept as alias for older imports. */
+export const PLANNING_RATES = SCENARIO_FACTORS;
 
 export function shortfall(demand, capacity) {
   return Math.max(0, demand - capacity);
@@ -69,25 +39,47 @@ export function shortfall(demand, capacity) {
 
 export function calculateResources({ community, disasterTypeId }) {
   const mappedId = disasterTypeId === "coastal-flood" ? "tsunami" : disasterTypeId;
-  const rates = PLANNING_RATES[mappedId] ?? PLANNING_RATES.flood;
+  const rates = SCENARIO_FACTORS[mappedId] ?? SCENARIO_FACTORS.flood;
   const place = getPlaceAcs(community.id);
+  const countyAcs = getCountyAcs(community.countyId);
   const hasPlace = place?.population != null;
   const population = hasPlace ? place.population : 0;
+  const countyPopulation = countyAcs?.population ?? 0;
   const noVehiclePct = hasPlace ? (place.noVehiclePct ?? 0) / 100 : 0;
   const lepPct = hasPlace ? (place.limitedEnglishPct ?? 0) / 100 : 0;
-  const estimatedShelterNeed = Math.round(population * rates.shelterRate);
+
+  const residentShare = 1 - VISITOR_SHARE;
+  const residentShelterNeed = Math.round(population * residentShare * rates.shelterRate);
+  const visitorShelterNeed = Math.round(population * VISITOR_SHARE * rates.shelterRate);
+  const estimatedShelterNeed = residentShelterNeed + visitorShelterNeed;
+
   const availableCapacity = community.shelterCapacity ?? 0;
   const capacityVerified = false;
   const shelterShortfall = shortfall(estimatedShelterNeed, availableCapacity);
-  const transportAssist = Math.round(
-    estimatedShelterNeed * Math.max(rates.transportAssistRate, noVehiclePct)
-  );
-  const electricityBackup = Math.round(population * rates.electricityBackupRate);
-  const communicationSupport = Math.round(
-    estimatedShelterNeed * Math.max(rates.communicationSupportRate, lepPct)
-  );
-  const waterGallons = estimatedShelterNeed * rates.waterGallonsPerPersonDay * rates.days;
+
+  // Residents without a vehicle (ACS) + visitors assumed to need transport assistance (HIEMA).
+  const transportAssist =
+    Math.round(residentShelterNeed * noVehiclePct) + visitorShelterNeed;
+
+  const countyEmpower = getEmpowerCountyTotal(community.countyId);
+  const placeEmpowerShare =
+    countyPopulation > 0 && hasPlace
+      ? Math.round(countyEmpower * (population / countyPopulation))
+      : 0;
+  const electricityBackup = Math.round(placeEmpowerShare * rates.outageIntensity);
+
+  const communicationSupport = Math.round(estimatedShelterNeed * lepPct);
+
+  const waterGallons =
+    estimatedShelterNeed * rates.waterGallonsPerPersonDay * rates.days;
   const meals = estimatedShelterNeed * rates.mealPerPersonDay * rates.days;
+
+  const petFactors = getPetFactors(community.countyId);
+  const households = hasPlace ? population / PERSONS_PER_HOUSEHOLD : 0;
+  const petHouseholds = households * petFactors.anyIndoorCA;
+  const petSupport = Math.round(
+    petHouseholds * rates.shelterRate * AVG_PETS_PER_PET_HOUSEHOLD
+  );
 
   return {
     community,
@@ -103,6 +95,17 @@ export function calculateResources({ community, disasterTypeId }) {
       lepPct,
       days: rates.days,
       hasPlaceAcs: hasPlace,
+      visitorShare: VISITOR_SHARE,
+      residentShelterNeed,
+      visitorShelterNeed,
+      countyEmpower,
+      placeEmpowerShare,
+      outageIntensity: rates.outageIntensity,
+      petHouseholdRate: petFactors.anyIndoorCA,
+      dogHouseholdRate: petFactors.dogHH,
+      catHouseholdRate: petFactors.catHH,
+      personsPerHousehold: PERSONS_PER_HOUSEHOLD,
+      avgPetsPerPetHousehold: AVG_PETS_PER_PET_HOUSEHOLD,
     },
     estimatedShelterNeed,
     availableCapacity,
@@ -112,17 +115,41 @@ export function calculateResources({ community, disasterTypeId }) {
     communicationSupport,
     waterGallons,
     meals,
+    petSupport,
+    sources: {
+      shelterRate: `${rates.shelterRateSource} — ${
+        mappedId === "hurricane" ? HIEMA_SHELTER_GUIDANCE_URL : FEMA_EVAC_SHELTER_URL
+      }`,
+      visitors: `${VISITOR_SOURCE} — ${HIEMA_SHELTER_GUIDANCE_URL}`,
+      transport: `ACS DP04_0058PE (no-vehicle occupied units) + HIEMA visitor share — ${HIEMA_SHELTER_GUIDANCE_URL}`,
+      electricity: `${EMPOWER_SOURCE.name} (${EMPOWER_SOURCE.asOf}); allocated to place by ACS population share × scenario outage intensity — ${EMPOWER_SOURCE.url}`,
+      communication: "ACS DP02_0115PE limited-English share × estimated shelter need — https://api.census.gov/data/2023/acs/acs5/profile",
+      water: `${WATER_SOURCE} — ${READY_WATER_URL}`,
+      meals: `${MEAL_SOURCE} — ${RED_CROSS_SHELTER_URL}`,
+      days: `${DAYS_SOURCE[mappedId] ?? DAYS_SOURCE.default} — ${READY_KIT_URL}`,
+      pets: `${PET_SOURCE.name}; households ≈ ACS pop ÷ ${PERSONS_PER_HOUSEHOLD}; × ${petFactors.anyIndoorCA} indoor companion-animal HH rate × shelter rate × ${AVG_PETS_PER_PET_HOUSEHOLD} animals/pet HH — ${PET_SOURCE.url}`,
+      capacity: "Sample community capacity in prototype data — not a verified open-bed inventory",
+    },
+    sourceLinks: PUBLIC_SOURCE_LINKS,
     formulas: {
-      estimatedShelterNeed: "round(ACS place population × scenario shelterRate)",
-      shelterShortfall: "max(0, estimatedShelterNeed − sampleCapacity) — sample capacity is not verified open beds",
-      transportAssist: "round(estimatedShelterNeed × max(transportAssistRate, ACS no-vehicle share))",
-      electricityBackup: "round(ACS place population × scenario backup-power rate)",
-      communicationSupport: "round(estimatedShelterNeed × max(communicationSupportRate, ACS limited-English share))",
+      estimatedShelterNeed:
+        "round(pop × (1 − 0.15) × shelterRate) + round(pop × 0.15 × shelterRate) — HIEMA visitor share 15%",
+      shelterShortfall:
+        "max(0, estimatedShelterNeed − sampleCapacity) — sample capacity is not verified open beds",
+      transportAssist:
+        "round(residentShelterNeed × ACS no-vehicle share) + visitorShelterNeed",
+      electricityBackup:
+        "round(county emPOWER × placePop/countyPop × scenario outageIntensity)",
+      communicationSupport: "round(estimatedShelterNeed × ACS limited-English share)",
       waterGallons: "estimatedShelterNeed × 1 gallon × days",
-      meals: "estimatedShelterNeed × mealsPerPersonDay × days",
+      meals: "estimatedShelterNeed × 3 meals × days",
+      petSupport:
+        "round((pop ÷ 2.92) × 0.39 indoor pet-HH rate × shelterRate × 1.7 animals) — Hawaiʻi Health Survey; not a registry",
     },
     dataLabel: hasPlace
-      ? `Population, no-vehicle, and limited-English shares from ${place.censusName} (${place.vintage}). Shelter capacity remains a sample planning figure.`
+      ? `ACS place ${place.censusName} (${place.vintage}). Shelter rate ${Math.round(
+          rates.shelterRate * 100
+        )}% (${rates.shelterRateSource.split(";")[0]}). emPOWER place share ${placeEmpowerShare} of ${countyEmpower} county Medicare electricity-dependent beneficiaries.`
       : `No ACS place table for ${community.name}; demand is not estimated from sample community numbers.`,
   };
 }

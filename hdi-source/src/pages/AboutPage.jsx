@@ -1,7 +1,19 @@
 import DisclaimerBanner from "../components/DisclaimerBanner";
 import { ACS_SOURCE } from "../data/acsIndicators";
 import { LEVEL_LIST } from "../data/classification";
+import {
+  PUBLIC_SOURCE_LINKS,
+} from "../data/planningFactors";
+import { SVI_SOURCE } from "../data/sviIndicators";
 import { NWS_ALERTS_ENDPOINT } from "../services/nwsAlerts";
+
+function SourceLink({ href, children }) {
+  return (
+    <a className="text-forest hover:underline" href={href} target="_blank" rel="noreferrer">
+      {children}
+    </a>
+  );
+}
 
 export default function AboutPage() {
   return (
@@ -19,46 +31,49 @@ export default function AboutPage() {
       <DisclaimerBanner />
 
       <Section id="sources" title="Data sources">
+        <p>
+          Every public dataset and planning document used by this prototype is linked
+          below. Click through to the originating agency page or PDF.
+        </p>
         <ul>
-          <li>
-            Live alerts: National Weather Service active alert API ({NWS_ALERTS_ENDPOINT}).
-            Refresh every 3 minutes. Follow official products if they disagree with this site.
-          </li>
-          <li>
-            County and Census place/CDP population and CMIST proxy indicators:{" "}
-            {ACS_SOURCE.name}, retrieved {ACS_SOURCE.retrievedAt}. Includes households
-            with no vehicle (DP04_0058PE). Refresh: <code>node scripts/fetch-acs.mjs</code>.
-            API: {ACS_SOURCE.url}
-          </li>
-          <li>
-            Map tiles: OpenStreetMap and Esri World Imagery. Community coordinates are
-            real; provisional disaster levels remain demonstration values.
-          </li>
-          <li>
-            Designated shelter locations are public civic facilities used for planning.
-            Hawaiʻi does not publish a standing open/closed shelter API. Counties
-            announce openings during events (Honolulu: honolulu.gov/dem and
-            p.veoci.com/hnlshelter). An older statewide school list is on
-            opendata.hawaii.gov (last updated 2019) and is not operational status.
-          </li>
-          <li>
-            Hazard GIS: Hawaiʻi Statewide GIS on geodata.hawaii.gov. Tsunami
-            evacuation is layer 11. Flood hazard uses county DFIRM layers (FEMA
-            flood zones hosted by the State). Wildfire risk uses Fire Risk Areas
-            (layer 7). Layers can be toggled on the Live Map.
-          </li>
-          <li>
-            CDC/ATSDR Social Vulnerability Index 2022 county percentiles (U.S.
-            ranking) are shown on Resource Planning. They are county-scale, not
-            tract-scale, in this prototype.
-          </li>
-          <li>
-            Census ACS place and county tables require an activated Census Data
-            API key in <code>.env.local</code> only. The key is never shipped to
-            the browser. Run <code>node scripts/fetch-acs.mjs</code> to refresh
-            <code>src/data/acs2023.json</code>.
-          </li>
+          {PUBLIC_SOURCE_LINKS.map((source) => (
+            <li key={source.id}>
+              <SourceLink href={source.url}>{source.label}</SourceLink>
+              {" — "}
+              {source.usedFor}
+              {source.id === "nws" ? (
+                <>
+                  {" "}
+                  (endpoint <code>{NWS_ALERTS_ENDPOINT}</code>)
+                </>
+              ) : null}
+              {source.id === "acs" ? (
+                <>
+                  {" "}
+                  ({ACS_SOURCE.name}, retrieved {ACS_SOURCE.retrievedAt}. Refresh with{" "}
+                  <code>node scripts/fetch-acs.mjs</code>.)
+                </>
+              ) : null}
+              {source.id === "svi" ? (
+                <>
+                  {" "}
+                  ({SVI_SOURCE.name}, retrieved {SVI_SOURCE.retrievedAt}. Service:{" "}
+                  <SourceLink href={SVI_SOURCE.url}>FeatureServer</SourceLink>.)
+                </>
+              ) : null}
+            </li>
+          ))}
         </ul>
+        <p>
+          Census ACS place and county tables require an activated Census Data API key in{" "}
+          <code>.env.local</code> only. The key is never shipped to the browser.
+        </p>
+        <p>
+          Designated shelter locations are public civic facilities used for planning.
+          Hawaiʻi does not publish a standing open/closed shelter API. Counties announce
+          openings during events. An older statewide school list on Open Data (2019) is
+          not operational status.
+        </p>
       </Section>
 
       <Section title="What the numbers mean">
@@ -92,15 +107,39 @@ export default function AboutPage() {
       </Section>
 
       <Section title="Resource formulas">
+        <p>
+          Planning rates are documented in code (<code>planningFactors.js</code>).
+          Prefer Hawaiʻi / federal public sources over invented percentages.
+        </p>
         <pre className="overflow-x-auto rounded-2xl bg-slate-900 p-4 text-xs text-emerald-100">
-{`estimatedShelterNeed = round(population × scenarioShelterRate)
-shelterShortfall     = max(0, need − sampleCapacity)  [sample, not verified open beds]
-transportAssist      = round(need × max(transportRate, noVehicleShare))
-electricityBackup    = round(population × backupRate)
-communicationSupport = round(need × max(communicationRate, LEP share))
-waterGallons         = need × 1 × days
-meals                = need × mealsPerPersonDay × days`}
+{`estimatedShelterNeed = residentShelter + visitorShelter
+  residentShelter = round(pop × 0.85 × shelterRate)
+  visitorShelter  = round(pop × 0.15 × shelterRate)   // HIEMA visitor share
+shelterRate (hurricane) = 0.35   // HIEMA 2017 / USACE 2009 survey
+shelterRate (other)     = 0.10–0.125 // FEMA 10–15% rule of thumb proxy
+shelterShortfall = max(0, need − sampleCapacity)  // sample, not verified beds
+transportAssist  = round(residentShelter × ACS no-vehicle) + visitorShelter
+electricityBackup = round(county emPOWER × placePop/countyPop × outageIntensity)
+communicationSupport = round(need × ACS limited-English share)
+waterGallons = need × 1 × days          // Ready.gov / CDC
+meals        = need × 3 × days          // mass-care practice
+petSupport   = round((pop÷2.92) × 0.39 × shelterRate × 1.7)
+  // Hawaiʻi Health Survey indoor companion-animal HH rate; not a registry`}
         </pre>
+        <p className="font-semibold text-ink">Formula source links</p>
+        <ul>
+          {PUBLIC_SOURCE_LINKS.filter((source) =>
+            ["hiema-shelter", "fema-evac", "empower", "pets", "ready-water", "ready-kit", "red-cross", "acs"].includes(
+              source.id
+            )
+          ).map((source) => (
+            <li key={source.id}>
+              <SourceLink href={source.url}>{source.label}</SourceLink>
+              {" — "}
+              {source.usedFor}
+            </li>
+          ))}
+        </ul>
       </Section>
 
       <Section title="Coordination and AI">

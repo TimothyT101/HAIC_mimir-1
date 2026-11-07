@@ -14,6 +14,7 @@ import { SVI_SOURCE, formatSviPercentile, getCountySvi } from "../data/sviIndica
 import { cmistFromAcs } from "../lib/cmistFromAcs";
 import { COMMUNITIES, communitiesByCounty, getCommunity } from "../data/communities";
 import { COUNTIES } from "../data/counties";
+import { matchPartners } from "../data/partners";
 import { sheltersForCounty } from "../data/shelters";
 import { formatNumber, formatPercent } from "../lib/format";
 import { buildPlanningSummary } from "../lib/planningSummary";
@@ -42,7 +43,7 @@ export default function ResourcePlanningPage() {
   const acs = getCountyAcs(countyId);
   const placeAcs = getPlaceAcs(community?.id);
   const svi = getCountySvi(countyId);
-  const cmist = cmistFromAcs(placeAcs, community?.name);
+  const cmist = cmistFromAcs(placeAcs, community?.name, countyId);
   const shelters = sheltersForCounty(countyId);
 
   const assessment = useMemo(() => {
@@ -54,6 +55,11 @@ export default function ResourcePlanningPage() {
     if (!community || !assessment) return null;
     return buildPlanningSummary({ community, assessment });
   }, [community, assessment]);
+
+  const partners = useMemo(() => {
+    if (!assessment) return [];
+    return matchPartners({ assessment, disasterTypeId });
+  }, [assessment, disasterTypeId]);
 
   function handleCounty(id) {
     setCountyId(id);
@@ -229,6 +235,11 @@ export default function ResourcePlanningPage() {
               ["Backup power considerations", assessment.electricityBackup, assessment.formulas.electricityBackup],
               ["Water (gallons)", assessment.waterGallons, assessment.formulas.waterGallons],
               ["Communication / language support", assessment.communicationSupport, assessment.formulas.communicationSupport],
+              [
+                "Pet / working-animal support",
+                assessment.petSupport,
+                assessment.formulas.petSupport,
+              ],
             ].map(([label, value, formula]) => (
               <article key={label} className="rounded-2xl border border-slate-100 p-4">
                 <p className="text-sm text-muted">{label}</p>
@@ -240,10 +251,54 @@ export default function ResourcePlanningPage() {
             ))}
           </div>
           <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-muted">
-            <li>Shelter rate {(assessment.inputs.shelterRate * 100).toFixed(0)}% · {assessment.rates.notes}</li>
-            <li>Planning horizon {assessment.inputs.days} days · meals {formatNumber(assessment.meals)}</li>
+            <li>
+              Shelter rate {(assessment.inputs.shelterRate * 100).toFixed(0)}% · {assessment.rates.notes}
+            </li>
+            <li>
+              Residents sheltering ~{formatNumber(assessment.inputs.residentShelterNeed)} · visitors
+              sheltering ~{formatNumber(assessment.inputs.visitorShelterNeed)} (HIEMA ~15% visitor share)
+            </li>
+            <li>
+              Planning horizon {assessment.inputs.days} days · meals {formatNumber(assessment.meals)} ·
+              pet HH rate {(assessment.inputs.petHouseholdRate * 100).toFixed(0)}% (Hawaiʻi Health Survey)
+            </li>
             <li>{assessment.dataLabel}</li>
           </ul>
+          {assessment.sources ? (
+            <details className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 text-xs text-slate-600">
+              <summary className="cursor-pointer font-semibold text-ink">
+                Data sources behind these numbers
+              </summary>
+              <ul className="mt-3 list-disc space-y-1.5 pl-5">
+                {Object.entries(assessment.sources).map(([key, value]) => (
+                  <li key={key}>
+                    <span className="font-medium capitalize text-ink">{key}:</span> {value}
+                  </li>
+                ))}
+              </ul>
+              {assessment.sourceLinks?.length ? (
+                <div className="mt-4 border-t border-slate-200 pt-3">
+                  <p className="font-semibold text-ink">All source links</p>
+                  <ul className="mt-2 list-disc space-y-1 pl-5">
+                    {assessment.sourceLinks.map((source) => (
+                      <li key={source.id}>
+                        <a
+                          className="text-forest hover:underline"
+                          href={source.url}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {source.label}
+                        </a>
+                        {" — "}
+                        {source.usedFor}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </details>
+          ) : null}
         </section>
       ) : null}
 
@@ -274,13 +329,47 @@ export default function ResourcePlanningPage() {
         {summary ? <p className="mt-3 text-sm leading-6 text-slate-700">{summary.text}</p> : null}
         <p className="mt-3 text-xs text-muted">
           {summary?.aiGenerated ? "AI summary" : "Deterministic planning summary — not AI-generated."}
+          {" "}
+          Partners below are matched to this scenario&apos;s estimated gaps (MATCH).
+          Counties lead; State ESF-6 supports.
         </p>
-        <ul className="mt-4 grid gap-2 text-sm text-muted md:grid-cols-2">
-          <li>County emergency management / civil defense — lead ESF-6 decisions</li>
-          <li>HIEMA and State DHS — state coordination and mass care support</li>
-          <li>American Red Cross and VOAD — shelter operations and feeding</li>
-          <li>Transit / paratransit — households without vehicles</li>
-        </ul>
+        <div className="mt-4 space-y-3">
+          {partners.map((partner) => (
+            <article
+              key={partner.id}
+              className={`rounded-2xl border p-4 ${
+                partner.lead ? "border-forest/30 bg-forest-soft/50" : "border-slate-100"
+              }`}
+            >
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <p className="font-semibold text-ink">
+                  {partner.name}
+                  {partner.lead ? (
+                    <span className="ml-2 text-xs font-semibold uppercase tracking-wide text-forest">
+                      Lead
+                    </span>
+                  ) : null}
+                </p>
+                <p className="text-[11px] uppercase tracking-wide text-muted">
+                  CMIST: {partner.cmist.join(" · ")}
+                </p>
+              </div>
+              <p className="mt-2 text-sm text-slate-700">{partner.role}</p>
+              {partner.matchedNeeds.length ? (
+                <p className="mt-2 text-xs text-amber-900">
+                  Matched to: {partner.matchedNeeds.join(" · ")}
+                </p>
+              ) : (
+                <p className="mt-2 text-xs text-muted">Always on for County / State coordination.</p>
+              )}
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-muted">
+                {partner.decisionPoints.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
         <button
           type="button"
           onClick={handleGenerate}
