@@ -41,7 +41,7 @@ export function buildPlanningSummary({ community, assessment }) {
       ? `Verified available capacity is ${assessment.availableCapacity}, leaving a shortfall of ${assessment.shelterShortfall}.`
       : `Shelter shortfall of ${assessment.shelterShortfall} is a scenario calculation only (demand ${assessment.estimatedShelterNeed} minus assumed sample capacity ${assessment.availableCapacity}). It is not a verified bed shortage.`;
 
-  const shelterText = `${designated.length} publicly listed designated facilities are shown for ${county.name}; ${openConfirmed} are confirmed open in this prototype (none unless a live shelter feed is connected).`;
+  const shelterText = `${designated.length} publicly listed designated/potential shelter or refuge facilities are shown for ${county.name} from county/Open Data inventories; ${openConfirmed} are confirmed open here (none unless a live shelter feed is connected). Capacities are not published in those sources.`;
 
   return {
     mode: "deterministic",

@@ -15,7 +15,7 @@ import { cmistFromAcs } from "../lib/cmistFromAcs";
 import { COMMUNITIES, communitiesByCounty, getCommunity } from "../data/communities";
 import { COUNTIES } from "../data/counties";
 import { matchPartners } from "../data/partners";
-import { sheltersForCounty } from "../data/shelters";
+import { SHELTER_DATASET, sheltersForCounty } from "../data/shelters";
 import { formatNumber, formatPercent } from "../lib/format";
 import { buildPlanningSummary } from "../lib/planningSummary";
 import { buildPlanningReport, downloadReport } from "../lib/reportGenerator";
@@ -303,25 +303,67 @@ export default function ResourcePlanningPage() {
       ) : null}
 
       <section className="rounded-3xl bg-white p-5 shadow-sm">
-        <h2 className="font-semibold">Designated shelter locations</h2>
+        <h2 className="font-semibold">Designated shelter / refuge locations</h2>
         <p className="mt-1 text-sm text-muted">
-          Public civic sites for {COUNTIES.find((item) => item.id === countyId)?.name}. Status is
-          designated, not confirmed open.
+          {shelters.length} publicly listed planning facilities for{" "}
+          {COUNTIES.find((item) => item.id === countyId)?.name}. These are designated or
+          potential sites only — not confirmed open. {SHELTER_DATASET.note}
         </p>
-        <ul className="mt-3 space-y-2 text-sm">
+        <p className="mt-1 text-xs text-amber-800">
+          Inventory vintage: {SHELTER_DATASET.asOf}. Capacities are not published in these
+          sources, so bed counts stay blank.
+        </p>
+        <ul className="mt-3 max-h-[28rem] space-y-2 overflow-y-auto pr-1 text-sm">
           {shelters.map((item) => (
             <li key={item.id} className="rounded-2xl border border-slate-100 p-3">
               <p className="font-semibold">{item.name}</p>
-              <p className="text-xs text-amber-800">Designated — open status not confirmed</p>
               <p className="text-xs text-muted">
-                Capacity: {item.capacity == null ? "not published here" : formatNumber(item.capacity)}
+                {item.island}
+                {item.address ? ` · ${item.address}` : ""}
               </p>
-              <a href={item.sourceUrl} className="text-xs text-forest hover:underline" target="_blank" rel="noreferrer">
-                {item.source}
+              <p className="mt-1 text-xs text-amber-800">
+                Designated / potential — open status not confirmed
+              </p>
+              <p className="text-xs text-muted">
+                Capacity:{" "}
+                {item.capacity == null ? "not published in source" : formatNumber(item.capacity)}
+                {item.petFriendly ? " · Pet-friendly (bring crate/supplies)" : ""}
+                {item.specialNeeds ? " · Special-needs flag in source" : ""}
+                {item.notes ? ` · ${item.notes}` : ""}
+              </p>
+              <a
+                href={item.sourceUrl}
+                className="text-xs text-forest hover:underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Source
               </a>
             </li>
           ))}
         </ul>
+        <p className="mt-3 text-xs text-muted">
+          Full source set:{" "}
+          <a className="text-forest hover:underline" href={SHELTER_DATASET.openDataUrl} target="_blank" rel="noreferrer">
+            Open Data CSV
+          </a>
+          {" · "}
+          <a className="text-forest hover:underline" href={SHELTER_DATASET.honoluluListUrl} target="_blank" rel="noreferrer">
+            Honolulu 2018 list
+          </a>
+          {" · "}
+          <a className="text-forest hover:underline" href={SHELTER_DATASET.kauaiListUrl} target="_blank" rel="noreferrer">
+            Kauaʻi KEMA list
+          </a>
+          {" · "}
+          <a className="text-forest hover:underline" href={SHELTER_DATASET.mauiEmaUrl} target="_blank" rel="noreferrer">
+            Maui EMA
+          </a>
+          {" · "}
+          <a className="text-forest hover:underline" href={SHELTER_DATASET.hawaiiCdUrl} target="_blank" rel="noreferrer">
+            Hawaiʻi Civil Defense
+          </a>
+        </p>
       </section>
 
       <section id="coordination" className="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm">
