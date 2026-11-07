@@ -12,7 +12,6 @@ import {
 } from "react-leaflet";
 import L from "leaflet";
 import { Home, Minus, Plus } from "lucide-react";
-import { getLevel } from "../../data/classification";
 import { getCounty } from "../../data/counties";
 import { communitiesByCounty } from "../../data/communities";
 import AfNTracts, { AfNSwitcher } from "./AfNTracts";
@@ -191,7 +190,6 @@ export default function MapView({
   onSelect,
   alertFeatures = [],
   zoneNote,
-  mode = "live",
 }) {
   const communities = useMemo(() => communitiesByCounty(countyId), [countyId]);
   const county = getCounty(countyId);
@@ -268,15 +266,13 @@ export default function MapView({
         ) : null}
         <LayerGroup>
           {communities.map((community) => {
-            const level = getLevel(community.provisionalLevel);
             const selected = community.id === selectedId;
-            const fillColor = mode === "planning" ? level.color : "#1f4d3a";
             return (
               <TownMarker
                 key={community.id}
                 community={community}
                 selected={selected}
-                fillColor={fillColor}
+                fillColor="#1f4d3a"
                 onSelect={onSelect}
               />
             );

@@ -1,30 +1,21 @@
 import { Link } from "react-router-dom";
-import {
-  AlertTriangle,
-  Clock,
-  ExternalLink,
-  Flame,
-  MapPin,
-  X,
-} from "lucide-react";
-import { getLevel } from "../../data/classification";
+import { AlertTriangle, Clock, ExternalLink, MapPin, X } from "lucide-react";
 import { getCounty } from "../../data/counties";
 import { formatTimestamp } from "../../lib/format";
 
-export default function CommunityPanel({ community, onClose, mode = "live", countyStatus }) {
+export default function CommunityPanel({ community, onClose, countyStatus }) {
   if (!community) {
     return (
       <section className="rounded-3xl bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold">Community details</h2>
         <p className="mt-2 text-sm text-muted">
-          Click a town marker for location details. Official weather products are under
-          Live conditions. Mass-care prep shows static readiness cues — not live warnings.
+          Click a town marker for location details and official source links. County
+          alert colors come from live NWS products.
         </p>
       </section>
     );
   }
 
-  const level = getLevel(community.provisionalLevel);
   const county = getCounty(community.countyId);
 
   return (
@@ -38,78 +29,35 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
           </p>
         </div>
         {onClose ? (
-          <button type="button" onClick={onClose} className="rounded-full p-1 hover:bg-slate-100" aria-label="Close details">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-1 hover:bg-slate-100"
+            aria-label="Close details"
+          >
             <X size={18} />
           </button>
         ) : null}
       </div>
 
-      {mode === "live" ? (
-        <div className="mt-4 rounded-2xl bg-forest-soft px-4 py-3 text-sm text-forest">
-          <p className="flex items-center gap-2 font-semibold">
-            {countyStatus ? (
-              <span
-                className="h-3 w-3 rounded-full"
-                style={{ background: countyStatus.color }}
-              />
-            ) : null}
-            {community.name}
-          </p>
-          <p className="mt-1 text-xs leading-5">
-            {community.island}, {county.name}. County NWS status:{" "}
-            {countyStatus?.label || "—"}. {countyStatus?.detail} This town is a
-            map location, not its own live emergency score.
-          </p>
-        </div>
-      ) : (
-        <div
-          className="mt-4 rounded-2xl px-4 py-3"
-          style={{ background: level.bg, color: level.text }}
-        >
-          <p className="flex items-center gap-2 text-sm font-semibold">
+      <div className="mt-4 rounded-2xl bg-forest-soft px-4 py-3 text-sm text-forest">
+        <p className="flex items-center gap-2 font-semibold">
+          {countyStatus ? (
             <span
-              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-white"
-              style={{ background: level.color }}
-            >
-              {level.id === "unknown" ? "?" : level.id}
-            </span>
-            {level.fullLabel}
-          </p>
-          <p className="mt-1 text-xs">
-            Mass-care prep classification — not an official warning. Use Live for NWS.
-          </p>
-        </div>
-      )}
+              className="h-3 w-3 rounded-full"
+              style={{ background: countyStatus.color }}
+            />
+          ) : null}
+          {community.name}
+        </p>
+        <p className="mt-1 text-xs leading-5">
+          {community.island}, {county.name}. County NWS status:{" "}
+          {countyStatus?.label || "—"}. {countyStatus?.detail} This town is a map
+          location, not its own live emergency score.
+        </p>
+      </div>
 
       <div className="mt-4 space-y-3 text-sm">
-        {mode === "planning" ? (
-          <>
-            <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-900">
-              Prep overlay only. Switch to <strong>Live conditions</strong> for real NWS
-              products.
-            </p>
-            <p className="flex items-center gap-2 font-medium">
-              <Flame size={16} className="text-orange-600" />
-              Prep hazard focus: {community.disasterType}
-            </p>
-            <p>
-              <span className="font-semibold">{community.incidentTitle}. </span>
-              {community.incidentDescription}
-            </p>
-            <p>
-              <span className="font-semibold">Focus area. </span>
-              {community.affectedArea}
-            </p>
-            <div>
-              <p className="font-semibold">Mass-care planning considerations</p>
-              <ul className="mt-1 list-disc space-y-1 pl-5 text-muted">
-                {community.potentialImpacts.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </>
-        ) : null}
         <div>
           <p className="font-semibold">Official source links</p>
           <ul className="mt-1 space-y-1">
@@ -130,7 +78,7 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
         </div>
         <p className="flex items-center gap-2 text-xs text-muted">
           <Clock size={14} />
-          Last updated {formatTimestamp(community.lastUpdated)}
+          Profile updated {formatTimestamp(community.lastUpdated)}
         </p>
       </div>
 

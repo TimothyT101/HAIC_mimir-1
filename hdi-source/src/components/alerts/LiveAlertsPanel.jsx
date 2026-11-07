@@ -9,42 +9,31 @@ export default function LiveAlertsPanel({
   stale,
   onReload,
   onViewDetails,
-  mode = "live",
 }) {
-  const live = mode === "live";
-
   return (
     <section className="flex h-full min-h-0 flex-col rounded-3xl bg-white p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="text-base font-semibold">
-            {live ? "Live NWS alerts" : "Prep scenario cards"}
-          </h2>
-          <p className={`text-xs ${live ? "text-slate-500" : "text-amber-700"}`}>
-            {live
-              ? "Official National Weather Service products for Hawaiʻi"
-              : "Static mass-care prep samples — switch to Live for real alerts"}
+          <h2 className="text-base font-semibold">Live NWS alerts</h2>
+          <p className="text-xs text-slate-500">
+            Official National Weather Service products for Hawaiʻi
           </p>
         </div>
-        <span
-          className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-wide ${
-            live ? "bg-emerald-50 text-forest" : "bg-amber-50 text-amber-800"
-          }`}
-        >
-          {live ? "Verified NWS" : "Not live"}
+        <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-forest">
+          Verified NWS
         </span>
       </div>
 
-      {live ? (
-        <p className="mt-2 text-[11px] text-muted">
-          Last successful refresh: {fetchedAt ? formatTimestamp(fetchedAt) : "—"}.
-          {stale ? " Feed may be stale." : ""} Source: weather.gov.
-        </p>
-      ) : null}
+      <p className="mt-2 text-[11px] text-muted">
+        Last successful refresh: {fetchedAt ? formatTimestamp(fetchedAt) : "—"}.
+        {stale ? " Feed may be stale." : ""} Source: weather.gov.
+      </p>
 
       <ul className="mt-3 min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
         {status === "loading" ? (
-          <li className="rounded-2xl bg-slate-50 p-3 text-sm text-muted">Loading Hawaiʻi alerts…</li>
+          <li className="rounded-2xl bg-slate-50 p-3 text-sm text-muted">
+            Loading Hawaiʻi alerts…
+          </li>
         ) : null}
         {status === "error" ? (
           <li className="rounded-2xl bg-red-50 p-3 text-sm text-red-800">
@@ -56,9 +45,7 @@ export default function LiveAlertsPanel({
         ) : null}
         {status === "empty" || (status === "ready" && alerts.length === 0) ? (
           <li className="rounded-2xl bg-slate-50 p-3 text-sm text-muted">
-            {live
-              ? "No active NWS alerts for Hawaiʻi."
-              : "No prep samples in this window. Switch to Live conditions for real NWS alerts."}
+            No active NWS alerts for Hawaiʻi.
           </li>
         ) : null}
         {alerts.map((alert) => (
@@ -73,7 +60,9 @@ export default function LiveAlertsPanel({
               <p className="text-xs text-muted">Expires {formatTimestamp(alert.expiresAt)}</p>
             ) : null}
             <p className="text-xs text-muted">Source: {alert.source}</p>
-            <p className="mt-1 text-[11px] text-slate-500">{alert.geometryLabel || alert.areaDesc}</p>
+            <p className="mt-1 text-[11px] text-slate-500">
+              {alert.geometryLabel || alert.areaDesc}
+            </p>
             <div className="mt-2 flex flex-wrap gap-2">
               <button
                 type="button"
@@ -98,16 +87,14 @@ export default function LiveAlertsPanel({
         ))}
       </ul>
 
-      {live ? (
-        <button
-          type="button"
-          onClick={onReload}
-          className="mt-3 inline-flex items-center gap-2 text-xs text-muted hover:text-forest"
-        >
-          <RefreshCw size={12} />
-          Refresh now
-        </button>
-      ) : null}
+      <button
+        type="button"
+        onClick={onReload}
+        className="mt-3 inline-flex items-center gap-2 text-xs text-muted hover:text-forest"
+      >
+        <RefreshCw size={12} />
+        Refresh now
+      </button>
     </section>
   );
 }

@@ -1,4 +1,3 @@
-import { DEMO_ALERTS } from "../data/alerts";
 import { categorizeEvent, inferCountyIds, severityToLevel } from "../lib/nwsZones";
 
 export const NWS_ALERTS_ENDPOINT = "https://api.weather.gov/alerts/active?area=HI";
@@ -68,11 +67,3 @@ export async function fetchLiveHawaiiAlerts() {
   throw lastError || new Error("NWS request failed");
 }
 
-/** Planning-exercise feed only. Never mix into the live NWS panel as verified alerts. */
-export async function fetchDemoAlerts() {
-  return {
-    source: "exercise",
-    fetchedAt: new Date().toISOString(),
-    alerts: DEMO_ALERTS,
-  };
-}
