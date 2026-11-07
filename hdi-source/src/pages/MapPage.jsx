@@ -119,18 +119,29 @@ export default function MapPage() {
             countyId={countyId}
             selectedId={selectedId}
             onSelect={handleSelect}
+            mode={mode}
             alertFeatures={mode === "live" ? alertFeatures : []}
-            zoneNote={mode === "live" ? zoneNote : "Planning overlay: community markers use demonstration classifications."}
+            zoneNote={
+              mode === "live"
+                ? zoneNote
+                : "Planning overlay: colored markers are demonstration classifications, not live warnings."
+            }
           />
-          <div className="pointer-events-none absolute bottom-3 right-3 z-[1000] max-w-sm">
-            <div className="pointer-events-auto">
-              <Legend compact />
+          {mode === "planning" ? (
+            <div className="pointer-events-none absolute bottom-3 right-3 z-[1000] max-w-sm">
+              <div className="pointer-events-auto">
+                <Legend compact />
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
         <div className="flex min-h-0 flex-col gap-4 xl:h-[560px]">
           <div className="max-h-[240px] overflow-y-auto xl:max-h-[46%]">
-            <CommunityPanel community={selected} onClose={() => update({ community: null })} />
+            <CommunityPanel
+              community={selected}
+              mode={mode}
+              onClose={() => update({ community: null })}
+            />
           </div>
           <div className="min-h-0 flex-1 overflow-hidden">
             <LiveAlertsPanel

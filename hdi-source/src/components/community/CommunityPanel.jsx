@@ -11,14 +11,14 @@ import { getLevel } from "../../data/classification";
 import { getCounty } from "../../data/counties";
 import { formatTimestamp } from "../../lib/format";
 
-export default function CommunityPanel({ community, onClose }) {
+export default function CommunityPanel({ community, onClose, mode = "live" }) {
   if (!community) {
     return (
       <section className="rounded-3xl bg-white p-6 shadow-sm">
         <h2 className="text-lg font-semibold">Community details</h2>
         <p className="mt-2 text-sm text-muted">
-          Click a town marker to view provisional classification, incident notes,
-          and a path to resource assessment.
+          Click a town marker for location details. Official weather products are in
+          Live NWS alerts. Demonstration classifications appear only in Planning scenario.
         </p>
       </section>
     );
@@ -44,45 +44,61 @@ export default function CommunityPanel({ community, onClose }) {
         ) : null}
       </div>
 
-      <div
-        className="mt-4 rounded-2xl px-4 py-3"
-        style={{ background: level.bg, color: level.text }}
-      >
-        <p className="flex items-center gap-2 text-sm font-semibold">
-          <span
-            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-white"
-            style={{ background: level.color }}
-          >
-            {level.id === "unknown" ? "?" : level.id}
-          </span>
-          {level.fullLabel}
-        </p>
-        <p className="mt-1 text-xs">
-          Provisional prototype classification — not an official warning.
-        </p>
-      </div>
+      {mode === "live" ? (
+        <div className="mt-4 rounded-2xl bg-forest-soft px-4 py-3 text-sm text-forest">
+          <p className="font-semibold">Live conditions</p>
+          <p className="mt-1 text-xs leading-5">
+            Official weather products are in the Live NWS alerts list. Town markers
+            are locations only. A colored Level score is a planning overlay — switch
+            to Planning scenario to see demonstration classifications. Marker color
+            does not mean an emergency is happening in {community.name}.
+          </p>
+        </div>
+      ) : (
+        <div
+          className="mt-4 rounded-2xl px-4 py-3"
+          style={{ background: level.bg, color: level.text }}
+        >
+          <p className="flex items-center gap-2 text-sm font-semibold">
+            <span
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{ background: level.color }}
+            >
+              {level.id === "unknown" ? "?" : level.id}
+            </span>
+            {level.fullLabel}
+          </p>
+          <p className="mt-1 text-xs">
+            Demonstration planning classification — not an official warning.
+          </p>
+        </div>
+      )}
 
       <div className="mt-4 space-y-3 text-sm">
-        <p className="flex items-center gap-2 font-medium">
-          <Flame size={16} className="text-orange-600" />
-          {community.disasterType}
-        </p>
-        <p>
-          <span className="font-semibold">Incident description. </span>
-          {community.incidentDescription}
-        </p>
-        <p>
-          <span className="font-semibold">Affected geographic area. </span>
-          {community.affectedArea}
-        </p>
-        <div>
-          <p className="font-semibold">Potential impacts on residents</p>
-          <ul className="mt-1 list-disc space-y-1 pl-5 text-muted">
-            {community.potentialImpacts.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </div>
+        {mode === "planning" ? (
+          <>
+            <p className="flex items-center gap-2 font-medium">
+              <Flame size={16} className="text-orange-600" />
+              {community.disasterType}
+            </p>
+            <p>
+              <span className="font-semibold">Incident description. </span>
+              {community.incidentDescription}
+            </p>
+            <p>
+              <span className="font-semibold">Affected geographic area. </span>
+              {community.affectedArea}
+            </p>
+            <div>
+              <p className="font-semibold">Potential impacts on residents</p>
+              <ul className="mt-1 list-disc space-y-1 pl-5 text-muted">
+                {community.potentialImpacts.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </>
+        ) : null}
         <div>
           <p className="font-semibold">Official source links</p>
           <ul className="mt-1 space-y-1">

@@ -138,6 +138,7 @@ export default function MapView({
   onSelect,
   alertFeatures = [],
   zoneNote,
+  mode = "live",
 }) {
   const communities = useMemo(() => communitiesByCounty(countyId), [countyId]);
   const county = getCounty(countyId);
@@ -205,6 +206,7 @@ export default function MapView({
           {communities.map((community) => {
             const level = getLevel(community.provisionalLevel);
             const selected = community.id === selectedId;
+            const fillColor = mode === "planning" ? level.color : "#1f4d3a";
             return (
               <CircleMarker
                 key={community.id}
@@ -213,7 +215,7 @@ export default function MapView({
                 pathOptions={{
                   color: "#fff",
                   weight: selected ? 3 : 2,
-                  fillColor: level.color,
+                  fillColor,
                   fillOpacity: 0.95,
                 }}
                 eventHandlers={{
