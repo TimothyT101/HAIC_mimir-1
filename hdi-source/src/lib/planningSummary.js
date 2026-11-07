@@ -1,4 +1,4 @@
-import { getCountyAcs } from "../data/acsIndicators";
+import { getCountyAcs, getPlaceAcs } from "../data/acsIndicators";
 import { getCounty } from "../data/counties";
 import { sheltersForCounty } from "../data/shelters";
 import { DISASTER_TYPES } from "./resourceCalculator";
@@ -12,18 +12,20 @@ export function buildPlanningSummary({ community, assessment }) {
   const designated = sheltersForCounty(community.countyId);
   const openConfirmed = designated.filter((item) => item.openConfirmed).length;
 
+  const place = getPlaceAcs(community.id);
   const vulnerabilityBits = [];
-  if (acs) {
+  if (place) {
     vulnerabilityBits.push(
-      `${acs.name} ACS/QuickFacts indicators include ${acs.olderAdultsPct}% of residents age 65+ and ${acs.disabilityUnder65Pct}% of people under 65 with a disability`
+      `${place.censusName} ACS 2023 5-year estimates include population ${place.population}, ${place.olderAdultsPct}% age 65+, ${place.disabilityPct}% with a disability, and ${place.noVehiclePct}% of occupied housing units with no vehicle`
     );
+  } else {
     vulnerabilityBits.push(
-      `${acs.languageOtherThanEnglishPct}% of people age 5+ speak a language other than English at home`
+      `${community.name} has no matching Census place table in this prototype, so town-level ACS demand is not estimated`
     );
   }
-  if (community.vulnerability?.noVehiclePct != null) {
+  if (acs) {
     vulnerabilityBits.push(
-      `the selected community file lists ${community.vulnerability.noVehiclePct}% of households without a vehicle as a demonstration planning proxy`
+      `County context: ${acs.name} is ${acs.olderAdultsPct}% age 65+ and ${acs.disabilityPct}% with a disability`
     );
   }
 

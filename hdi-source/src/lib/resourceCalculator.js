@@ -3,6 +3,7 @@
  * All rates are documented planning assumptions for the HAIC prototype.
  * Resource Shortfall = max(0, Estimated Demand − Available Capacity)
  */
+import { getPlaceAcs } from "../data/acsIndicators";
 
 export const DISASTER_TYPES = [
   { id: "hurricane", label: "Hurricane" },
@@ -69,9 +70,11 @@ export function shortfall(demand, capacity) {
 export function calculateResources({ community, disasterTypeId }) {
   const mappedId = disasterTypeId === "coastal-flood" ? "tsunami" : disasterTypeId;
   const rates = PLANNING_RATES[mappedId] ?? PLANNING_RATES.flood;
-  const population = community.population ?? 0;
-  const noVehiclePct = (community.vulnerability?.noVehiclePct ?? 0) / 100;
-  const lepPct = (community.vulnerability?.lepPct ?? 0) / 100;
+  const place = getPlaceAcs(community.id);
+  const hasPlace = place?.population != null;
+  const population = hasPlace ? place.population : 0;
+  const noVehiclePct = hasPlace ? (place.noVehiclePct ?? 0) / 100 : 0;
+  const lepPct = hasPlace ? (place.limitedEnglishPct ?? 0) / 100 : 0;
   const estimatedShelterNeed = Math.round(population * rates.shelterRate);
   const availableCapacity = community.shelterCapacity ?? 0;
   const capacityVerified = false;
@@ -93,11 +96,13 @@ export function calculateResources({ community, disasterTypeId }) {
     capacityVerified,
     inputs: {
       population,
+      populationSource: hasPlace ? place.censusName : null,
       shelterRate: rates.shelterRate,
       availableCapacity,
       noVehiclePct,
       lepPct,
       days: rates.days,
+      hasPlaceAcs: hasPlace,
     },
     estimatedShelterNeed,
     availableCapacity,
@@ -108,14 +113,16 @@ export function calculateResources({ community, disasterTypeId }) {
     waterGallons,
     meals,
     formulas: {
-      estimatedShelterNeed: "round(community population × scenario shelterRate)",
+      estimatedShelterNeed: "round(ACS place population × scenario shelterRate)",
       shelterShortfall: "max(0, estimatedShelterNeed − sampleCapacity) — sample capacity is not verified open beds",
-      transportAssist: "round(estimatedShelterNeed × max(transportAssistRate, community no-vehicle share))",
-      electricityBackup: "round(population × scenario backup-power rate)",
-      communicationSupport: "round(estimatedShelterNeed × max(communicationSupportRate, LEP share))",
+      transportAssist: "round(estimatedShelterNeed × max(transportAssistRate, ACS no-vehicle share))",
+      electricityBackup: "round(ACS place population × scenario backup-power rate)",
+      communicationSupport: "round(estimatedShelterNeed × max(communicationSupportRate, ACS limited-English share))",
       waterGallons: "estimatedShelterNeed × 1 gallon × days",
       meals: "estimatedShelterNeed × mealsPerPersonDay × days",
     },
-    dataLabel: "Scenario calculation — not an operational resource request",
+    dataLabel: hasPlace
+      ? `Population, no-vehicle, and limited-English shares from ${place.censusName} (${place.vintage}). Shelter capacity remains a sample planning figure.`
+      : `No ACS place table for ${community.name}; demand is not estimated from sample community numbers.`,
   };
 }

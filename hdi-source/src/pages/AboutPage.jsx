@@ -25,8 +25,9 @@ export default function AboutPage() {
             Refresh every 3 minutes. Follow official products if they disagree with this site.
           </li>
           <li>
-            County population and CMIST proxy indicators: {ACS_SOURCE.name}, retrieved{" "}
-            {ACS_SOURCE.retrievedAt}. Includes households with no vehicle (DP04_0058PE).
+            County and Census place/CDP population and CMIST proxy indicators:{" "}
+            {ACS_SOURCE.name}, retrieved {ACS_SOURCE.retrievedAt}. Includes households
+            with no vehicle (DP04_0058PE). Refresh: <code>node scripts/fetch-acs.mjs</code>.
             API: {ACS_SOURCE.url}
           </li>
           <li>
@@ -47,10 +48,10 @@ export default function AboutPage() {
             geometry. Flood maps: FEMA MSC.
           </li>
           <li>
-            Census ACS place and county tables (including households with no
-            vehicle, DP04_0058PE) require an activated Census Data API key. The
-            key stays in .env.local and is never shipped to the browser. Run
-            <code>node scripts/fetch-acs.mjs</code> after activating the key.
+            Census ACS place and county tables require an activated Census Data
+            API key in <code>.env.local</code> only. The key is never shipped to
+            the browser. Run <code>node scripts/fetch-acs.mjs</code> to refresh
+            <code>src/data/acs2023.json</code>.
           </li>
         </ul>
       </Section>

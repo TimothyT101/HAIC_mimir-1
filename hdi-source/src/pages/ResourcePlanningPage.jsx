@@ -9,7 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import DisclaimerBanner from "../components/DisclaimerBanner";
-import { ACS_SOURCE, getCountyAcs } from "../data/acsIndicators";
+import { ACS_SOURCE, getCountyAcs, getPlaceAcs } from "../data/acsIndicators";
 import { COMMUNITIES, communitiesByCounty, getCommunity } from "../data/communities";
 import { COUNTIES } from "../data/counties";
 import { sheltersForCounty } from "../data/shelters";
@@ -38,6 +38,7 @@ export default function ResourcePlanningPage() {
   const countyCommunities = communitiesByCounty(countyId);
   const community = getCommunity(communityId) ?? countyCommunities[0];
   const acs = getCountyAcs(countyId);
+  const placeAcs = getPlaceAcs(community?.id);
   const shelters = sheltersForCounty(countyId);
 
   const assessment = useMemo(() => {
@@ -80,9 +81,10 @@ export default function ResourcePlanningPage() {
       <div>
         <h1 className="text-3xl font-bold text-forest">Resource Planning</h1>
         <p className="mt-2 max-w-3xl text-sm text-muted">
-          County, community, and hazard scenario for ESF-6 planning. County
-          indicators are Census QuickFacts/ACS aggregates. Shelter open status is
-          not confirmed. Formulas are shown with the results.
+          County, community, and hazard scenario for ESF-6 planning. Town
+          population, vehicles, disability, and language shares are Census ACS
+          place/CDP tables. Shelter open status is not confirmed. Formulas are
+          shown with the results.
         </p>
       </div>
       <DisclaimerBanner compact />
@@ -140,26 +142,41 @@ export default function ResourcePlanningPage() {
 
       {acs ? (
         <section id="vulnerability" className="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-semibold">Population vulnerability (county ACS)</h2>
+          <h2 className="text-xl font-semibold">Population vulnerability (ACS)</h2>
           <p className="mt-1 text-sm text-muted">
-            {acs.name}, {acs.geography} scale. Source: {ACS_SOURCE.name}, retrieved{" "}
+            {placeAcs
+              ? `${community?.name} uses ${placeAcs.censusName}.`
+              : `${community?.name} has no matching Census place table — town ACS is Unknown.`}{" "}
+            County comparison is {acs.name}. Source: {ACS_SOURCE.name}, retrieved{" "}
             {ACS_SOURCE.retrievedAt}. These aggregates do not identify individuals.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Stat label="Population (ACS 2023 5-year)" value={formatNumber(acs.population)} />
-            <Stat label="Age 65+" value={formatPercent(acs.olderAdultsPct)} />
-            <Stat label="With a disability" value={formatPercent(acs.disabilityPct ?? acs.disabilityUnder65Pct)} />
-            <Stat label="Language other than English at home" value={formatPercent(acs.languageOtherThanEnglishPct)} />
-            <Stat label="Speak English less than very well" value={formatPercent(acs.limitedEnglishPct)} />
-            <Stat label="Poverty" value={formatPercent(acs.povertyPct)} />
             <Stat
-              label="Households without vehicles"
-              value={acs.noVehiclePct == null ? "Not published in this extract" : formatPercent(acs.noVehiclePct)}
+              label={`${community?.name} population`}
+              value={placeAcs ? formatNumber(placeAcs.population) : "Unknown"}
             />
             <Stat
-              label={`${community?.name} no-vehicle proxy`}
-              value={v?.noVehiclePct == null ? "Unknown" : `${formatPercent(v.noVehiclePct)} (demonstration)`}
+              label={`${community?.name} age 65+`}
+              value={placeAcs ? formatPercent(placeAcs.olderAdultsPct) : "Unknown"}
             />
+            <Stat
+              label={`${community?.name} with a disability`}
+              value={placeAcs ? formatPercent(placeAcs.disabilityPct) : "Unknown"}
+            />
+            <Stat
+              label={`${community?.name} no vehicle`}
+              value={placeAcs?.noVehiclePct == null ? "Unknown" : formatPercent(placeAcs.noVehiclePct)}
+            />
+            <Stat
+              label={`${community?.name} limited English`}
+              value={placeAcs?.limitedEnglishPct == null ? "Unknown" : formatPercent(placeAcs.limitedEnglishPct)}
+            />
+            <Stat
+              label={`${community?.name} poverty`}
+              value={placeAcs?.povertyPct == null ? "Unknown" : formatPercent(placeAcs.povertyPct)}
+            />
+            <Stat label={`${acs.name} population`} value={formatNumber(acs.population)} />
+            <Stat label={`${acs.name} no vehicle`} value={formatPercent(acs.noVehiclePct)} />
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
             {CMIST.map((item) => (
@@ -186,7 +203,11 @@ export default function ResourcePlanningPage() {
           </p>
           <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {[
-              ["Potential population used", assessment.inputs.population, "Selected community population field"],
+              [
+                "ACS place population used",
+                assessment.inputs.hasPlaceAcs ? assessment.inputs.population : "Unknown",
+                assessment.inputs.populationSource || "No Census place match",
+              ],
               ["Accessible / congregate shelter need", assessment.estimatedShelterNeed, assessment.formulas.estimatedShelterNeed],
               ["Sample capacity (not confirmed open)", assessment.availableCapacity, assessment.formulas.shelterShortfall],
               ["Scenario shelter gap", assessment.shelterShortfall, assessment.formulas.shelterShortfall],
@@ -197,7 +218,9 @@ export default function ResourcePlanningPage() {
             ].map(([label, value, formula]) => (
               <article key={label} className="rounded-2xl border border-slate-100 p-4">
                 <p className="text-sm text-muted">{label}</p>
-                <p className="mt-2 text-3xl font-bold text-forest">{formatNumber(value)}</p>
+                <p className="mt-2 text-3xl font-bold text-forest">
+                  {typeof value === "number" ? formatNumber(value) : value}
+                </p>
                 <p className="mt-2 font-mono text-[11px] leading-4 text-slate-500">{formula}</p>
               </article>
             ))}
