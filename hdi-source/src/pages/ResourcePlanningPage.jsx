@@ -15,11 +15,16 @@ import { cmistFromAcs } from "../lib/cmistFromAcs";
 import { COMMUNITIES, communitiesByCounty, getCommunity } from "../data/communities";
 import { COUNTIES } from "../data/counties";
 import { matchPartners } from "../data/partners";
+import {
+  estimateExposedShelterNeed,
+  HAZARD_EXPOSURE_SOURCE,
+} from "../data/hazardTractExposure";
 import { SHELTER_DATASET, sheltersForCounty } from "../data/shelters";
 import { formatNumber, formatPercent } from "../lib/format";
 import { buildPlanningSummary } from "../lib/planningSummary";
 import { buildPlanningReport, downloadReport } from "../lib/reportGenerator";
 import { calculateResources, DISASTER_TYPES } from "../lib/resourceCalculator";
+import { buildScenarioCompare } from "../lib/scenarioCompare";
 import { maybeAiSummary } from "../services/aiSummary";
 
 const CMIST = [
@@ -50,6 +55,16 @@ export default function ResourcePlanningPage() {
     if (!community) return null;
     return calculateResources({ community, disasterTypeId });
   }, [community, disasterTypeId]);
+
+  const scenarioCompare = useMemo(() => {
+    if (!community) return null;
+    return buildScenarioCompare({ community, disasterTypeId });
+  }, [community, disasterTypeId]);
+
+  const hazardExposure = useMemo(
+    () => estimateExposedShelterNeed(countyId, disasterTypeId),
+    [countyId, disasterTypeId]
+  );
 
   const summary = useMemo(() => {
     if (!community || !assessment) return null;
@@ -147,6 +162,137 @@ export default function ResourcePlanningPage() {
           <p className="mt-3 text-sm text-slate-700">{assessment.rates.exposure}</p>
         ) : null}
       </section>
+
+      {scenarioCompare ? (
+        <section
+          id="what-changed"
+          className="scroll-mt-24 rounded-3xl border border-amber-200 bg-amber-50/70 p-5 shadow-sm"
+        >
+          <h2 className="text-xl font-semibold text-amber-950">
+            What changed for {scenarioCompare.currentLabel}
+          </h2>
+          <p className="mt-1 text-sm text-amber-900/90">
+            Switching the disaster scenario only changes MODEL rates for{" "}
+            {scenarioCompare.communityName}. {scenarioCompare.unchangedNote}
+          </p>
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-amber-950">
+            {scenarioCompare.bullets.map((item) => (
+              <li key={item.label}>
+                <span className="font-semibold">{item.label}. </span>
+                {item.detail}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-4 overflow-x-auto rounded-2xl bg-white/80">
+            <table className="min-w-full text-left text-xs">
+              <thead className="bg-amber-100/80 text-[10px] uppercase tracking-wide text-amber-900">
+                <tr>
+                  <th className="px-3 py-2">Scenario</th>
+                  <th className="px-3 py-2">Shelter rate</th>
+                  <th className="px-3 py-2">Days</th>
+                  <th className="px-3 py-2">Shelter need</th>
+                  <th className="px-3 py-2">Water (gal)</th>
+                  <th className="px-3 py-2">Meals</th>
+                  <th className="px-3 py-2">Power cue</th>
+                </tr>
+              </thead>
+              <tbody>
+                {scenarioCompare.rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className={`border-t border-amber-100 ${
+                      row.isCurrent ? "bg-amber-100/60 font-semibold" : ""
+                    }`}
+                  >
+                    <td className="px-3 py-2">
+                      {row.label}
+                      {row.isCurrent ? " ← current" : ""}
+                    </td>
+                    <td className="px-3 py-2">{row.shelterRatePct}%</td>
+                    <td className="px-3 py-2">{row.days}</td>
+                    <td className="px-3 py-2">{formatNumber(row.estimatedShelterNeed)}</td>
+                    <td className="px-3 py-2">{formatNumber(row.waterGallons)}</td>
+                    <td className="px-3 py-2">{formatNumber(row.meals)}</td>
+                    <td className="px-3 py-2">{row.outageIntensity}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
+
+      {hazardExposure?.selected ? (
+        <section
+          id="hazard-tract-demand"
+          className="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm"
+        >
+          <h2 className="text-xl font-semibold">
+            Hazard ∩ tract AFN demand ({hazardExposure.hazardLabel})
+          </h2>
+          <p className="mt-1 text-sm text-muted">
+            County-scale cue: census tracts whose polygons intersect public{" "}
+            {hazardExposure.hazardKey === "hurricane"
+              ? "countywide planning extent (hurricane)"
+              : `${hazardExposure.hazardLabel.toLowerCase()} hazard polygons`}
+            . Separate from the selected-community calculator above.{" "}
+            {HAZARD_EXPOSURE_SOURCE.note}
+          </p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <Stat
+              label="Exposed tracts"
+              value={`${formatNumber(hazardExposure.selected.tractCount)} / ${formatNumber(
+                hazardExposure.allTracts.tractCount
+              )}`}
+            />
+            <Stat
+              label="Population in exposed tracts"
+              value={formatNumber(hazardExposure.selected.population)}
+            />
+            <Stat
+              label={`Shelter need @ ${Math.round(hazardExposure.shelterRate * 100)}%`}
+              value={formatNumber(hazardExposure.estimatedShelterNeedFromExposedTracts)}
+            />
+            <Stat
+              label="Est. disability (SVI × pop)"
+              value={formatNumber(hazardExposure.selected.estDisability ?? 0)}
+            />
+            <Stat
+              label="Est. limited English"
+              value={formatNumber(hazardExposure.selected.estLimitedEnglish ?? 0)}
+            />
+            <Stat
+              label="Est. age 65+"
+              value={formatNumber(hazardExposure.selected.estAge65Plus ?? 0)}
+            />
+            <Stat
+              label="No-vehicle proxy"
+              value={formatNumber(hazardExposure.selected.estNoVehicleHhProxy ?? 0)}
+            />
+            <Stat
+              label="Pop-weighted disability %"
+              value={
+                hazardExposure.selected.disabilityPct == null
+                  ? "—"
+                  : formatPercent(hazardExposure.selected.disabilityPct)
+              }
+            />
+          </div>
+          <p className="mt-3 text-xs text-muted">
+            Method: {HAZARD_EXPOSURE_SOURCE.method} As of {HAZARD_EXPOSURE_SOURCE.asOf}. Rate
+            source: {hazardExposure.shelterRateSource}.
+          </p>
+          {hazardExposure.hazardKey === "wildfire" ? (
+            <p className="mt-2 text-xs text-amber-800">
+              Fire Risk Areas cover most inhabited tracts statewide — treat as a broad WUI
+              planning screen, not a parcel burn footprint.
+            </p>
+          ) : null}
+          {hazardExposure.selected.note ? (
+            <p className="mt-2 text-xs text-muted">{hazardExposure.selected.note}</p>
+          ) : null}
+        </section>
+      ) : null}
 
       {acs ? (
         <section id="vulnerability" className="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm">

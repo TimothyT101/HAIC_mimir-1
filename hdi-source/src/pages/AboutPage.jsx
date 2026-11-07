@@ -124,6 +124,21 @@ export default function AboutPage() {
         </ul>
       </Section>
 
+      <Section title="Scenario differences and hazard ∩ tract demand">
+        <p>
+          On Resource Planning, the disaster-scenario dropdown only changes MODEL
+          rates (shelter %, days, power intensity) for the selected community. ACS
+          vulnerability cards stay the same. A “What changed” strip compares the
+          current scenario to hurricane on the same town.
+        </p>
+        <p>
+          A separate county panel estimates AFN demand for census tracts that
+          intersect public hazard polygons (tsunami evacuation zones, DFIRM SFHA,
+          fire risk areas). Hurricane is treated as countywide. These are planning
+          proxies from tract polygons — not parcel risk and not a registry of people.
+        </p>
+      </Section>
+
       <Section title="Resource formulas">
         <p>
           Planning rates are documented in code (<code>planningFactors.js</code>).
