@@ -14,7 +14,7 @@ const FEATURES = [
   {
     icon: Shield,
     title: "Live Disaster Information",
-    body: "View verified weather, seismic and emergency alerts across Hawaiʻi.",
+    body: "View official National Weather Service alerts across Hawaiʻi.",
     to: "/map",
   },
   {

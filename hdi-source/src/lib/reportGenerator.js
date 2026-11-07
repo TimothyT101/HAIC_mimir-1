@@ -14,7 +14,7 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
     subtitle: "Hawaiʻi Disaster Intelligence prototype (HAIC 2026)",
     generatedAt: generatedAt.toISOString(),
     disclaimer:
-      "This report is a structured planning template filled with demonstration data. It is not AI-generated and is not an official emergency order, evacuation instruction, or resource request.",
+      "This report is a deterministic planning template filled with calculator outputs and public county indicators. It is not AI-generated and is not an official emergency order, evacuation instruction, or resource request.",
     community: {
       name: community.name,
       county: county.name,
@@ -28,6 +28,7 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
       { item: "Potential shelter shortage", value: assessment.shelterShortfall },
       { item: "Transportation assistance estimates", value: assessment.transportAssist },
       { item: "Backup electricity considerations", value: assessment.electricityBackup },
+      { item: "Language / communication support contacts", value: assessment.communicationSupport },
       { item: "Water (gallons, planning horizon)", value: assessment.waterGallons },
       { item: "Meals (planning horizon)", value: assessment.meals },
     ],
@@ -81,6 +82,8 @@ export function reportToText(report) {
     `Generated: ${report.generatedAt}`,
     "",
     report.disclaimer,
+    "",
+    report.summary ? `Planning summary\n${report.summary}` : "",
     "",
     `Community: ${report.community.name}`,
     `County / island: ${report.community.county} / ${report.community.island}`,

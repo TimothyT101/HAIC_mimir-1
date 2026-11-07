@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import {
   CircleMarker,
+  GeoJSON,
   LayerGroup,
   LayersControl,
   MapContainer,
@@ -134,11 +135,20 @@ export default function MapView({
   countyId,
   selectedId,
   onSelect,
+  alertFeatures = [],
+  zoneNote,
 }) {
   const communities = useMemo(() => communitiesByCounty(countyId), [countyId]);
   const county = getCounty(countyId);
   const bounds = useMemo(() => fitBoundsFor(county), [county]);
   const maxBounds = useMemo(() => maxBoundsFor(county), [county]);
+  const alertCollection = useMemo(
+    () => ({
+      type: "FeatureCollection",
+      features: alertFeatures.filter((feature) => feature?.geometry),
+    }),
+    [alertFeatures]
+  );
 
   useEffect(() => {
     delete L.Icon.Default.prototype._getIconUrl;
@@ -177,6 +187,18 @@ export default function MapView({
         <CountyCamera countyId={countyId} />
         <MapButtons countyId={countyId} />
         <ScaleControl position="bottomleft" imperial />
+        {alertCollection.features.length ? (
+          <GeoJSON
+            key={alertCollection.features.map((item) => item.id).join("|")}
+            data={alertCollection}
+            style={{
+              color: "#b45309",
+              weight: 2,
+              fillColor: "#f59e0b",
+              fillOpacity: 0.22,
+            }}
+          />
+        ) : null}
         <LayerGroup>
           {communities.map((community) => {
             const level = getLevel(community.provisionalLevel);
@@ -204,9 +226,10 @@ export default function MapView({
           })}
         </LayerGroup>
       </MapContainer>
-      <div className="pointer-events-none absolute bottom-10 left-3 rounded-xl bg-slate-900/70 px-3 py-2 text-white">
+      <div className="pointer-events-none absolute bottom-10 left-3 max-w-xs rounded-xl bg-slate-900/70 px-3 py-2 text-white">
         <p className="text-sm font-semibold">{county.islandLabel}</p>
         <p className="text-xs text-white/80">{county.name}</p>
+        {zoneNote ? <p className="mt-1 text-[11px] leading-4 text-amber-100">{zoneNote}</p> : null}
       </div>
     </div>
   );

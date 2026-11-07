@@ -3,7 +3,6 @@ import {
   AlertTriangle,
   Clock,
   ExternalLink,
-  FileText,
   Flame,
   MapPin,
   X,
@@ -108,20 +107,13 @@ export default function CommunityPanel({ community, onClose }) {
         </p>
       </div>
 
-      <div className="mt-5 grid gap-2">
+      <div className="mt-5">
         <Link
           to={`/resource-planning?community=${community.id}&county=${community.countyId}`}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-forest px-4 py-3 text-sm font-semibold text-white hover:bg-forest-dark"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest px-4 py-3 text-sm font-semibold text-white hover:bg-forest-dark"
         >
           View Resource Assessment
           <AlertTriangle size={16} />
-        </Link>
-        <Link
-          to={`/resource-planning?community=${community.id}&county=${community.countyId}#coordination`}
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 px-4 py-3 text-sm font-semibold hover:bg-slate-50"
-        >
-          <FileText size={16} />
-          Generate Planning Report
         </Link>
       </div>
     </section>

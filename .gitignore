@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-ssr
+.env
+.env.local
+*.local
+.DS_Store
+hdi-source/node_modules
+hdi-source/dist
+hdi-source/.env
+hdi-source/.env.local

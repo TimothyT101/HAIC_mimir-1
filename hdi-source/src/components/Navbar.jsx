@@ -5,10 +5,9 @@ import Logo from "./Logo";
 import PrototypeBadge from "./PrototypeBadge";
 
 const LINKS = [
-  { to: "/map", label: "Map" },
+  { to: "/map", label: "Live Map" },
   { to: "/resource-planning", label: "Resource Planning" },
-  { to: "/methodology", label: "Methodology" },
-  { to: "/about", label: "About" },
+  { to: "/about", label: "About & Sources" },
 ];
 
 export default function Navbar() {
