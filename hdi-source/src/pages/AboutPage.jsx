@@ -1,6 +1,7 @@
 import DisclaimerBanner from "../components/DisclaimerBanner";
 import { ACS_SOURCE } from "../data/acsIndicators";
 import { LEVEL_LIST } from "../data/classification";
+import { AFN_TRACT_SOURCE } from "../data/afnTracts";
 import {
   PUBLIC_SOURCE_LINKS,
 } from "../data/planningFactors";
@@ -73,6 +74,17 @@ export default function AboutPage() {
           Hawaiʻi does not publish a standing open/closed shelter API. Counties announce
           openings during events. An older statewide school list on Open Data (2019) is
           not operational status.
+        </p>
+        <p>
+          <strong>Tract-level AFN mapping:</strong> Live Map can color all {436} Hawaiʻi
+          census tracts using {AFN_TRACT_SOURCE.name} ({AFN_TRACT_SOURCE.vintage}). Toggle
+          “Show tract AFN choropleth” and choose a CMIST-related metric.{" "}
+          {AFN_TRACT_SOURCE.note}{" "}
+          <SourceLink href={AFN_TRACT_SOURCE.csvUrl}>SVI CSV</SourceLink>
+          {" · "}
+          <SourceLink href={AFN_TRACT_SOURCE.boundariesUrl}>Census tract boundaries</SourceLink>
+          {" · "}
+          <SourceLink href={AFN_TRACT_SOURCE.documentationUrl}>SVI docs</SourceLink>
         </p>
       </Section>
 

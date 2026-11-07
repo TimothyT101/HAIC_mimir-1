@@ -15,6 +15,7 @@ import { Home, Minus, Plus } from "lucide-react";
 import { getLevel } from "../../data/classification";
 import { getCounty } from "../../data/counties";
 import { communitiesByCounty } from "../../data/communities";
+import AfNTracts, { AfNSwitcher } from "./AfNTracts";
 import HazardOverlays, { HazardSwitcher } from "./HazardOverlays";
 import TsunamiZones from "./TsunamiZones";
 
@@ -209,6 +210,9 @@ export default function MapView({
     flood: false,
     wildfire: false,
   });
+  // Default Off so hazards stay readable; user flips the On/Off switch for tracts.
+  const [afnEnabled, setAfnEnabled] = useState(false);
+  const [afnMetricId, setAfnMetricId] = useState("sviOverall");
 
   useEffect(() => {
     delete L.Icon.Default.prototype._getIconUrl;
@@ -247,6 +251,7 @@ export default function MapView({
         <CountyCamera countyId={countyId} />
         <MapButtons countyId={countyId} />
         <ScaleControl position="bottomleft" imperial />
+        <AfNTracts countyId={countyId} metricId={afnMetricId} enabled={afnEnabled} />
         {hazards.tsunami ? <TsunamiZones countyId={countyId} /> : null}
         <HazardOverlays countyId={countyId} hazards={hazards} />
         {alertCollection.features.length ? (
@@ -284,8 +289,15 @@ export default function MapView({
         <p className="text-xs text-white/80">{county.name}</p>
         {zoneNote ? <p className="mt-1 text-[11px] leading-4 text-amber-100">{zoneNote}</p> : null}
       </div>
-      <div className="pointer-events-auto absolute right-3 top-14 z-[1000] w-[220px] sm:w-[240px]">
-        <HazardSwitcher hazards={hazards} onChange={setHazards} />
+      <div className="pointer-events-auto absolute right-3 top-14 z-[1000] w-[220px] sm:w-[260px]">
+        <HazardSwitcher hazards={hazards} onChange={setHazards}>
+          <AfNSwitcher
+            enabled={afnEnabled}
+            metricId={afnMetricId}
+            onEnabledChange={setAfnEnabled}
+            onMetricChange={setAfnMetricId}
+          />
+        </HazardSwitcher>
       </div>
     </div>
   );
