@@ -81,21 +81,38 @@ export default function AfNTracts({ countyId, metricId, enabled }) {
 export function AfNSwitcher({ enabled, metricId, onEnabledChange, onMetricChange }) {
   return (
     <div className="mt-3 border-t border-slate-100 pt-3">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
-        Tract AFN map
-      </p>
-      <p className="mt-1 text-[11px] leading-4 text-muted">
-        Census tracts colored by Access &amp; Functional Needs proxies (SVI / ACS).
-        Aggregates only — not a list of people.
-      </p>
-      <label className="mt-2 flex cursor-pointer items-center gap-2">
-        <input
-          type="checkbox"
-          checked={enabled}
-          onChange={(event) => onEnabledChange(event.target.checked)}
-        />
-        Show tract AFN choropleth
-      </label>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+            Tract AFN map
+          </p>
+          <p className="mt-1 text-[11px] leading-4 text-muted">
+            Census tracts colored by Access &amp; Functional Needs proxies (SVI / ACS).
+            Aggregates only — not a list of people.
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={enabled}
+          aria-label="Tract AFN map on or off"
+          onClick={() => onEnabledChange(!enabled)}
+          className={`relative inline-flex h-7 w-[64px] shrink-0 items-center rounded-full border text-[10px] font-bold uppercase tracking-wide transition ${
+            enabled
+              ? "border-forest bg-forest text-white"
+              : "border-slate-300 bg-slate-100 text-slate-500"
+          }`}
+        >
+          <span
+            className={`absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition ${
+              enabled ? "right-0.5" : "left-0.5"
+            }`}
+          />
+          <span className={`w-full px-1.5 ${enabled ? "pr-6 text-left" : "pl-6 text-right"}`}>
+            {enabled ? "On" : "Off"}
+          </span>
+        </button>
+      </div>
       {enabled ? (
         <label className="mt-2 block text-[11px] text-ink">
           <span className="mb-1 block text-muted">Metric</span>
@@ -128,7 +145,11 @@ export function AfNSwitcher({ enabled, metricId, onEnabledChange, onMetricChange
             <span className="h-3 w-3 rounded-sm bg-[#cbd5e1]" /> Unknown / missing
           </li>
         </ul>
-      ) : null}
+      ) : (
+        <p className="mt-2 text-[11px] leading-4 text-muted">
+          Switch <strong>On</strong> to color census tracts by AFN proxies.
+        </p>
+      )}
     </div>
   );
 }

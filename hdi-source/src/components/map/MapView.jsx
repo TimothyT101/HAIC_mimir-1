@@ -210,7 +210,8 @@ export default function MapView({
     flood: false,
     wildfire: false,
   });
-  const [afnEnabled, setAfnEnabled] = useState(true);
+  // Default Off so hazards stay readable; user flips the On/Off switch for tracts.
+  const [afnEnabled, setAfnEnabled] = useState(false);
   const [afnMetricId, setAfnMetricId] = useState("sviOverall");
 
   useEffect(() => {
