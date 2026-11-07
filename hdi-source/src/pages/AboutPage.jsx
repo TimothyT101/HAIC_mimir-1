@@ -26,7 +26,8 @@ export default function AboutPage() {
           </li>
           <li>
             County population and CMIST proxy indicators: {ACS_SOURCE.name}, retrieved{" "}
-            {ACS_SOURCE.retrievedAt}. {ACS_SOURCE.url}
+            {ACS_SOURCE.retrievedAt}. Includes households with no vehicle (DP04_0058PE).
+            API: {ACS_SOURCE.url}
           </li>
           <li>
             Map tiles: OpenStreetMap and Esri World Imagery. Community coordinates are
@@ -40,10 +41,10 @@ export default function AboutPage() {
             opendata.hawaii.gov (last updated 2019) and is not operational status.
           </li>
           <li>
-            Hazard GIS: Hawaiʻi Statewide GIS tsunami evacuation zones at
-            geodata.hawaii.gov / opendata.hawaii.gov (GeoJSON, shapefile). Flood
-            maps: FEMA MSC. These layers are not loaded in this prototype until
-            a GeoJSON extract is added.
+            Hazard GIS: Hawaiʻi Statewide GIS tsunami evacuation polygons are
+            drawn on the Live Map from geodata.hawaii.gov (Hazards layer 11).
+            The PDF you may see with that dataset is metadata, not the map
+            geometry. Flood maps: FEMA MSC.
           </li>
           <li>
             Census ACS place and county tables (including households with no

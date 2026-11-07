@@ -146,15 +146,15 @@ export default function ResourcePlanningPage() {
             {ACS_SOURCE.retrievedAt}. These aggregates do not identify individuals.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Stat label="Population (2025 estimate)" value={formatNumber(acs.population)} />
-            <Stat label="Households (ACS 2020–2024)" value={formatNumber(acs.households)} />
-            <Stat label="Age 65+ " value={formatPercent(acs.olderAdultsPct)} />
-            <Stat label="Disability, under 65" value={formatPercent(acs.disabilityUnder65Pct)} />
+            <Stat label="Population (ACS 2023 5-year)" value={formatNumber(acs.population)} />
+            <Stat label="Age 65+" value={formatPercent(acs.olderAdultsPct)} />
+            <Stat label="With a disability" value={formatPercent(acs.disabilityPct ?? acs.disabilityUnder65Pct)} />
             <Stat label="Language other than English at home" value={formatPercent(acs.languageOtherThanEnglishPct)} />
+            <Stat label="Speak English less than very well" value={formatPercent(acs.limitedEnglishPct)} />
             <Stat label="Poverty" value={formatPercent(acs.povertyPct)} />
             <Stat
               label="Households without vehicles"
-              value={acs.noVehiclePct == null ? "Not in QuickFacts" : formatPercent(acs.noVehiclePct)}
+              value={acs.noVehiclePct == null ? "Not published in this extract" : formatPercent(acs.noVehiclePct)}
             />
             <Stat
               label={`${community?.name} no-vehicle proxy`}

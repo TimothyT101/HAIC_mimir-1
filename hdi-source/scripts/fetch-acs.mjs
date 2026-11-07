@@ -12,7 +12,7 @@ if (!KEY) {
 const url =
   "https://api.census.gov/data/2023/acs/acs5/profile?" +
   new URLSearchParams({
-    get: "NAME,DP05_0001E,DP05_0024PE,DP02_0072PE,DP04_0058PE,DP02_0113PE,DP03_0119PE",
+    get: "NAME,DP05_0001E,DP05_0024PE,DP02_0072PE,DP04_0058PE,DP02_0114PE,DP02_0115PE,DP03_0119PE",
     for: "county:*",
     in: "state:15",
     key: KEY,
@@ -28,4 +28,4 @@ if (!response.ok || text.includes("Invalid Key") || text.startsWith("<")) {
 
 const rows = JSON.parse(text);
 console.log(JSON.stringify(rows, null, 2));
-console.log("\nFields: NAME, population, 65+ %, disability under 65 %, no-vehicle %, language other than English %, poverty %");
+console.log("\nFields: NAME, population, 65+ %, disability %, no-vehicle %, language other than English %, limited English %, poverty %");

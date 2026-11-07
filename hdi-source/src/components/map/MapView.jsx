@@ -15,6 +15,7 @@ import { Home, Minus, Plus } from "lucide-react";
 import { getLevel } from "../../data/classification";
 import { getCounty } from "../../data/counties";
 import { communitiesByCounty } from "../../data/communities";
+import TsunamiZones from "./TsunamiZones";
 
 function fitBoundsFor(county) {
   return L.latLngBounds(county.bounds);
@@ -187,6 +188,7 @@ export default function MapView({
         <CountyCamera countyId={countyId} />
         <MapButtons countyId={countyId} />
         <ScaleControl position="bottomleft" imperial />
+        <TsunamiZones countyId={countyId} />
         {alertCollection.features.length ? (
           <GeoJSON
             key={alertCollection.features.map((item) => item.id).join("|")}
