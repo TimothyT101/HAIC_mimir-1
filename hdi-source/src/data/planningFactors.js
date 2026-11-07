@@ -229,7 +229,8 @@ export const PUBLIC_SOURCE_LINKS = [
     id: "hawaii-gis",
     label: "Hawaiʻi Statewide GIS — Hazards MapServer",
     url: HAWAII_GIS_HAZARDS_URL,
-    usedFor: "Tsunami (layer 11), flood DFIRM, wildfire risk (layer 7) overlays",
+    usedFor:
+      "Map overlays + hazard∩tract AFN exposure (tsunami layer 11 / local GeoJSON, DFIRM SFHA, fire risk layer 7)",
   },
   {
     id: "honolulu-dem",
