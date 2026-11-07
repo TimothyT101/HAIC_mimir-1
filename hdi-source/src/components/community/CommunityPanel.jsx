@@ -53,12 +53,12 @@ export default function CommunityPanel({ community, onClose, mode = "live", coun
                 style={{ background: countyStatus.color }}
               />
             ) : null}
-            {county.name}: {countyStatus?.label || "Live conditions"}
+            {community.name}
           </p>
           <p className="mt-1 text-xs leading-5">
-            {countyStatus?.detail} Town dots are locations only — NWS products are
-            county or zone scale, not a score for {community.name}. Switch to
-            Planning scenario for the demonstration 1–5 overlay.
+            {community.island}, {county.name}. County NWS status:{" "}
+            {countyStatus?.label || "—"}. {countyStatus?.detail} This town is a
+            map location, not its own live emergency score.
           </p>
         </div>
       ) : (

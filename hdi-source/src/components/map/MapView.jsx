@@ -9,7 +9,6 @@ import {
   TileLayer,
   Tooltip,
   useMap,
-  useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
 import { Home, Minus, Plus } from "lucide-react";
@@ -100,12 +99,27 @@ function CountyCamera({ countyId }) {
   return null;
 }
 
-function MapBackgroundClick({ onClear }) {
-  useMapEvents({
-    click() {
-      onClear?.();
-    },
-  });
+function SelectedTownLabel({ community }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!community) return undefined;
+    const tooltip = L.tooltip({
+      permanent: true,
+      direction: "top",
+      offset: [0, -12],
+      opacity: 1,
+      className: "town-selected-label",
+    })
+      .setLatLng([community.lat, community.lng])
+      .setContent(`<strong>${community.name}</strong>`)
+      .addTo(map);
+
+    return () => {
+      map.removeLayer(tooltip);
+    };
+  }, [community, map]);
+
   return null;
 }
 
@@ -113,29 +127,23 @@ function TownMarker({ community, selected, fillColor, onSelect }) {
   return (
     <CircleMarker
       center={[community.lat, community.lng]}
-      radius={selected ? 12 : 9}
+      radius={selected ? 13 : 10}
       pane="markerPane"
       pathOptions={{
         color: "#fff",
         weight: selected ? 3 : 2,
         fillColor,
         fillOpacity: 0.95,
+        bubblingMouseEvents: false,
       }}
       eventHandlers={{
         click: (event) => {
-          L.DomEvent.stopPropagation(event.originalEvent);
-          if (selected) onSelect(null);
-          else onSelect(community.id);
+          L.DomEvent.stop(event);
+          onSelect(community.id);
         },
       }}
     >
-      <Tooltip
-        direction="top"
-        offset={[0, -10]}
-        opacity={1}
-        permanent={selected}
-        sticky={!selected}
-      >
+      <Tooltip direction="top" offset={[0, -10]} opacity={1}>
         <span className="font-semibold">{community.name}</span>
       </Tooltip>
     </CircleMarker>
@@ -231,7 +239,6 @@ export default function MapView({
         </LayersControl>
         <CountyCamera countyId={countyId} />
         <MapButtons countyId={countyId} />
-        <MapBackgroundClick onClear={() => onSelect(null)} />
         <ScaleControl position="bottomleft" imperial />
         <TsunamiZones countyId={countyId} />
         {alertCollection.features.length ? (
@@ -253,7 +260,7 @@ export default function MapView({
             const fillColor = mode === "planning" ? level.color : "#1f4d3a";
             return (
               <TownMarker
-                key={`${community.id}-${selected ? "on" : "off"}`}
+                key={community.id}
                 community={community}
                 selected={selected}
                 fillColor={fillColor}
@@ -262,6 +269,7 @@ export default function MapView({
             );
           })}
         </LayerGroup>
+        <SelectedTownLabel community={communities.find((item) => item.id === selectedId)} />
       </MapContainer>
       <div className="pointer-events-none absolute bottom-10 left-3 max-w-xs rounded-xl bg-slate-900/70 px-3 py-2 text-white">
         <p className="text-sm font-semibold">{county.islandLabel}</p>

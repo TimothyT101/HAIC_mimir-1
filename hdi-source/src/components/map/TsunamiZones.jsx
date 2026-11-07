@@ -67,6 +67,8 @@ export default function TsunamiZones({ countyId }) {
     <GeoJSON
       key={`${countyId}-${data.features.length}`}
       data={data}
+      interactive={false}
+      bubblingMouseEvents={false}
       style={(feature) => {
         const extreme = feature?.properties?.zone_code === 2;
         return {
