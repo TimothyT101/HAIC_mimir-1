@@ -1,6 +1,7 @@
 /**
- * Demonstration community records.
- * Coordinates are real. Classifications, incidents, and AFN estimates are fictional prototype data.
+ * Community map records for the HAIC prototype.
+ * Coordinates are real. Planning classifications and scenario notes are exercise samples only —
+ * not live incidents or official warnings. Prefer ACS/SVI for vulnerability stats.
  */
 
 export const COMMUNITIES = [
@@ -16,9 +17,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.91,
     provisionalLevel: 3,
     disasterType: "Wildfire",
-    incidentTitle: "Brush fire near Makakilo slopes (demonstration)",
+    incidentTitle: "Brush fire near Makakilo slopes (planning exercise)",
     incidentDescription:
-      "Demonstration scenario: dry vegetation and gusty trade winds increase wildfire exposure on the slopes above Kapolei. No official county emergency has been declared in this prototype.",
+      "HAIC planning exercise only — not a live emergency: dry vegetation and gusty trade winds increase wildfire exposure on the slopes above Kapolei. No official emergency is implied by this exercise card.",
     affectedArea: "Makakilo hillside interface and nearby residential streets",
     potentialImpacts: [
       "Localized smoke and air-quality concerns",
@@ -31,8 +32,8 @@ export const COMMUNITIES = [
     ],
     lastUpdated: "2026-10-26T14:30:00-10:00",
     history: [
-      { date: "2026-10-26T14:30:00-10:00", title: "Brush fire watch (demo)", type: "Wildfire", level: 3, source: "HFD" },
-      { date: "2026-10-20T09:00:00-10:00", title: "Heat advisory expired (demo)", type: "Heat", level: 2, source: "NWS" },
+      { date: "2026-10-26T14:30:00-10:00", title: "Brush fire watch (exercise)", type: "Wildfire", level: 3, source: "HFD" },
+      { date: "2026-10-20T09:00:00-10:00", title: "Heat advisory expired (exercise)", type: "Heat", level: 2, source: "NWS" },
     ],
     vulnerability: {
       olderAdultsPct: 14,
@@ -62,14 +63,14 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.86,
     provisionalLevel: 4,
     disasterType: "Coastal Flooding",
-    incidentTitle: "Coastal flooding along ʻEwa Beach shoreline (demonstration)",
+    incidentTitle: "Coastal flooding along ʻEwa Beach shoreline (planning exercise)",
     incidentDescription:
-      "Demonstration scenario: elevated sea levels and large swells inundate low-lying shoreline roads and neighborhoods. This is sample planning data, not an official flood warning.",
+      "HAIC planning exercise only — not a live emergency: elevated sea levels and large swells inundate low-lying shoreline roads and neighborhoods. Exercise sample only — not an official flood warning.",
     affectedArea: "ʻEwa Beach shoreline, Iroquois Point, Puʻuloa, and nearby low-lying coastal areas",
     potentialImpacts: [
       "Coastal and low-lying roads may be impassable",
-      "Some residents may require evacuation if conditions worsen",
-      "Increased demand for emergency shelter",
+      "If this exercise became a real event, some residents might need evacuation support",
+      "Exercise assumption: increased demand for emergency shelter",
       "Localized power outages possible",
       "Bus service may be disrupted",
     ],
@@ -79,10 +80,10 @@ export const COMMUNITIES = [
     ],
     lastUpdated: "2026-10-26T14:30:00-10:00",
     history: [
-      { date: "2026-10-26T14:30:00-10:00", title: "Coastal flooding in ʻEwa Beach (demo)", type: "Coastal Flooding", level: 4, source: "HIEMA" },
-      { date: "2026-10-26T11:45:00-10:00", title: "High surf advisory (demo)", type: "High Surf", level: 2, source: "NWS" },
-      { date: "2026-10-26T09:20:00-10:00", title: "King tide conditions (demo)", type: "Coastal Flooding", level: 2, source: "NWS" },
-      { date: "2026-10-25T18:10:00-10:00", title: "Coastal flood watch (demo)", type: "Coastal Flooding", level: 1, source: "NWS" },
+      { date: "2026-10-26T14:30:00-10:00", title: "Coastal flooding in ʻEwa Beach (exercise)", type: "Coastal Flooding", level: 4, source: "HIEMA" },
+      { date: "2026-10-26T11:45:00-10:00", title: "High surf advisory (exercise)", type: "High Surf", level: 2, source: "NWS" },
+      { date: "2026-10-26T09:20:00-10:00", title: "King tide conditions (exercise)", type: "Coastal Flooding", level: 2, source: "NWS" },
+      { date: "2026-10-25T18:10:00-10:00", title: "Coastal flood watch (exercise)", type: "Coastal Flooding", level: 1, source: "NWS" },
     ],
     vulnerability: {
       olderAdultsPct: 16,
@@ -112,9 +113,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.88,
     provisionalLevel: 2,
     disasterType: "Flood",
-    incidentTitle: "Stream monitoring along Kapakahi and Waikele (demonstration)",
+    incidentTitle: "Stream monitoring along Kapakahi and Waikele (planning exercise)",
     incidentDescription:
-      "Demonstration scenario: heavy rainfall could raise stream levels. Classification remains Advisory because no confirmed flooding is recorded in this sample dataset.",
+      "HAIC planning exercise only — not a live emergency: heavy rainfall could raise stream levels. Classification remains Advisory because no confirmed flooding is recorded in this sample dataset.",
     affectedArea: "Waikele Stream corridor and low-lying parcels near Farrington Highway",
     potentialImpacts: [
       "Ponding on local roads",
@@ -123,7 +124,7 @@ export const COMMUNITIES = [
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
     lastUpdated: "2026-10-26T11:15:00-10:00",
     history: [
-      { date: "2026-10-26T11:15:00-10:00", title: "Flood watch inland Oʻahu (demo)", type: "Flood", level: 2, source: "NWS" },
+      { date: "2026-10-26T11:15:00-10:00", title: "Flood watch inland Oʻahu (exercise)", type: "Flood", level: 2, source: "NWS" },
     ],
     vulnerability: {
       olderAdultsPct: 18,
@@ -153,15 +154,15 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.95,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
+    incidentTitle: "No active exercise scenario (planning baseline)",
     incidentDescription:
-      "Demonstration record: no active incident is assigned. Central Oʻahu remains at Normal in this prototype dataset.",
-    affectedArea: "No affected area in the current demonstration record",
+      "HAIC planning exercise only — not a live emergency: no active incident is assigned. Central Oʻahu remains at Normal in this prototype dataset.",
+    affectedArea: "No exercise impact area assigned",
     potentialImpacts: ["Routine preparedness only"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
     lastUpdated: "2026-10-26T09:20:00-10:00",
     history: [
-      { date: "2026-10-26T09:20:00-10:00", title: "Strong winds — Central Oʻahu (demo)", type: "Wind", level: 1, source: "NWS" },
+      { date: "2026-10-26T09:20:00-10:00", title: "Strong winds — Central Oʻahu (exercise)", type: "Wind", level: 1, source: "NWS" },
     ],
     vulnerability: {
       olderAdultsPct: 15,
@@ -191,10 +192,10 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.9,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
+    incidentTitle: "No active exercise scenario (planning baseline)",
     incidentDescription:
-      "Demonstration record: no active incident is assigned. Wahiawā remains at Normal in this prototype dataset.",
-    affectedArea: "No affected area in the current demonstration record",
+      "HAIC planning exercise only — not a live emergency: no active incident is assigned. Wahiawā remains at Normal in this prototype dataset.",
+    affectedArea: "No exercise impact area assigned",
     potentialImpacts: ["Routine preparedness only"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
     lastUpdated: "2026-10-26T09:20:00-10:00",
@@ -227,9 +228,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.9,
     provisionalLevel: 2,
     disasterType: "Wildfire",
-    incidentTitle: "Wildfire risk — North Shore (demonstration)",
+    incidentTitle: "Wildfire risk — North Shore (planning exercise)",
     incidentDescription:
-      "Demonstration scenario: dry fuels and strong winds raise wildfire risk in the Haleʻiwa area. No active wildfire is asserted as a real event. Authorities in this storyline are monitoring.",
+      "HAIC planning exercise only — not a live emergency: dry fuels and strong winds raise wildfire risk in the Haleʻiwa area. No active wildfire is asserted as a real event. Authorities in this storyline are monitoring.",
     affectedArea: "Haleʻiwa and surrounding North Shore region",
     potentialImpacts: [
       "Evacuation advisory possible in some areas",
@@ -243,7 +244,7 @@ export const COMMUNITIES = [
     ],
     lastUpdated: "2026-10-26T14:30:00-10:00",
     history: [
-      { date: "2026-10-26T14:30:00-10:00", title: "Wildfire risk (demo)", type: "Wildfire", level: 2, source: "NWS" },
+      { date: "2026-10-26T14:30:00-10:00", title: "Wildfire risk (exercise)", type: "Wildfire", level: 2, source: "NWS" },
     ],
     vulnerability: {
       olderAdultsPct: 19,
@@ -273,9 +274,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.83,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal urban conditions (demonstration)",
+    incidentTitle: "No active exercise scenario (planning baseline)",
     incidentDescription:
-      "Demonstration record for urban Honolulu. Classification is Normal. Official NWS products should be checked separately.",
+      "Exercise card for urban Honolulu. Classification is Normal. Official NWS products should be checked under Live conditions.",
     affectedArea: "City of Honolulu planning area",
     potentialImpacts: ["Routine urban preparedness"],
     sources: [
@@ -283,7 +284,7 @@ export const COMMUNITIES = [
     ],
     lastUpdated: "2026-10-24T20:10:00-10:00",
     history: [
-      { date: "2026-10-24T20:10:00-10:00", title: "Flood advisory expired (demo)", type: "Flood", level: 1, source: "NWS" },
+      { date: "2026-10-24T20:10:00-10:00", title: "Flood advisory expired (exercise)", type: "Flood", level: 1, source: "NWS" },
     ],
     vulnerability: {
       olderAdultsPct: 20,
@@ -313,9 +314,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.89,
     provisionalLevel: 2,
     disasterType: "High Surf",
-    incidentTitle: "High surf along the North Shore (demonstration)",
+    incidentTitle: "High surf along the North Shore (planning exercise)",
     incidentDescription:
-      "Demonstration scenario: large northwest swell affects shoreline access. Inland neighborhoods remain at Advisory, not automatically elevated because of coastal proximity.",
+      "HAIC planning exercise only — not a live emergency: large northwest swell affects shoreline access. Inland neighborhoods remain at Advisory, not automatically elevated because of coastal proximity.",
     affectedArea: "Kahuku shoreline and coastal parks",
     potentialImpacts: ["Shoreline closures", "Visitor injuries possible at beaches"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
@@ -349,15 +350,15 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.84,
     provisionalLevel: 3,
     disasterType: "Wildfire",
-    incidentTitle: "Brush fire contained — Waiʻanae (demonstration)",
+    incidentTitle: "Brush fire contained — Waiʻanae (planning exercise)",
     incidentDescription:
-      "Demonstration history record: a contained brush fire is shown for planning practice. Do not treat this as a current official incident.",
+      "Exercise history card: a contained brush fire for planning practice only. Not a current official incident.",
     affectedArea: "Waiʻanae coast mauka interface",
     potentialImpacts: ["Smoke", "Temporary road restrictions"],
     sources: [{ label: "Honolulu Fire Department", url: "https://fire.honolulu.gov/" }],
     lastUpdated: "2026-10-25T18:45:00-10:00",
     history: [
-      { date: "2026-10-25T18:45:00-10:00", title: "Brush fire contained (demo)", type: "Wildfire", level: 3, source: "HFD" },
+      { date: "2026-10-25T18:45:00-10:00", title: "Brush fire contained (exercise)", type: "Wildfire", level: 3, source: "HFD" },
     ],
     vulnerability: {
       olderAdultsPct: 16,
@@ -387,8 +388,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.92,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record with no active incident assigned.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card with no active incident assigned.",
     affectedArea: "Kāneʻohe town",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
@@ -422,8 +423,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.87,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record with no active incident assigned.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card with no active incident assigned.",
     affectedArea: "Waimānalo",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
@@ -457,8 +458,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.9,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record with no active incident assigned.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card with no active incident assigned.",
     affectedArea: "Pearl City",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
@@ -492,8 +493,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.93,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record with no active incident assigned.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card with no active incident assigned.",
     affectedArea: "Aiea",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
@@ -527,8 +528,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.94,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record with no active incident assigned.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card with no active incident assigned.",
     affectedArea: "Kailua",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "National Weather Service Honolulu", url: "https://www.weather.gov/hfo/" }],
@@ -562,9 +563,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.88,
     provisionalLevel: 3,
     disasterType: "Wildfire",
-    incidentTitle: "West Maui wildfire planning scenario (demonstration)",
+    incidentTitle: "West Maui wildfire planning scenario (planning exercise)",
     incidentDescription:
-      "Demonstration planning scenario only. It does not describe a current wildfire and is not an official warning. West Maui remains a high-priority ESF-6 planning area because of limited road access and prior disaster recovery needs.",
+      "Planning exercise only. It does not describe a current wildfire and is not an official warning. West Maui remains a high-priority ESF-6 planning area because of limited road access and prior disaster recovery needs.",
     affectedArea: "Lahaina town and West Maui coastal corridor",
     potentialImpacts: [
       "Single-highway access constraints",
@@ -577,7 +578,7 @@ export const COMMUNITIES = [
     ],
     lastUpdated: "2026-10-26T12:00:00-10:00",
     history: [
-      { date: "2026-10-26T12:00:00-10:00", title: "Wildfire planning scenario (demo)", type: "Wildfire", level: 3, source: "Demo" },
+      { date: "2026-10-26T12:00:00-10:00", title: "Wildfire planning scenario (exercise)", type: "Wildfire", level: 3, source: "Exercise" },
     ],
     vulnerability: {
       olderAdultsPct: 18,
@@ -607,8 +608,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.9,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record. Kahului is modeled as a logistics hub for Maui County ESF-6 planning.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card. Kahului is modeled as a logistics hub for Maui County ESF-6 planning.",
     affectedArea: "Kahului",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/76/Emergency-Management" }],
@@ -642,9 +643,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.86,
     provisionalLevel: "unknown",
     disasterType: "Unknown",
-    incidentTitle: "Insufficient local incident data (demonstration)",
+    incidentTitle: "Insufficient local incident data (planning exercise)",
     incidentDescription:
-      "Demonstration of the Unknown status. Molokaʻi does not automatically inherit Maui island classifications.",
+      "Exercise Unknown status. Molokaʻi does not automatically inherit Maui island classifications.",
     affectedArea: "Not verified",
     potentialImpacts: ["Unknown pending local verification"],
     sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/76/Emergency-Management" }],
@@ -678,8 +679,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.91,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record. Lānaʻi is classified independently from Maui island communities.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card. Lānaʻi is classified independently from Maui island communities.",
     affectedArea: "Lānaʻi City",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/76/Emergency-Management" }],
@@ -713,9 +714,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.89,
     provisionalLevel: 2,
     disasterType: "Tsunami",
-    incidentTitle: "Tsunami information statement — Hilo Bay (demonstration)",
+    incidentTitle: "Tsunami information statement — Hilo Bay (planning exercise)",
     incidentDescription:
-      "Demonstration scenario: a distant earthquake produces an information statement for Hilo Bay. This is not a real tsunami warning. Official PTWC/NWS products remain the only authoritative source.",
+      "HAIC planning exercise only — not a live emergency: a distant earthquake produces an information statement for Hilo Bay. Exercise only. Official PTWC/NWS products remain the only authoritative source.",
     affectedArea: "Hilo Bay tsunami evacuation zone (planning overlay only)",
     potentialImpacts: ["Traffic toward inland shelters", "Harbor operations pause for assessment"],
     sources: [
@@ -724,7 +725,7 @@ export const COMMUNITIES = [
     ],
     lastUpdated: "2026-10-26T07:40:00-10:00",
     history: [
-      { date: "2026-10-26T07:40:00-10:00", title: "Tsunami information statement (demo)", type: "Tsunami", level: 2, source: "PTWC" },
+      { date: "2026-10-26T07:40:00-10:00", title: "Tsunami information statement (exercise)", type: "Tsunami", level: 2, source: "PTWC" },
     ],
     vulnerability: {
       olderAdultsPct: 21,
@@ -754,9 +755,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.91,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
+    incidentTitle: "No active exercise scenario (planning baseline)",
     incidentDescription:
-      "Demonstration record. Kona is not classified from Hilo conditions; each community is scored independently.",
+      "Exercise card. Kona is not classified from Hilo conditions; each community is scored independently.",
     affectedArea: "Kailua-Kona",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "Hawaiʻi County Civil Defense", url: "https://www.hawaiicounty.gov/departments/civil-defense" }],
@@ -790,9 +791,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.9,
     provisionalLevel: 2,
     disasterType: "Volcanic / Vog",
-    incidentTitle: "Vog and volcanic monitoring (demonstration)",
+    incidentTitle: "Vog and volcanic monitoring (planning exercise)",
     incidentDescription:
-      "Demonstration air-quality planning record. Not an official USGS volcano alert.",
+      "Exercise air-quality planning card. Not an official USGS volcano alert.",
     affectedArea: "Lower Puna",
     potentialImpacts: ["Respiratory irritation", "School activity modifications"],
     sources: [{ label: "USGS Hawaiian Volcano Observatory", url: "https://www.usgs.gov/observatories/hvo" }],
@@ -826,9 +827,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.9,
     provisionalLevel: 2,
     disasterType: "Hurricane",
-    incidentTitle: "Pre-season hurricane planning scenario (demonstration)",
+    incidentTitle: "Pre-season hurricane planning scenario (planning exercise)",
     incidentDescription:
-      "Demonstration hurricane-preparedness scenario for Kauaʻi County. No live tropical cyclone is implied.",
+      "Exercise hurricane-preparedness scenario for Kauaʻi County. No live tropical cyclone is implied.",
     affectedArea: "Līhuʻe civic and airport district",
     potentialImpacts: ["Airport disruption", "County EOC activation planning"],
     sources: [
@@ -837,7 +838,7 @@ export const COMMUNITIES = [
     ],
     lastUpdated: "2026-10-26T09:00:00-10:00",
     history: [
-      { date: "2026-10-26T09:00:00-10:00", title: "Hurricane planning scenario (demo)", type: "Hurricane", level: 2, source: "Demo" },
+      { date: "2026-10-26T09:00:00-10:00", title: "Hurricane planning scenario (exercise)", type: "Hurricane", level: 2, source: "Exercise" },
     ],
     vulnerability: {
       olderAdultsPct: 20,
@@ -867,8 +868,8 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.88,
     provisionalLevel: 1,
     disasterType: "None",
-    incidentTitle: "Normal conditions (demonstration)",
-    incidentDescription: "Demonstration record classified independently from Līhuʻe.",
+    incidentTitle: "No active exercise scenario (planning baseline)",
+    incidentDescription: "Exercise card classified independently from Līhuʻe.",
     affectedArea: "Kapaʻa",
     potentialImpacts: ["Routine preparedness"],
     sources: [{ label: "Kauaʻi Emergency Management Agency", url: "https://www.kauai.gov/Government/Departments-Agencies/Emergency-Management" }],
@@ -902,9 +903,9 @@ export const COMMUNITIES = [
     vehicleAccessRate: 0.4,
     provisionalLevel: "unknown",
     disasterType: "Unknown",
-    incidentTitle: "Limited public data (demonstration)",
+    incidentTitle: "Limited public data (planning exercise)",
     incidentDescription:
-      "Demonstration of Unknown status. Niʻihau is a privately owned island with limited public datasets. This prototype does not invent incident conditions.",
+      "Exercise Unknown status. Niʻihau is a privately owned island with limited public datasets. This app does not invent live incident conditions.",
     affectedArea: "Not verified",
     potentialImpacts: ["Unknown pending coordination with authorized contacts"],
     sources: [{ label: "Kauaʻi Emergency Management Agency", url: "https://www.kauai.gov/Government/Departments-Agencies/Emergency-Management" }],

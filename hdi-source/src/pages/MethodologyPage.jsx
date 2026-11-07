@@ -16,8 +16,10 @@ export default function MethodologyPage() {
 
       <Section title="Official data sources">
         <p>
-          Live pages currently use demonstration files in <code>src/data</code>.
-          The architecture is ready for:
+          <strong>Live conditions</strong> pulls official National Weather Service
+          products. <strong>Planning scenario</strong> uses labeled exercise cards in{" "}
+          <code>src/data</code> so judges can practice ESF-6 workflows without mistaking
+          samples for live alerts. The architecture is also ready for:
         </p>
         <ul>
           <li>National Weather Service alerts: {NWS_ALERTS_ENDPOINT}</li>
@@ -32,8 +34,8 @@ export default function MethodologyPage() {
         <p>
           Live Map colors the four counties from official NWS severity (Fine/Minor,
           Moderate, Severe, Extreme). Town markers stay as locations. Planning
-          scenario still uses demonstration community levels. Nearby towns are not
-          automatically raised because they are close to an incident.
+          scenario uses exercise-only community levels — never live warnings. Nearby
+          towns are not automatically raised because they are near an exercise card.
         </p>
         <ul>
           {LEVEL_LIST.map((level) => (
@@ -43,9 +45,9 @@ export default function MethodologyPage() {
           ))}
         </ul>
         <p>
-          For this prototype, levels are assigned in demonstration data. Later,
-          documented thresholds (for example, official warning type, inundation
-          overlap, or shelter demand) can replace the static <code>provisionalLevel</code> field.
+          Exercise levels are assigned in static planning data. Later, documented
+          thresholds (for example, official warning type, inundation overlap, or
+          shelter demand) can replace the static <code>provisionalLevel</code> field.
         </p>
       </Section>
 
@@ -76,8 +78,8 @@ meals                = estimatedShelterNeed × mealsPerPersonDay × days`}
 
       <Section title="Assumptions and limitations">
         <ul>
-          <li>All incidents and calculations are labeled demonstration data.</li>
-          <li>Coordinates are real; classifications are fictional.</li>
+          <li>Planning-mode cards and calculations are labeled as exercise data.</li>
+          <li>Coordinates are real; planning classifications are exercise samples, not live status.</li>
           <li>The site does not issue evacuation orders or replace county EOPs.</li>
           <li>Unknown is used when public data are missing or unverified.</li>
         </ul>
@@ -85,17 +87,17 @@ meals                = estimatedShelterNeed × mealsPerPersonDay × days`}
 
       <Section title="Data update frequency">
         <p>
-          Demonstration timestamps are static. After APIs are connected, NWS alerts
-          can refresh on a timer (for example, every 5 minutes), while Census
-          vulnerability indicators would update with each ACS release.
+          Exercise-card timestamps are static. Live NWS alerts refresh from the
+          official feed; Census vulnerability indicators update with each ACS release.
         </p>
       </Section>
 
-      <Section title="Official alerts versus prototype classifications">
+      <Section title="Official alerts versus planning classifications">
         <p>
           Official alerts are the products of NWS, PTWC, HIEMA, and county agencies.
-          Prototype classifications are a planning overlay. If they disagree, follow
-          the official product.
+          Planning classifications are an exercise overlay only. If they disagree,
+          follow the official product. Switch to <strong>Live conditions</strong> for
+          real alerts.
         </p>
       </Section>
 

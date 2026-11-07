@@ -42,9 +42,9 @@ export default function MapPage() {
     const rows = DEMO_ALERTS.filter((item) => item.countyId === countyId).map((item) => ({
       ...item,
       verified: false,
-      sourceKind: "demonstration",
+      sourceKind: "exercise",
       officialTitle: item.officialTitle,
-      geometryLabel: "Demonstration record — no live geometry",
+      geometryLabel: "Exercise card — no live alert geometry",
     }));
     return filterRecentIncidents(rows);
   }, [countyId]);
@@ -94,8 +94,8 @@ export default function MapPage() {
         <div>
           <h1 className="text-3xl font-bold text-forest">Live Map</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">
-            {county.islandLabel}. Live mode shows official NWS alerts. Planning mode
-            shows labeled demonstration records only.
+            {county.islandLabel}. Live conditions show official NWS alerts. Planning
+            scenario shows HAIC exercise cards only — never live warnings.
           </p>
         </div>
         <div className="inline-flex rounded-full bg-white p-1 shadow-sm" role="tablist" aria-label="Map data mode">
@@ -142,7 +142,7 @@ export default function MapPage() {
             zoneNote={
               mode === "live"
                 ? zoneNote
-                : "Planning overlay: colored markers are demonstration classifications, not live warnings."
+                : "Planning overlay: colored markers are exercise classifications only — not live warnings."
             }
           />
           {mode === "planning" ? (

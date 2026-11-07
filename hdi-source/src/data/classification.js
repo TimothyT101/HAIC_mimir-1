@@ -1,7 +1,6 @@
 /**
- * Prototype disaster classification scale.
- * These are not official Hawaiʻi or NWS warning levels.
- * Replace `assignProvisionalLevel` with documented thresholds and live feeds later.
+ * Planning-exercise classification scale for Map → Planning scenario only.
+ * These are not official Hawaiʻi or NWS warning levels and must not be shown as live status.
  */
 
 export const CLASSIFICATION_LEVELS = {
@@ -14,7 +13,7 @@ export const CLASSIFICATION_LEVELS = {
     color: "#22c55e",
     bg: "#ecfdf3",
     text: "#166534",
-    description: "No significant hazards or impacts reported. Routine monitoring.",
+    description: "Exercise baseline: no significant hazards or impacts in the scenario.",
   },
   2: {
     id: 2,
@@ -25,7 +24,7 @@ export const CLASSIFICATION_LEVELS = {
     color: "#eab308",
     bg: "#fefce8",
     text: "#854d0e",
-    description: "Developing conditions or limited exposure. Stay informed and prepared.",
+    description: "Exercise scale: developing conditions or limited exposure in the scenario.",
   },
   3: {
     id: 3,
@@ -36,7 +35,7 @@ export const CLASSIFICATION_LEVELS = {
     color: "#f97316",
     bg: "#fff7ed",
     text: "#9a3412",
-    description: "Significant hazard exposure or potential impacts. Increased readiness recommended.",
+    description: "Exercise scale: significant hazard exposure or potential impacts in the scenario.",
   },
   4: {
     id: 4,
@@ -47,7 +46,8 @@ export const CLASSIFICATION_LEVELS = {
     color: "#ef4444",
     bg: "#fef2f2",
     text: "#991b1b",
-    description: "Confirmed impacts and ongoing hazards. Active response and support may be needed.",
+    description:
+      "Exercise scale: confirmed impacts and ongoing hazards in the scenario. Mass-care support may be needed if this were real.",
   },
   5: {
     id: 5,
@@ -58,7 +58,8 @@ export const CLASSIFICATION_LEVELS = {
     color: "#7f1d1d",
     bg: "#fee2e2",
     text: "#7f1d1d",
-    description: "Severe impacts and major emergency support needs. Immediate coordinated response likely required.",
+    description:
+      "Exercise scale: severe impacts and major ESF-6 support needs in the scenario. Not a live emergency declaration.",
   },
   unknown: {
     id: "unknown",
@@ -69,7 +70,7 @@ export const CLASSIFICATION_LEVELS = {
     color: "#9ca3af",
     bg: "#f3f4f6",
     text: "#4b5563",
-    description: "Insufficient or unverified information available.",
+    description: "Insufficient or unverified information in the exercise dataset.",
   },
 };
 

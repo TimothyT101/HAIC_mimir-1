@@ -24,7 +24,7 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
       name: community.name,
       county: county.name,
       island: community.island,
-      provisionalLevel: level.fullLabel,
+      provisionalLevel: `${level.fullLabel} (planning exercise — not an official warning)`,
       disasterType: disasterLabel,
     },
     needs: [

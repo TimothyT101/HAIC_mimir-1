@@ -68,10 +68,10 @@ export async function fetchLiveHawaiiAlerts() {
   throw lastError || new Error("NWS request failed");
 }
 
-/** Demonstration feed only. Never mix into the live NWS panel as verified alerts. */
+/** Planning-exercise feed only. Never mix into the live NWS panel as verified alerts. */
 export async function fetchDemoAlerts() {
   return {
-    source: "demonstration",
+    source: "exercise",
     fetchedAt: new Date().toISOString(),
     alerts: DEMO_ALERTS,
   };
