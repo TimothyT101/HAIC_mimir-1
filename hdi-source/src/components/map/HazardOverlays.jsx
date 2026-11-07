@@ -138,13 +138,13 @@ export default function HazardOverlays({ countyId, hazards }) {
   );
 }
 
-export function HazardSwitcher({ hazards, onChange }) {
+export function HazardSwitcher({ hazards, onChange, children = null }) {
   function toggle(key) {
     onChange({ ...hazards, [key]: !hazards[key] });
   }
 
   return (
-    <div className="max-h-[280px] overflow-y-auto rounded-2xl bg-white/95 p-3 text-xs shadow-lg sm:max-h-none">
+    <div className="max-h-[340px] overflow-y-auto rounded-2xl bg-white/95 p-3 text-xs shadow-lg sm:max-h-none">
       <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Hazard layers</p>
       <p className="mt-1 text-[11px] leading-4 text-muted">
         These are places, not people. A zone is where to go or avoid if officials
@@ -213,6 +213,7 @@ export function HazardSwitcher({ hazards, onChange }) {
           Town location
         </li>
       </ul>
+      {children}
     </div>
   );
 }

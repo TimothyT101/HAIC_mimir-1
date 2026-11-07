@@ -163,6 +163,19 @@ export const PUBLIC_SOURCE_LINKS = [
     usedFor: "County SVI percentiles on Resource Planning",
   },
   {
+    id: "svi-tracts",
+    label: "CDC/ATSDR SVI 2022 Hawaiʻi census-tract CSV",
+    url: "https://svi.cdc.gov/Documents/Data/2022/csv/states/Hawaii.csv",
+    usedFor:
+      "Tract AFN choropleth (disability, limited English, no vehicle, age 65+, poverty, overall SVI)",
+  },
+  {
+    id: "census-tracts",
+    label: "U.S. Census 2023 cartographic boundary — Hawaiʻi tracts (1:500k)",
+    url: "https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_15_tract_500k.zip",
+    usedFor: "Tract polygon boundaries for the AFN map layer",
+  },
+  {
     id: "empower",
     label: EMPOWER_SOURCE.name,
     url: EMPOWER_SOURCE.url,

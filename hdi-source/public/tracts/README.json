@@ -1,0 +1,11 @@
+{
+  "source": "CDC/ATSDR Social Vulnerability Index 2022, Hawaii census tracts",
+  "csvUrl": "https://svi.cdc.gov/Documents/Data/2022/csv/states/Hawaii.csv",
+  "documentationUrl": "https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html",
+  "boundaries": "U.S. Census Bureau 2023 Cartographic Boundary File, Hawaii census tracts 1:500,000 (cb_2023_15_tract_500k)",
+  "boundariesUrl": "https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_15_tract_500k.zip",
+  "retrievedAt": "2026-11-07",
+  "vintage": "SVI 2022 (ACS 2018\u20132022 inputs)",
+  "tractCount": 436,
+  "note": "Choropleth shows tract-level AFN proxies (disability, limited English, no vehicle, age 65+, poverty) and overall SVI percentile. Aggregates only \u2014 not an individual AFN registry."
+}
