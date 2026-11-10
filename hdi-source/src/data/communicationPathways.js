@@ -12,7 +12,7 @@ export const COMMUNICATION_PATHWAYS_SOURCE = {
     "Addresses the HAIC objective for clear, multilingual, trauma-informed (humanistic) communication before, during, and after disasters.",
 };
 
-/** Priority languages commonly needed in Hawaiʻi mass-care outreach (planning checklist). */
+/** Priority languages commonly needed in Hawaiʻi mass-care outreach (planning reference). */
 export const PRIORITY_LANGUAGES = [
   { id: "en", label: "English", role: "Default operations language" },
   { id: "haw", label: "ʻŌlelo Hawaiʻi", role: "Cultural respect; community radio / messengers" },
@@ -28,6 +28,24 @@ export const PRIORITY_LANGUAGES = [
   { id: "es", label: "Spanish", role: "Residents and visitors" },
   { id: "asl", label: "American Sign Language (ASL)", role: "Deaf / hard-of-hearing — video or in-person, not text-only" },
 ];
+
+/** Copy-ready briefing for County / VOAD language-access partners (no PII). */
+export function buildLanguageAccessBriefing() {
+  const lines = PRIORITY_LANGUAGES.filter((lang) => lang.id !== "en").map(
+    (lang) => `- [ ] ${lang.label} — ${lang.role}`
+  );
+  return [
+    "Language-access briefing (ESF-6 planning)",
+    "Audience: County EM / language partners / libraries / VOAD",
+    "",
+    "Please confirm interpreters or plain-language lines BEFORE impact for:",
+    ...lines,
+    "",
+    "Also confirm: ASL video or in-person options; large-print / phone-tree alternatives for low-connectivity households.",
+    "Use trusted community messengers. Official life-safety alerts remain NWS / HIEMA / county products.",
+    "This prototype does not machine-translate and does not store personal language preferences.",
+  ].join("\n");
+}
 
 export const TRAUMA_PRINCIPLES = [
   {
@@ -112,7 +130,7 @@ export const MESSAGE_TEMPLATES = [
     hazards: ["all"],
     title: "Language-access readiness (for partners)",
     audience: "County EM / language partners / libraries",
-    body: "Please confirm interpreters and translated plain-language lines for Tagalog, Ilokano, Chuukese, Marshallese, Samoan, Chinese, Korean, Vietnamese, Japanese, Spanish, and ʻŌlelo Hawaiʻi before impact. Share ASL video options if available. Use trusted community messengers — not only English social media.",
+    body: `Please confirm interpreters and translated plain-language lines before impact for: ${PRIORITY_LANGUAGES.filter((l) => l.id !== "en" && l.id !== "asl").map((l) => l.label).join(", ")}. Share ASL video options if available. Use trusted community messengers — not only English social media.`,
   },
   {
     id: "before-immigrant",
