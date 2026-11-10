@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Check, Copy, Languages, MapPin, Megaphone } from "lucide-react";
+import { Check, Copy, Languages, Megaphone } from "lucide-react";
 import DisclaimerBanner from "../components/DisclaimerBanner";
 import { COMMUNITIES } from "../data/communities";
 import { COUNTIES } from "../data/counties";
@@ -14,7 +14,7 @@ import {
   PRIORITY_LANGUAGES,
   templatesFor,
 } from "../data/communicationPathways";
-import { sheltersForCounty, suggestSheltersNearQuery } from "../data/shelters";
+import { sheltersForCounty } from "../data/shelters";
 import { DISASTER_TYPES } from "../lib/resourceCalculator";
 
 export default function CommunicationPage() {
@@ -45,11 +45,6 @@ export default function CommunicationPage() {
         name: item.name,
       })),
     [countyId]
-  );
-
-  const suggestedShelters = useMemo(
-    () => suggestSheltersNearQuery(fields.zone, countyId, { limit: 8 }),
-    [fields.zone, countyId]
   );
 
   const templates = useMemo(
@@ -85,10 +80,6 @@ export default function CommunicationPage() {
   }, [shelterId, countyShelters]);
 
   const messageBody = selected ? fillTemplate(selected.body, fields) : "";
-  const nearbyNames = suggestedShelters
-    .filter((item) => item.id !== shelterId)
-    .slice(0, 5)
-    .map((item) => item.name);
 
   const advisory = buildPublicAdvisoryDraft({
     county,
@@ -96,7 +87,6 @@ export default function CommunicationPage() {
     phaseLabel: phaseMeta?.label,
     fields,
     messageBody,
-    nearbyShelterNames: nearbyNames,
   });
 
   async function copyText(id, text) {
@@ -122,10 +112,6 @@ export default function CommunicationPage() {
       facility: "",
       address: "",
     }));
-  }
-
-  function pickSuggestedShelter(shelter) {
-    setShelterId(shelter.id);
   }
 
   return (
@@ -154,8 +140,8 @@ export default function CommunicationPage() {
             <div>
               <h2 className="text-xl font-semibold text-ink">Advisory draft builder</h2>
               <p className="mt-1 text-sm text-muted">
-                Type a neighborhood (for example ʻEwa Beach) to see nearby designated
-                shelters like Campbell High, fill the blanks, then copy the advisory.
+                Pick a town, optionally choose a designated shelter from the county list,
+                fill the blanks, then copy the advisory.
               </p>
             </div>
           </div>
@@ -261,54 +247,6 @@ export default function CommunicationPage() {
                 })}
               </ul>
             </div>
-          ) : null}
-
-          {suggestedShelters.length > 0 ? (
-            <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/60 p-3 dark:border-emerald-900 dark:bg-emerald-950/30">
-              <div className="flex items-start gap-2">
-                <MapPin className="mt-0.5 shrink-0 text-forest" size={16} />
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-semibold text-forest dark:text-emerald-300">
-                    Possible shelters near “{fields.zone}”
-                  </p>
-                  <p className="mt-0.5 text-[11px] text-muted">
-                    Click one to put it in the advisory. Open status is never confirmed
-                    here — County still announces openings.
-                  </p>
-                  <ul className="mt-2 flex flex-wrap gap-2">
-                    {suggestedShelters.map((shelter) => {
-                      const active = shelterId === shelter.id;
-                      return (
-                        <li key={shelter.id}>
-                          <button
-                            type="button"
-                            onClick={() => pickSuggestedShelter(shelter)}
-                            className={`max-w-full rounded-full px-3 py-1.5 text-left text-xs transition ${
-                              active
-                                ? "bg-forest text-white"
-                                : "border border-emerald-300/80 bg-white text-ink hover:border-forest dark:border-emerald-800 dark:bg-slate-950"
-                            }`}
-                            title={shelter.address || shelter.name}
-                          >
-                            <span className="font-semibold">{shelter.name}</span>
-                            {shelter.address ? (
-                              <span className="mt-0.5 block truncate text-[10px] opacity-80">
-                                {shelter.address}
-                              </span>
-                            ) : null}
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          ) : fields.zone && String(fields.zone).trim().length >= 3 ? (
-            <p className="text-[11px] text-muted">
-              No address match yet for “{fields.zone}” in this county inventory. Try a
-              town name (ʻEwa Beach, Kapolei) or pick from the full list below.
-            </p>
           ) : null}
         </div>
 

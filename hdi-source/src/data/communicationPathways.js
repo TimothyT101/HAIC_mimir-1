@@ -279,8 +279,9 @@ export function defaultComposerFields(county) {
     county: name,
     facility: "",
     address: "",
-    zone: county?.islandLabel || "",
-    area: county?.islandLabel || "",
+    // Leave blank so planners pick a town from quick places (not the whole island).
+    zone: "",
+    area: "",
     location: "",
     transportLine: `${name} transit / paratransit`,
     officialChannel: `${name} emergency management`,

@@ -106,10 +106,11 @@ export default function ResourcePlanningPage() {
           Resource Planning
         </h1>
         <p className="mt-2 max-w-3xl text-sm text-muted">
-          County, community, and hazard scenario for ESF-6 planning. Town
-          population, vehicles, disability, and language shares are Census ACS
-          place/CDP tables. Shelter open status is not confirmed. Formulas are
-          shown with the results.
+          Pick a county, community, and hazard to estimate ESF-6 needs, match
+          partners, and download a planning report. Extra comparison tables,
+          county-scale tract cues, and the full shelter inventory stay collapsed
+          below so the page stays short. Shelter open status is never confirmed
+          here.
         </p>
       </div>
       <DisclaimerBanner compact />
@@ -166,17 +167,19 @@ export default function ResourcePlanningPage() {
       </section>
 
       {scenarioCompare ? (
-        <section
+        <details
           id="what-changed"
           className="scroll-mt-24 rounded-3xl border border-amber-200 bg-amber-50/70 p-5 shadow-sm dark:border-amber-800/60 dark:shadow-none"
         >
-          <h2 className="text-xl font-semibold text-amber-950 dark:text-amber-100">
-            What changed for {scenarioCompare.currentLabel}
-          </h2>
-          <p className="mt-1 text-sm text-amber-900/90 dark:text-amber-200/90">
-            Switching the disaster scenario only changes MODEL rates for{" "}
-            {scenarioCompare.communityName}. {scenarioCompare.unchangedNote}
-          </p>
+          <summary className="cursor-pointer">
+            <h2 className="ml-1 inline text-xl font-semibold text-amber-950 dark:text-amber-100">
+              Scenario comparison — {scenarioCompare.currentLabel}
+            </h2>
+            <p className="mt-1 text-sm text-amber-900/90 dark:text-amber-200/90">
+              Optional detail. Open to compare hurricane / wildfire / tsunami / flood rates
+              for {scenarioCompare.communityName}.
+            </p>
+          </summary>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-amber-950 dark:text-amber-100">
             {scenarioCompare.bullets.map((item) => (
               <li key={item.label}>
@@ -223,24 +226,31 @@ export default function ResourcePlanningPage() {
               </tbody>
             </table>
           </div>
-        </section>
+        </details>
       ) : null}
 
       {hazardExposure?.selected ? (
-        <section
+        <details
           id="hazard-tract-demand"
           className="scroll-mt-24 rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none"
         >
-          <h2 className="text-xl font-semibold text-ink">
-            Hazard ∩ tract AFN demand ({hazardExposure.hazardLabel})
-          </h2>
-          <p className="mt-1 text-sm text-muted">
-            County-scale cue: census tracts whose polygons intersect public{" "}
+          <summary className="cursor-pointer">
+            <h2 className="ml-1 inline text-xl font-semibold text-ink">
+              County-scale hazard ∩ tract cue ({hazardExposure.hazardLabel})
+            </h2>
+            <p className="mt-1 text-sm text-muted">
+              Optional detail — separate from the town calculator.{" "}
+              {formatNumber(hazardExposure.selected.tractCount)} /{" "}
+              {formatNumber(hazardExposure.allTracts.tractCount)} tracts · shelter cue{" "}
+              {formatNumber(hazardExposure.estimatedShelterNeedFromExposedTracts)}.
+            </p>
+          </summary>
+          <p className="mt-3 text-sm text-muted">
+            Census tracts whose polygons intersect public{" "}
             {hazardExposure.hazardKey === "hurricane"
               ? "countywide planning extent (hurricane)"
               : `${hazardExposure.hazardLabel.toLowerCase()} hazard polygons`}
-            . Separate from the selected-community calculator above.{" "}
-            {HAZARD_EXPOSURE_SOURCE.note}
+            . {HAZARD_EXPOSURE_SOURCE.note}
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Stat
@@ -295,7 +305,7 @@ export default function ResourcePlanningPage() {
           {hazardExposure.selected.note ? (
             <p className="mt-2 text-xs text-muted">{hazardExposure.selected.note}</p>
           ) : null}
-        </section>
+        </details>
       ) : null}
 
       {acs ? (
@@ -456,18 +466,22 @@ export default function ResourcePlanningPage() {
         </section>
       ) : null}
 
-      <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
-        <h2 className="font-semibold">Designated shelter / refuge locations</h2>
-        <p className="mt-1 text-sm text-muted">
-          {shelters.length} publicly listed planning facilities for{" "}
-          {COUNTIES.find((item) => item.id === countyId)?.name}. These are designated or
-          potential sites only — not confirmed open. {SHELTER_DATASET.note}
+      <details className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
+        <summary className="cursor-pointer">
+          <h2 className="ml-1 inline font-semibold text-ink">
+            Designated shelter / refuge inventory
+          </h2>
+          <p className="mt-1 text-sm text-muted">
+            {shelters.length} planning facilities for{" "}
+            {COUNTIES.find((item) => item.id === countyId)?.name} — open to browse the full
+            list. Not confirmed open.
+          </p>
+        </summary>
+        <p className="mt-3 text-xs text-amber-800">
+          Inventory vintage: {SHELTER_DATASET.asOf}. {SHELTER_DATASET.note} Capacities are not
+          published in these sources, so bed counts stay blank.
         </p>
-        <p className="mt-1 text-xs text-amber-800">
-          Inventory vintage: {SHELTER_DATASET.asOf}. Capacities are not published in these
-          sources, so bed counts stay blank.
-        </p>
-        <ul className="mt-3 max-h-[28rem] space-y-2 overflow-y-auto pr-1 text-sm">
+        <ul className="mt-3 max-h-[22rem] space-y-2 overflow-y-auto pr-1 text-sm">
           {shelters.map((item) => (
             <li key={item.id} className="rounded-2xl border border-slate-100 p-3">
               <p className="font-semibold">{item.name}</p>
@@ -518,7 +532,7 @@ export default function ResourcePlanningPage() {
             Hawaiʻi Civil Defense
           </a>
         </p>
-      </section>
+      </details>
 
       <section id="coordination" className="scroll-mt-24 rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
         <h2 className="text-xl font-semibold text-ink">Coordinated response framework</h2>

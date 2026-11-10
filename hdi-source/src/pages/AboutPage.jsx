@@ -444,11 +444,10 @@ export default function AboutPage() {
 
       <Card icon={Languages} title="Communication pathways">
         <p>
-          The Communication page builds a copy-ready advisory draft: type a neighborhood
-          (for example ʻEwa Beach) to surface nearby designated shelters, choose where to
-          get help, include Hawaiʻi’s priority languages for mass care, and copy a
-          trauma-informed English message with no leftover placeholders. County PIO still
-          owns public release; partners localize — this app does not machine-translate.
+          The Communication page builds a copy-ready advisory draft: pick a town, optionally
+          choose a designated shelter from the county inventory, include Hawaiʻi’s priority
+          languages for mass care, and copy a trauma-informed English message. County PIO
+          still owns public release; partners localize — this app does not machine-translate.
           Official alerts remain NWS / HIEMA / county products.
         </p>
       </Card>
