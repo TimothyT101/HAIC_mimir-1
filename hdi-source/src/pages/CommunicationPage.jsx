@@ -17,8 +17,6 @@ import {
 import { sheltersForCounty, suggestSheltersNearQuery } from "../data/shelters";
 import { DISASTER_TYPES } from "../lib/resourceCalculator";
 
-const DEFAULT_LANG_IDS = PRIORITY_LANGUAGES.map((lang) => lang.id);
-
 export default function CommunicationPage() {
   const [params] = useSearchParams();
   const initialCounty =
@@ -31,7 +29,6 @@ export default function CommunicationPage() {
   const [countyId, setCountyId] = useState(initialCounty);
   const [templateId, setTemplateId] = useState("");
   const [shelterId, setShelterId] = useState("");
-  const [selectedLangIds, setSelectedLangIds] = useState(DEFAULT_LANG_IDS);
   const [fields, setFields] = useState(() =>
     defaultComposerFields(COUNTIES.find((c) => c.id === initialCounty))
   );
@@ -83,7 +80,7 @@ export default function CommunicationPage() {
       address: shelter.address || "",
       petRule: shelter.petFriendly
         ? "pet-friendly area when County opens this site — confirm crate rules"
-        : current.petRule || "check county pet / crate rules",
+        : current.petRule || "follow county pet and crate guidance",
     }));
   }, [shelterId, countyShelters]);
 
@@ -99,8 +96,6 @@ export default function CommunicationPage() {
     phaseLabel: phaseMeta?.label,
     fields,
     messageBody,
-    audience: selected?.audience,
-    priorityLanguageIds: selectedLangIds,
     nearbyShelterNames: nearbyNames,
   });
 
@@ -133,16 +128,6 @@ export default function CommunicationPage() {
     setShelterId(shelter.id);
   }
 
-  function toggleLanguage(id) {
-    if (id === "en") return;
-    setSelectedLangIds((current) => {
-      if (current.includes(id)) {
-        return current.filter((item) => item !== id);
-      }
-      return [...current, id];
-    });
-  }
-
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6">
       <div>
@@ -170,18 +155,10 @@ export default function CommunicationPage() {
               <h2 className="text-xl font-semibold text-ink">Advisory draft builder</h2>
               <p className="mt-1 text-sm text-muted">
                 Type a neighborhood (for example ʻEwa Beach) to see nearby designated
-                shelters like Campbell High, fill the blanks, then copy one advisory.
+                shelters like Campbell High, fill the blanks, then copy the advisory.
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={() => copyText("advisory", advisory)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-forest px-4 py-2 text-xs font-semibold text-white hover:bg-forest-dark"
-          >
-            {copiedId === "advisory" ? <Check size={14} /> : <Copy size={14} />}
-            {copiedId === "advisory" ? "Advisory copied" : "Copy full advisory"}
-          </button>
         </div>
 
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
@@ -403,30 +380,34 @@ export default function CommunicationPage() {
         </div>
 
         <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 dark:border-slate-700 dark:bg-slate-950/50">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted">
-            Full advisory (copy this)
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+              Advisory draft
+            </p>
+            <button
+              type="button"
+              onClick={() => copyText("advisory", advisory)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-forest hover:bg-forest-soft dark:border-slate-600"
+            >
+              {copiedId === "advisory" ? <Check size={14} /> : <Copy size={14} />}
+              {copiedId === "advisory" ? "Copied" : "Copy advisory"}
+            </button>
+          </div>
           <pre className="mt-2 whitespace-pre-wrap font-sans text-sm leading-6 text-ink">
             {advisory}
           </pre>
         </div>
 
         <p className="mt-3 text-xs text-muted">
-          Numbers and the downloadable ESF-6 planning report live on{" "}
+          Need numbers or a downloadable planning report? Use{" "}
           <Link
             className="font-medium text-forest hover:underline"
             to={`/resource-planning?county=${countyId}`}
           >
             Resource Planning
           </Link>
-          . Language partners on{" "}
-          <Link
-            className="font-medium text-forest hover:underline"
-            to="/resource-planning#coordination"
-          >
-            MATCH
-          </Link>
-          .
+          . To see which agencies and VOAD partners to call for interpreters, shelters,
+          or transport, open the partner list on that same page.
         </p>
       </section>
 
@@ -439,19 +420,15 @@ export default function CommunicationPage() {
                 Priority languages for mass care
               </h2>
               <p className="mt-1 text-sm text-muted">
-                Click to include or drop languages from the advisory above. Copy the
-                partner briefing when you want a checkbox ask for interpreters.
+                Always included in the advisory above so planners do not have to guess.
+                Copy a separate partner briefing when you want a checkbox ask for
+                interpreters.
               </p>
             </div>
           </div>
           <button
             type="button"
-            onClick={() =>
-              copyText(
-                "language-briefing",
-                buildLanguageAccessBriefing(selectedLangIds)
-              )
-            }
+            onClick={() => copyText("language-briefing", buildLanguageAccessBriefing())}
             className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-forest hover:bg-forest-soft dark:border-slate-600"
           >
             {copiedId === "language-briefing" ? <Check size={14} /> : <Copy size={14} />}
@@ -461,27 +438,15 @@ export default function CommunicationPage() {
           </button>
         </div>
         <ul className="mt-4 flex flex-wrap gap-2">
-          {PRIORITY_LANGUAGES.map((lang) => {
-            const active = selectedLangIds.includes(lang.id);
-            const locked = lang.id === "en";
-            return (
-              <li key={lang.id}>
-                <button
-                  type="button"
-                  disabled={locked}
-                  onClick={() => toggleLanguage(lang.id)}
-                  title={lang.role}
-                  className={`rounded-full px-3 py-1 text-xs transition ${
-                    active
-                      ? "bg-forest text-white"
-                      : "border border-slate-200 text-ink hover:bg-forest-soft dark:border-slate-700"
-                  } ${locked ? "cursor-default opacity-90" : ""}`}
-                >
-                  {lang.label}
-                </button>
-              </li>
-            );
-          })}
+          {PRIORITY_LANGUAGES.map((lang) => (
+            <li
+              key={lang.id}
+              className="rounded-full border border-slate-200 px-3 py-1 text-xs text-ink dark:border-slate-700"
+              title={lang.role}
+            >
+              {lang.label}
+            </li>
+          ))}
         </ul>
       </section>
     </div>

@@ -148,24 +148,24 @@ export const MESSAGE_TEMPLATES = [
     id: "during-open-shelter",
     phase: "during",
     hazards: ["all"],
-    title: "Shelter opening (fill in county details)",
-    audience: "General public",
-    body: "[COUNTY] emergency management: A public emergency shelter / refuge area is open at [FACILITY] ([ADDRESS]). Bring your own food, water, medicines, and bedding if you can. Pets: [PET RULE — crate required / pet-friendly area]. This is not a hospital. For medical emergencies call 911. Updates: [OFFICIAL CHANNEL].",
+    title: "Shelter opening",
+    audience: "Public release",
+    body: "[COUNTY] emergency management: A public emergency shelter is open at [SHELTER_SITE]. Bring food, water, medicines, and bedding if you can. Pets: [PET_RULE]. This is not a hospital — for medical emergencies call 911. For updates, follow [OFFICIAL_CHANNEL].",
   },
   {
     id: "during-sip",
     phase: "during",
     hazards: ["hurricane", "wildfire", "flood"],
     title: "Shelter in place when safer",
-    audience: "Households outside evacuation zones",
-    body: "If county officials say it is safer to stay home, stay inside away from windows, keep phones charged, and check on neighbors who may need help — especially older adults and people who use medical devices. Do not drive through flood water. Follow only official county / NWS instructions.",
+    audience: "Public release",
+    body: "If county officials say it is safer to stay home, stay inside away from windows, keep phones charged, and check on neighbors who may need help — especially older adults and people who use medical devices. Do not drive through flood water. Follow only official county and NWS instructions.",
   },
   {
     id: "during-tsunami",
     phase: "during",
     hazards: ["tsunami"],
     title: "Tsunami — move inland / to high ground",
-    audience: "Coastal residents and visitors",
+    audience: "Public release",
     body: "A tsunami warning or evacuation order is in effect for [ZONE]. Move inland or to high ground now. Do not wait to watch the water. Take your go-bag if you can leave quickly. Listen to sirens and NOAA Weather Radio. Hotels and workplaces should help visitors without cars.",
   },
   {
@@ -173,23 +173,23 @@ export const MESSAGE_TEMPLATES = [
     phase: "during",
     hazards: ["all"],
     title: "No-vehicle / accessible transport",
-    audience: "Households without cars; paratransit riders",
-    body: "If you need a ride to an open shelter, call [COUNTY TRANSPORT / PARATRANSIT LINE] or go to the announced pickup point at [LOCATION]. Accessible vehicles will be prioritized for people with mobility needs and medical equipment. Bring medicines and a caregiver if you have one.",
+    audience: "Public release",
+    body: "If you need a ride to an open shelter, call [TRANSPORT_LINE] or go to the announced pickup point at [PICKUP]. Accessible vehicles will be prioritized for people with mobility needs and medical equipment. Bring medicines and a caregiver if you have one.",
   },
   {
     id: "after-return",
     phase: "after",
     hazards: ["all"],
     title: "After the hazard — recovery info",
-    audience: "General public + AFN households",
-    body: "The immediate hazard has passed for [AREA], but roads and power may still be unsafe. Return home only when county officials say it is safe. For debris, housing, or recovery help, use official county / State channels — not unverified social media lists. Mental health support: call or text 988.",
+    audience: "Public release",
+    body: "The immediate hazard has passed for [AREA], but roads and power may still be unsafe. Return home only when county officials say it is safe. For debris, housing, or recovery help, use official county and State channels — not unverified social media lists. Mental health support: call or text 988.",
   },
   {
     id: "after-trauma",
     phase: "after",
     hazards: ["all"],
     title: "Trauma-informed partner talking points",
-    audience: "Shelter staff / VOAD / community messengers",
+    audience: "Partner / staff brief",
     body: "Speak calmly. Offer choices (“Would you like water or a quiet seat?”). Do not demand personal stories. Protect privacy — no photos of shelter guests without consent. Connect people to 988 or county behavioral-health partners if they ask for help. Thank volunteers and remind them rest matters too.",
   },
 ];
@@ -211,26 +211,66 @@ export function templatesFor({ phase, hazardId }) {
   });
 }
 
-/** Fill [PLACEHOLDER] tokens in a template body. Unknown tokens are left as-is. */
+function trimField(value) {
+  const text = String(value ?? "").trim();
+  return text || "";
+}
+
+function shelterSitePhrase(fields = {}) {
+  const facility = trimField(fields.facility);
+  const address = trimField(fields.address);
+  if (facility && address) return `${facility}, ${address}`;
+  if (facility) return facility;
+  return "a designated site announced by county emergency management";
+}
+
+/** Fill template tokens with natural wording — never leave [BRACKETS] in the draft. */
 export function fillTemplate(body, fields = {}) {
-  return String(body || "").replace(/\[([^\]]+)\]/g, (match, rawKey) => {
+  const county = trimField(fields.county) || "County";
+  const zone = trimField(fields.zone) || trimField(fields.area) || "this area";
+  const area = trimField(fields.area) || trimField(fields.zone) || "this area";
+  const pickup =
+    trimField(fields.location) || "the announced community pickup point";
+  const transport =
+    trimField(fields.transportLine) || `${county} transit / paratransit`;
+  const channel =
+    trimField(fields.officialChannel) || `${county} emergency management`;
+  const petRule =
+    trimField(fields.petRule) || "follow county pet and crate guidance";
+
+  const aliases = {
+    COUNTY: county,
+    FACILITY: trimField(fields.facility) || "the designated shelter",
+    ADDRESS: trimField(fields.address),
+    SHELTER_SITE: shelterSitePhrase(fields),
+    ZONE: zone,
+    AREA: area,
+    LOCATION: pickup,
+    PICKUP: pickup,
+    TRANSPORT_LINE: transport,
+    "COUNTY TRANSPORT / PARATRANSIT LINE": transport,
+    OFFICIAL_CHANNEL: channel,
+    "OFFICIAL CHANNEL": channel,
+    PET_RULE: petRule,
+    "PET RULE — CRATE REQUIRED / PET-FRIENDLY AREA": petRule,
+    "PET RULE": petRule,
+  };
+
+  let text = String(body || "").replace(/\[([^\]]+)\]/g, (match, rawKey) => {
     const key = String(rawKey).trim().toUpperCase();
-    const aliases = {
-      COUNTY: fields.county,
-      FACILITY: fields.facility,
-      ADDRESS: fields.address,
-      ZONE: fields.zone,
-      AREA: fields.area || fields.zone,
-      LOCATION: fields.location,
-      "COUNTY TRANSPORT / PARATRANSIT LINE": fields.transportLine,
-      "OFFICIAL CHANNEL": fields.officialChannel,
-      "PET RULE — CRATE REQUIRED / PET-FRIENDLY AREA": fields.petRule,
-      "PET RULE": fields.petRule,
-    };
-    const value = aliases[key];
-    if (value == null || String(value).trim() === "") return match;
-    return String(value).trim();
+    if (Object.prototype.hasOwnProperty.call(aliases, key)) {
+      return aliases[key];
+    }
+    return match;
   });
+
+  // Clean leftover empty parentheticals if address was blank in older templates.
+  text = text
+    .replace(/\s*\(\s*\)/g, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/\s+([,.])/g, "$1")
+    .trim();
+  return text;
 }
 
 export function defaultComposerFields(county) {
@@ -242,16 +282,16 @@ export function defaultComposerFields(county) {
     zone: county?.islandLabel || "",
     area: county?.islandLabel || "",
     location: "",
-    transportLine: `${name} transit / paratransit line`,
-    officialChannel: `${name} emergency management / NWS`,
-    petRule: "check county pet / crate rules",
+    transportLine: `${name} transit / paratransit`,
+    officialChannel: `${name} emergency management`,
+    petRule: "follow county pet and crate guidance",
   };
 }
 
 /**
  * Full advisory draft for County/partner desks:
  * where it affects · where to get help · languages · message body.
- * Always labeled as a planning draft — not an official alert.
+ * Reads like a planning memo — no bracket leftovers or audience labels.
  */
 export function buildPublicAdvisoryDraft({
   county,
@@ -259,69 +299,62 @@ export function buildPublicAdvisoryDraft({
   phaseLabel,
   fields,
   messageBody,
-  audience,
-  priorityLanguageIds,
   nearbyShelterNames,
 }) {
   const areaLine =
-    fields.zone || fields.area || county?.islandLabel || county?.name || "Hawaiʻi";
+    trimField(fields.zone) ||
+    trimField(fields.area) ||
+    county?.islandLabel ||
+    county?.name ||
+    "Hawaiʻi";
   const helpLines = [];
-  if (fields.facility) {
+  if (trimField(fields.facility)) {
     helpLines.push(
-      `- Shelter / refuge (planning site — confirm County opening): ${fields.facility}${
-        fields.address ? ` (${fields.address})` : ""
-      }`
+      `- Shelter: ${shelterSitePhrase(fields)} (confirm County has opened this site before releasing)`
     );
   } else {
     helpLines.push(
-      "- Shelter / refuge: wait for County emergency management to announce which designated sites are open"
+      "- Shelter: County emergency management will announce which designated sites are open"
     );
   }
   if (nearbyShelterNames?.length) {
     helpLines.push(
-      `- Other designated sites near this zone (planning inventory — confirm openings): ${nearbyShelterNames.join("; ")}`
+      `- Nearby designated sites to consider: ${nearbyShelterNames.join("; ")}`
     );
   }
-  if (fields.location) {
-    helpLines.push(`- Transport pickup point: ${fields.location}`);
+  if (trimField(fields.location)) {
+    helpLines.push(`- Transport pickup: ${trimField(fields.location)}`);
   }
-  if (fields.transportLine) {
-    helpLines.push(`- Transport / paratransit: ${fields.transportLine}`);
+  if (trimField(fields.transportLine)) {
+    helpLines.push(`- Transit / paratransit: ${trimField(fields.transportLine)}`);
   }
-  if (fields.officialChannel) {
-    helpLines.push(`- Official updates: ${fields.officialChannel}`);
+  if (trimField(fields.officialChannel)) {
+    helpLines.push(`- Official updates: ${trimField(fields.officialChannel)}`);
   }
-  if (fields.petRule) {
-    helpLines.push(`- Pets: ${fields.petRule}`);
+  if (trimField(fields.petRule)) {
+    helpLines.push(`- Pets: ${trimField(fields.petRule)}`);
   }
 
-  const selectedLangs = (
-    Array.isArray(priorityLanguageIds) && priorityLanguageIds.length
-      ? PRIORITY_LANGUAGES.filter((lang) => priorityLanguageIds.includes(lang.id))
-      : PRIORITY_LANGUAGES
-  ).filter((lang) => lang.id !== "en");
-
-  const languageLabels = selectedLangs.map((lang) => lang.label).join(", ");
+  const languageLabels = PRIORITY_LANGUAGES.filter((lang) => lang.id !== "en")
+    .map((lang) => lang.label)
+    .join(", ");
 
   return [
-    "PLANNING DRAFT — not an official NWS / county alert. County PIO must approve before public release.",
+    "PLANNING DRAFT — not an official alert. County PIO must approve before public release.",
     "",
     `Phase: ${phaseLabel || "—"}`,
     `Hazard: ${hazardLabel || "—"}`,
-    `Where this affects: ${fields.county || county?.name || "County"} — ${areaLine}`,
+    `Where this affects: ${trimField(fields.county) || county?.name || "County"} — ${areaLine}`,
     "",
-    "Where to get help:",
+    "Where to get help",
     ...helpLines,
     "",
-    "Priority languages for mass care (localize with partners before release — this app does not machine-translate):",
-    languageLabels || "(select languages below)",
+    "Priority languages for mass care",
+    languageLabels,
     "",
-    audience ? `Audience focus: ${audience}` : null,
-    "Message:",
-    messageBody || "(add message body)",
+    "Suggested message",
+    messageBody || "Choose a message focus above to fill this section.",
     "",
-    "Seeking emergency shelter is about safety. Follow only official county / NWS instructions.",
-  ]
-    .filter((line) => line != null)
-    .join("\n");
+    "Seeking emergency shelter is about safety. Follow only official county and NWS instructions.",
+  ].join("\n");
 }
