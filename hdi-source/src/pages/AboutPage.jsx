@@ -1,11 +1,13 @@
 import {
   BookOpen,
   Calculator,
+  CheckCircle2,
   ExternalLink,
   Languages,
   Map,
   Shield,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import DisclaimerBanner from "../components/DisclaimerBanner";
 import { ACS_SOURCE } from "../data/acsIndicators";
 import { AFN_TRACT_SOURCE } from "../data/afnTracts";
@@ -152,6 +154,84 @@ export default function AboutPage() {
       </header>
 
       <DisclaimerBanner />
+
+      <Card icon={Shield} title="HAIC challenge fit (MAP · MODEL · MATCH)">
+        <p>
+          Built against the DHS 2026 HAIC challenge: strengthen County-led ESF-6 mass
+          care with State support — using only de-identified public data.
+        </p>
+        <div className="grid gap-3 md:grid-cols-3">
+          {[
+            {
+              label: "MAP",
+              to: "/map",
+              body: "Live NWS alerts, hazard overlays, shelter inventories, and tract AFN choropleths for all four counties (435 census tracts).",
+            },
+            {
+              label: "MODEL",
+              to: "/resource-planning",
+              body: "Hazard scenarios (hurricane, wildfire, tsunami, flood) estimate shelter, water, meals, transport, backup power, language support, and pets — with CMIST notes from ACS + emPOWER.",
+            },
+            {
+              label: "MATCH",
+              to: "/resource-planning#coordination",
+              body: "Partners matched to gaps with roles and decision points, plus trauma-informed multilingual Communication pathways.",
+            },
+          ].map((pillar) => (
+            <Link
+              key={pillar.label}
+              to={pillar.to}
+              className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 transition hover:border-forest/30 hover:bg-forest-soft/40 dark:border-slate-700 dark:bg-slate-950/50 dark:hover:bg-slate-900"
+            >
+              <p className="text-sm font-bold tracking-wide text-forest">{pillar.label}</p>
+              <p className="mt-2 text-xs leading-5 text-muted">{pillar.body}</p>
+            </Link>
+          ))}
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {[
+            {
+              title: "Actionable",
+              body: "Cited rates and formulas Counties / DHS can review before an event.",
+            },
+            {
+              title: "Usable",
+              body: "Roles, decision points, Communication templates, and a downloadable planning report.",
+            },
+            {
+              title: "Private",
+              body: "ACS, SVI, and emPOWER aggregates only — no PII, no AFN registries.",
+            },
+            {
+              title: "Equitable",
+              body: "Every county and neighbor-island communities; LEP + ASL checklist; immigrant-safety messaging.",
+            },
+            {
+              title: "Sustainable",
+              body: "Static web app on public APIs / GIS; ACS refresh script; optional AI summary only if configured.",
+            },
+            {
+              title: "Honest limits",
+              body: "No medication pill counts; no earthquake scenario; high-rise / off-grid called out in planning notes, not as a separate model.",
+            },
+          ].map((item) => (
+            <div
+              key={item.title}
+              className="flex gap-2 rounded-2xl border border-slate-100 px-3 py-2.5 dark:border-slate-700"
+            >
+              <CheckCircle2
+                className="mt-0.5 shrink-0 text-forest"
+                size={16}
+                aria-hidden="true"
+              />
+              <div>
+                <p className="text-sm font-semibold text-ink">{item.title}</p>
+                <p className="text-xs leading-5 text-muted">{item.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       <Card icon={Calculator} title="Planning rates used across the site">
         <p>

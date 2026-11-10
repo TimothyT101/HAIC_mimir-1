@@ -18,6 +18,8 @@ export function buildPlanningReport({ community, assessment, generatedAt = new D
     generatedAt: generatedAt.toISOString(),
     disclaimer:
       "This report is a deterministic planning template filled with calculator outputs and public county indicators. It is not AI-generated and is not an official emergency order, evacuation instruction, or resource request.",
+    challengeAlignment:
+      "HAIC MAP·MODEL·MATCH prototype: de-identified public data only; Counties lead; State ESF-6 supports. Generated in seconds for pre-event coordination — not a substitute for County EOPs.",
     community: {
       name: community.name,
       county: county.name,
@@ -76,6 +78,7 @@ export function reportToText(report) {
     `Generated: ${report.generatedAt}`,
     "",
     report.disclaimer,
+    report.challengeAlignment ? `\n${report.challengeAlignment}` : "",
     "",
     report.summary ? `Planning summary\n${report.summary}` : "",
     "",

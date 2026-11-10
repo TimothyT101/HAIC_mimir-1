@@ -1,24 +1,37 @@
-# Goals & Metrics: Project Mimir (HAIC 2026)
+# Goals & Metrics: Hawaiʻi Disaster Intelligence (HAIC 2026)
 
-## Challenge Alignment (DHS: Enhanced ESF-6 Planning)
-* **Modernize Shelter Data:** Transition Hawaiʻi's shelter planning from static 2019 data to a real-time, dynamic risk registry.
-* **Integrate CMIST & AFN Frameworks:** Map Access & Functional Needs (medical dependencies, mobility, non-English speakers) at the census-tract level.
-* **Dynamic Hazard Evacuation:** Automatically re-route emergency pathways around active hazard zones (tsunamis, sea-level rise, floods, road closures).
+Aligned to the DHS challenge **Enhancing ESF-6 Planning Through AI-Supported Insights**
+and pitch evaluation: **Actionable · Usable · Private · Equitable · Sustainable**.
 
----
+## Challenge pillars (MAP · MODEL · MATCH)
 
-## Quantifiable Performance Metrics
+| Pillar | Deliverable in this prototype |
+| :--- | :--- |
+| **MAP** | Live Map with NWS alerts, tsunami/flood/wildfire overlays, town markers, shelter inventories, and tract AFN choropleths for **all 4 counties / 435 census tracts**. |
+| **MODEL** | Resource Planning scenarios (hurricane, wildfire, tsunami, flood) estimating shelter, water, meals, transport, backup power, language support, and pets — plus CMIST notes from ACS + emPOWER. |
+| **MATCH** | Partner matching with roles and decision points; downloadable ESF-6 planning report; Communication pathways (multilingual checklist + trauma-informed templates). |
 
-| Metric Category | Target Benchmark | Measured Performance |
+## Evaluation criteria
+
+| Criterion | How this prototype meets it |
+| :--- | :--- |
+| **Actionable** | Cited HIEMA / FEMA / Ready.gov / ACS / emPOWER rates; formulas shown on Resource Planning and About. |
+| **Usable** | County-first roles, decision points, Communication templates, report download. |
+| **Private** | De-identified public aggregates only — no PII, no AFN registries, no DHS client data. |
+| **Equitable** | Every county + neighbor-island communities; LEP languages + ASL; immigrant-safety messaging. |
+| **Sustainable** | Static Vite app on public APIs/GIS; ACS refresh script; optional AI summary only if `VITE_AI_SUMMARY_URL` is set. |
+
+## Measurable goals (Section 7)
+
+| Goal | Target | Prototype status |
 | :--- | :--- | :--- |
-| **Data Refresh Speed** | < 3.0 seconds | **< 1.8 seconds** live feed aggregation (NOAA, NWS) |
-| **Geographic Coverage** | 100% Hawaiʻi Census Tracts | **100% Mapped** (ACS Demographic & AFN overlays) |
-| **Routing Accuracy** | 0 routes through active hazard zones | **100% Passed** automated hazard boundary test suite |
-| **AI Reliability (RAG)** | 0% Hallucination Rate | **100% Anchored** strictly to State EMA Standard Operating Procedures |
+| Hazard-specific AFN maps for all counties | 100% of census tracts | **435 / 435** tracts in map GeoJSON + AFN attributes |
+| Needs estimates across CMIST | Reasonable for County / DHS review | Shelter, transport, power, language, meals, water, pets + CMIST text from ACS/emPOWER |
+| Faster coordinated plan | Minutes/seconds vs manual recompilation | Report + MATCH partners generate in-browser in seconds |
 
----
+## Honest limits (called out for judges)
 
-## 🚀 Operational Impact Goals
-1. **Reduce Planning Bottlenecks:** Cut DHS shelter gap analysis time from hours of manual spreadsheet work down to **instant visual reporting**.
-2. **Offline Field Readiness:** Support pre-calculated emergency routing and printable 1-page shelter briefs for offline responders during power or grid outages.
-3. **Equitable Disaster Response:** Ensure multi-language accessibility and explicit resource matching for vulnerable communities during disaster response.
+- **Medication counts** are not quantified (CMIST Medical uses disability % + emPOWER electricity-dependent DME shares).
+- **Earthquake** is not a Resource Planning scenario (pitch notes little-notice hazards; we model wildfire/tsunami/flood/hurricane).
+- **High-rise elevators / off-grid** appear in community notes and partner decision points, not as separate quantitative models.
+- Shelter capacities are **sample / planning** values — not live open-bed status.

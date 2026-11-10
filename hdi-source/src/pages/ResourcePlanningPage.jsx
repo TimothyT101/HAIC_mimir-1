@@ -387,6 +387,7 @@ export default function ResourcePlanningPage() {
               ["Transportation assistance", assessment.transportAssist, assessment.formulas.transportAssist],
               ["Backup power considerations", assessment.electricityBackup, assessment.formulas.electricityBackup],
               ["Water (gallons)", assessment.waterGallons, assessment.formulas.waterGallons],
+              ["Meals (planning horizon)", assessment.meals, assessment.formulas.meals],
               ["Communication / language support", assessment.communicationSupport, assessment.formulas.communicationSupport],
               [
                 "Pet / working-animal support",
