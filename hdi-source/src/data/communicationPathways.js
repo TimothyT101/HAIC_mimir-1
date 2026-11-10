@@ -243,3 +243,70 @@ export function defaultComposerFields(county) {
     petRule: "check county pet / crate rules",
   };
 }
+
+/**
+ * Full advisory draft for County/partner desks:
+ * where it affects · where to get help · languages · message body.
+ * Always labeled as a planning draft — not an official alert.
+ */
+export function buildPublicAdvisoryDraft({
+  county,
+  hazardLabel,
+  phaseLabel,
+  fields,
+  messageBody,
+  audience,
+}) {
+  const areaLine =
+    fields.zone || fields.area || county?.islandLabel || county?.name || "Hawaiʻi";
+  const helpLines = [];
+  if (fields.facility) {
+    helpLines.push(
+      `- Shelter / refuge (planning site — confirm County opening): ${fields.facility}${
+        fields.address ? ` (${fields.address})` : ""
+      }`
+    );
+  } else {
+    helpLines.push(
+      "- Shelter / refuge: wait for County emergency management to announce which designated sites are open"
+    );
+  }
+  if (fields.location) {
+    helpLines.push(`- Transport pickup point: ${fields.location}`);
+  }
+  if (fields.transportLine) {
+    helpLines.push(`- Transport / paratransit: ${fields.transportLine}`);
+  }
+  if (fields.officialChannel) {
+    helpLines.push(`- Official updates: ${fields.officialChannel}`);
+  }
+  if (fields.petRule) {
+    helpLines.push(`- Pets: ${fields.petRule}`);
+  }
+
+  const languageLabels = PRIORITY_LANGUAGES.filter((l) => l.id !== "en")
+    .map((l) => l.label)
+    .join(", ");
+
+  return [
+    "PLANNING DRAFT — not an official NWS / county alert. County PIO must approve before public release.",
+    "",
+    `Phase: ${phaseLabel || "—"}`,
+    `Hazard: ${hazardLabel || "—"}`,
+    `Where this affects: ${fields.county || county?.name || "County"} — ${areaLine}`,
+    "",
+    "Where to get help:",
+    ...helpLines,
+    "",
+    "Priority languages for mass care (localize before release; do not machine-translate here):",
+    languageLabels,
+    "",
+    audience ? `Audience focus: ${audience}` : null,
+    "Message:",
+    messageBody || "(add message body)",
+    "",
+    "Seeking emergency shelter is about safety. Follow only official county / NWS instructions.",
+  ]
+    .filter((line) => line != null)
+    .join("\n");
+}

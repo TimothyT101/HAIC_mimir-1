@@ -444,10 +444,10 @@ export default function AboutPage() {
 
       <Card icon={Languages} title="Communication pathways">
         <p>
-          The Communication page is a message composer: fill county / facility blanks,
-          copy English drafts for before / during / after, then localize with language
-          partners. It also lists Hawaiʻi priority languages and a copyable
-          language-access briefing.
+          The Communication page builds a copy-ready advisory draft: where the hazard
+          affects, where to get help (optional designated shelter), priority languages
+          for mass care, and a trauma-informed English message. County PIO still owns
+          public release; partners localize — this app does not machine-translate.
           Templates are trauma-informed (lead with safety; affirm that seeking shelter is
           about safety) and must be localized by County language-access partners — this
           prototype does not machine-translate. Official alerts remain NWS / HIEMA /
