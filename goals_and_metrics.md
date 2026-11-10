@@ -9,7 +9,7 @@ and pitch evaluation: **Actionable · Usable · Private · Equitable · Sustaina
 | :--- | :--- |
 | **MAP** | Live Map with NWS alerts, tsunami/flood/wildfire overlays, town markers, shelter inventories, and tract AFN choropleths for **all 4 counties / 435 census tracts**. |
 | **MODEL** | Resource Planning scenarios (hurricane, wildfire, tsunami, flood) estimating shelter, water, meals, transport, backup power, language support, and pets — plus CMIST notes from ACS + emPOWER. |
-| **MATCH** | Partner matching with roles and decision points; downloadable ESF-6 planning report; Communication pathways (multilingual checklist + trauma-informed templates). |
+| **MATCH** | Partner matching with roles and decision points; downloadable ESF-6 planning report; Communication pathways (priority languages + copyable briefing + trauma-informed templates). |
 
 ## Evaluation criteria
 

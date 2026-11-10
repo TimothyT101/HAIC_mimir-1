@@ -204,7 +204,7 @@ export default function AboutPage() {
             },
             {
               title: "Equitable",
-              body: "Every county and neighbor-island communities; LEP + ASL checklist; immigrant-safety messaging.",
+              body: "Every county and neighbor-island communities; LEP + ASL priority languages; immigrant-safety messaging.",
             },
             {
               title: "Sustainable",
@@ -444,8 +444,9 @@ export default function AboutPage() {
 
       <Card icon={Languages} title="Communication pathways">
         <p>
-          The Communication page provides a priority-language checklist, trusted-messenger
-          channels, and English message templates for before / during / after a hazard.
+          The Communication page provides Hawaiʻi priority languages, a copyable
+          language-access briefing, trusted-messenger channels, and English message
+          templates for before / during / after a hazard.
           Templates are trauma-informed (lead with safety; affirm that seeking shelter is
           about safety) and must be localized by County language-access partners — this
           prototype does not machine-translate. Official alerts remain NWS / HIEMA /
