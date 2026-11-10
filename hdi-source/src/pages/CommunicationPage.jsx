@@ -118,14 +118,17 @@ export default function CommunicationPage() {
             <div>
               <h2 className="text-xl font-semibold text-ink">Priority languages checklist</h2>
               <p className="mt-1 text-sm text-muted">
-                Working desk tool: click each language when your County / VOAD team
-                has an interpreter or plain-language line ready <em>before</em> impact.
-                Saved in this browser only — not shared with DHS systems.
+                Pre-event readiness tracker for County / VOAD desks: check a language
+                when an interpreter or plain-language line is confirmed{" "}
+                <em>before</em> impact. This does <strong className="text-ink">not</strong>{" "}
+                change Live Map, Resource Planning numbers, or the templates below — it
+                only tracks your team&apos;s coverage. Saved in this browser only (not
+                sent to DHS).
               </p>
             </div>
           </div>
           <p className="rounded-full bg-forest-soft px-3 py-1 text-xs font-semibold text-forest">
-            {coveredCount} / {PRIORITY_LANGUAGES.length} covered
+            {coveredCount} / {PRIORITY_LANGUAGES.length} ready
           </p>
         </div>
         <ul className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
@@ -162,6 +165,19 @@ export default function CommunicationPage() {
             );
           })}
         </ul>
+        {coveredCount < PRIORITY_LANGUAGES.length ? (
+          <p className="mt-3 rounded-2xl border border-amber-200/80 bg-amber-50/70 px-3 py-2 text-xs text-amber-950 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-100">
+            Still need a confirmed line for:{" "}
+            {PRIORITY_LANGUAGES.filter((lang) => !covered.has(lang.id))
+              .map((lang) => lang.label)
+              .join(", ")}
+            .
+          </p>
+        ) : (
+          <p className="mt-3 rounded-2xl border border-emerald-200 bg-emerald-50/80 px-3 py-2 text-xs text-forest dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300">
+            All {PRIORITY_LANGUAGES.length} priority lines marked ready in this browser.
+          </p>
+        )}
       </section>
 
       <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
