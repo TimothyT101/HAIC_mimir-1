@@ -6,8 +6,8 @@ import { formatTimestamp } from "../../lib/format";
 export default function CommunityPanel({ community, onClose, countyStatus }) {
   if (!community) {
     return (
-      <section className="rounded-3xl bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold">Community details</h2>
+      <section className="rounded-3xl border border-transparent bg-white p-6 shadow-sm dark:border-slate-800 dark:shadow-none">
+        <h2 className="text-lg font-semibold text-ink">Community details</h2>
         <p className="mt-2 text-sm text-muted">
           Click a town marker for location details and official source links. County
           alert colors come from live NWS products.

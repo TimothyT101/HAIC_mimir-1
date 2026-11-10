@@ -2,6 +2,8 @@ import { categorizeEvent, inferCountyIds, severityToLevel } from "../lib/nwsZone
 
 export const NWS_ALERTS_ENDPOINT = "https://api.weather.gov/alerts/active?area=HI";
 export const NWS_PROXY_PATH = "/api/nws/alerts/active?area=HI";
+/** Human-facing Honolulu NWS office page (alert source for this prototype). */
+export const NWS_PUBLIC_URL = "https://www.weather.gov/hfo/";
 
 const NWS_HEADERS = {
   Accept: "application/geo+json",
