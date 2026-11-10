@@ -444,9 +444,10 @@ export default function AboutPage() {
 
       <Card icon={Languages} title="Communication pathways">
         <p>
-          The Communication page provides Hawaiʻi priority languages, a copyable
-          language-access briefing, trusted-messenger channels, and English message
-          templates for before / during / after a hazard.
+          The Communication page is a message composer: fill county / facility blanks,
+          copy English drafts for before / during / after, then localize with language
+          partners. It also lists Hawaiʻi priority languages and a copyable
+          language-access briefing.
           Templates are trauma-informed (lead with safety; affirm that seeking shelter is
           about safety) and must be localized by County language-access partners — this
           prototype does not machine-translate. Official alerts remain NWS / HIEMA /

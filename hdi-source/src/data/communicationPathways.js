@@ -206,3 +206,40 @@ export function templatesFor({ phase, hazardId }) {
     return phaseOk && hazardOk;
   });
 }
+
+/** Fill [PLACEHOLDER] tokens in a template body. Unknown tokens are left as-is. */
+export function fillTemplate(body, fields = {}) {
+  return String(body || "").replace(/\[([^\]]+)\]/g, (match, rawKey) => {
+    const key = String(rawKey).trim().toUpperCase();
+    const aliases = {
+      COUNTY: fields.county,
+      FACILITY: fields.facility,
+      ADDRESS: fields.address,
+      ZONE: fields.zone,
+      AREA: fields.area || fields.zone,
+      LOCATION: fields.location,
+      "COUNTY TRANSPORT / PARATRANSIT LINE": fields.transportLine,
+      "OFFICIAL CHANNEL": fields.officialChannel,
+      "PET RULE — CRATE REQUIRED / PET-FRIENDLY AREA": fields.petRule,
+      "PET RULE": fields.petRule,
+    };
+    const value = aliases[key];
+    if (value == null || String(value).trim() === "") return match;
+    return String(value).trim();
+  });
+}
+
+export function defaultComposerFields(county) {
+  const name = county?.name || "County";
+  return {
+    county: name,
+    facility: "",
+    address: "",
+    zone: county?.islandLabel || "",
+    area: county?.islandLabel || "",
+    location: "",
+    transportLine: `${name} transit / paratransit line`,
+    officialChannel: `${name} emergency management / NWS`,
+    petRule: "check county pet / crate rules",
+  };
+}

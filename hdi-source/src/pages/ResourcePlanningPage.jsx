@@ -529,7 +529,10 @@ export default function ResourcePlanningPage() {
           Partners below are matched to this scenario&apos;s estimated gaps (MATCH).
           Counties lead; State ESF-6 supports. For multilingual / trauma-informed message
           templates, open{" "}
-          <Link className="font-medium text-forest hover:underline" to="/communication">
+          <Link
+            className="font-medium text-forest hover:underline"
+            to={`/communication?county=${countyId}&hazard=${disasterTypeId}`}
+          >
             Communication pathways
           </Link>
           .
