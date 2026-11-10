@@ -32,9 +32,127 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+/* Dark theme tokens: readable body text, softer surfaces */
+html.dark {
+  --color-ink: #e2e8f0;
+  --color-muted: #94a3b8;
+  --color-forest-soft: #14352a;
+  color-scheme: dark;
+}
+
 html.dark body {
   background: #020617;
-  color: #f1f5f9;
+  color: var(--color-ink);
+}
+
+/* Brand green text stays readable; keep filled forest buttons deep green */
+html.dark :where(.text-forest) {
+  color: #6ee7b7;
+}
+
+html.dark :where(.bg-forest) {
+  background-color: #1f4d3a;
+}
+
+html.dark :where(.hover\:bg-forest-dark:hover) {
+  background-color: #153628;
+}
+
+html.dark :where(.bg-forest-soft),
+html.dark :where(.bg-forest-soft\/50),
+html.dark :where(.bg-forest-soft\/60),
+html.dark :where(.bg-forest-soft\/70) {
+  background-color: rgb(20 53 42 / 0.85);
+}
+
+/* Soften bright white cards / nested light surfaces */
+html.dark :where(.bg-white) {
+  background-color: #0f172a;
+}
+
+html.dark :where(.bg-white\/80),
+html.dark :where(.bg-white\/90),
+html.dark :where(.bg-white\/95) {
+  background-color: rgb(15 23 42 / 0.92);
+}
+
+html.dark :where(.bg-slate-50),
+html.dark :where(.bg-slate-50\/80),
+html.dark :where(.bg-slate-100) {
+  background-color: #1e293b;
+}
+
+html.dark :where(.hover\:bg-white:hover),
+html.dark :where(.hover\:bg-slate-50:hover),
+html.dark :where(.hover\:bg-slate-100:hover),
+html.dark :where(.hover\:bg-forest-soft:hover) {
+  background-color: #1e293b;
+}
+
+/* Body copy that used light-mode slate grays */
+html.dark :where(.text-slate-700),
+html.dark :where(.text-slate-600) {
+  color: #cbd5e1;
+}
+
+html.dark :where(.text-amber-800),
+html.dark :where(.text-amber-900),
+html.dark :where(.text-amber-900\/90),
+html.dark :where(.text-amber-950) {
+  color: #fde68a;
+}
+
+html.dark :where(.border-slate-100),
+html.dark :where(.border-slate-200),
+html.dark :where(.border-emerald-50),
+html.dark :where(.border-emerald-100),
+html.dark :where(.border-emerald-100\/80) {
+  border-color: #334155;
+}
+
+html.dark :where(.border-amber-100),
+html.dark :where(.border-amber-200) {
+  border-color: #92400e;
+}
+
+html.dark :where(.bg-amber-50\/70) {
+  background-color: rgb(69 26 3 / 0.55);
+}
+
+html.dark :where(.bg-amber-100\/80),
+html.dark :where(.bg-amber-100\/60) {
+  background-color: rgb(120 53 15 / 0.55);
+}
+
+html.dark :where(.ring-slate-100) {
+  --tw-ring-color: #334155;
+}
+
+/* Inline code: less glare than white pills */
+html.dark code {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border-radius: 0.25rem;
+  padding: 0.05rem 0.35rem;
+}
+
+html.dark :where(.bg-slate-100) code,
+html.dark code:where(.bg-slate-100) {
+  background-color: #1e293b;
+}
+
+/* Form controls on dark surfaces */
+html.dark select,
+html.dark input,
+html.dark textarea {
+  background-color: #020617;
+  color: #e2e8f0;
+  border-color: #334155;
+}
+
+html.dark option {
+  background-color: #0f172a;
+  color: #e2e8f0;
 }
 
 .leaflet-container {

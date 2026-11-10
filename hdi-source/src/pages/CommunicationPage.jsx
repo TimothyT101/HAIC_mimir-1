@@ -72,24 +72,26 @@ export default function CommunicationPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6">
       <div>
-        <h1 className="text-3xl font-bold text-forest">Communication pathways</h1>
+        <h1 className="text-3xl font-bold text-forest dark:text-emerald-300">
+          Communication pathways
+        </h1>
         <p className="mt-2 max-w-3xl text-sm text-muted">
           Multilingual checklist and trauma-informed message templates for ESF-6
           mass-care planning — before, during, and after a hazard.{" "}
           {COMMUNICATION_PATHWAYS_SOURCE.challengeNote}
         </p>
-        <p className="mt-2 max-w-3xl text-xs text-amber-800">
+        <p className="mt-2 max-w-3xl text-xs text-amber-800 dark:text-amber-200">
           {COMMUNICATION_PATHWAYS_SOURCE.note}
         </p>
       </div>
 
       <DisclaimerBanner compact />
 
-      <section className="rounded-3xl bg-white p-5 shadow-sm">
+      <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
         <div className="flex items-start gap-3">
           <Shield className="mt-0.5 text-forest" size={22} />
           <div>
-            <h2 className="text-xl font-semibold">Trauma-informed principles</h2>
+            <h2 className="text-xl font-semibold text-ink">Trauma-informed principles</h2>
             <p className="mt-1 text-sm text-muted">
               Humanistic tone for County and partner outreach. These are planning
               cues — not a substitute for county public information officers.
@@ -98,7 +100,10 @@ export default function CommunicationPage() {
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {TRAUMA_PRINCIPLES.map((item) => (
-            <article key={item.id} className="rounded-2xl border border-slate-100 p-4">
+            <article
+              key={item.id}
+              className="rounded-2xl border border-slate-100 p-4 dark:border-slate-700 dark:bg-slate-950/50"
+            >
               <p className="font-semibold text-forest">{item.title}</p>
               <p className="mt-2 text-sm leading-6 text-slate-700">{item.body}</p>
             </article>
@@ -106,12 +111,12 @@ export default function CommunicationPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl bg-white p-5 shadow-sm">
+      <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <Languages className="mt-0.5 text-forest" size={22} />
             <div>
-              <h2 className="text-xl font-semibold">Priority languages checklist</h2>
+              <h2 className="text-xl font-semibold text-ink">Priority languages checklist</h2>
               <p className="mt-1 text-sm text-muted">
                 Working desk tool: click each language when your County / VOAD team
                 has an interpreter or plain-language line ready <em>before</em> impact.
@@ -135,14 +140,14 @@ export default function CommunicationPage() {
                   className={`flex w-full items-start gap-3 rounded-2xl border px-3 py-3 text-left text-sm transition ${
                     isOn
                       ? "border-forest/40 bg-forest-soft/70"
-                      : "border-slate-100 hover:border-forest/30 hover:bg-slate-50"
+                      : "border-slate-100 hover:border-forest/30 hover:bg-slate-50 dark:border-slate-700"
                   }`}
                 >
                   <span
                     className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
                       isOn
                         ? "border-forest bg-forest text-white"
-                        : "border-slate-300 bg-white text-transparent"
+                        : "border-slate-300 bg-white text-transparent dark:border-slate-600 dark:bg-slate-950"
                     }`}
                     aria-hidden="true"
                   >
@@ -159,11 +164,11 @@ export default function CommunicationPage() {
         </ul>
       </section>
 
-      <section className="rounded-3xl bg-white p-5 shadow-sm">
+      <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
         <div className="flex items-start gap-3">
           <HeartHandshake className="mt-0.5 text-forest" size={22} />
           <div>
-            <h2 className="text-xl font-semibold">Who carries the message</h2>
+            <h2 className="text-xl font-semibold text-ink">Who carries the message</h2>
             <p className="mt-1 text-sm text-muted">
               Pair official alerts with mass-care and trusted community channels.
             </p>
@@ -191,12 +196,12 @@ export default function CommunicationPage() {
         </p>
       </section>
 
-      <section className="rounded-3xl bg-white p-5 shadow-sm">
+      <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div className="flex items-start gap-3">
             <Megaphone className="mt-0.5 text-forest" size={22} />
             <div>
-              <h2 className="text-xl font-semibold">English message templates</h2>
+              <h2 className="text-xl font-semibold text-ink">English message templates</h2>
               <p className="mt-1 text-sm text-muted">
                 Copy, localize with language partners, then release only through
                 authorized public information channels.
@@ -209,7 +214,7 @@ export default function CommunicationPage() {
               <select
                 value={phase}
                 onChange={(event) => setPhase(event.target.value)}
-                className="ml-2 rounded-xl border border-slate-200 px-3 py-2 text-sm text-ink"
+                className="ml-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
               >
                 {PHASES.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -223,7 +228,7 @@ export default function CommunicationPage() {
               <select
                 value={hazardId}
                 onChange={(event) => setHazardId(event.target.value)}
-                className="ml-2 rounded-xl border border-slate-200 px-3 py-2 text-sm text-ink"
+                className="ml-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
               >
                 {DISASTER_TYPES.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -237,7 +242,10 @@ export default function CommunicationPage() {
 
         <div className="mt-4 space-y-3">
           {templates.map((template) => (
-            <article key={template.id} className="rounded-2xl border border-slate-100 p-4">
+            <article
+              key={template.id}
+              className="rounded-2xl border border-slate-100 p-4 dark:border-slate-700 dark:bg-slate-950/50"
+            >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <p className="font-semibold text-ink">{template.title}</p>
@@ -248,7 +256,7 @@ export default function CommunicationPage() {
                 <button
                   type="button"
                   onClick={() => copyTemplate(template)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-forest hover:bg-forest-soft"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-forest hover:bg-forest-soft dark:border-slate-600"
                 >
                   {copiedId === template.id ? <Check size={14} /> : <Copy size={14} />}
                   {copiedId === template.id ? "Copied" : "Copy English"}

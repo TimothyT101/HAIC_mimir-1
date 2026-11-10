@@ -102,7 +102,9 @@ export default function ResourcePlanningPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6">
       <div>
-        <h1 className="text-3xl font-bold text-forest">Resource Planning</h1>
+        <h1 className="text-3xl font-bold text-forest dark:text-emerald-300">
+          Resource Planning
+        </h1>
         <p className="mt-2 max-w-3xl text-sm text-muted">
           County, community, and hazard scenario for ESF-6 planning. Town
           population, vehicles, disability, and language shares are Census ACS
@@ -112,15 +114,15 @@ export default function ResourcePlanningPage() {
       </div>
       <DisclaimerBanner compact />
 
-      <section className="rounded-3xl bg-white p-5 shadow-sm">
-        <h2 className="font-semibold">Scenario inputs</h2>
+      <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
+        <h2 className="font-semibold text-ink">Scenario inputs</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <label className="text-sm">
             <span className="mb-1 block text-muted">County</span>
             <select
               value={countyId}
               onChange={(event) => handleCounty(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 px-3 py-2"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-ink dark:border-slate-600 dark:bg-slate-950"
             >
               {COUNTIES.map((county) => (
                 <option key={county.id} value={county.id}>
@@ -134,7 +136,7 @@ export default function ResourcePlanningPage() {
             <select
               value={community?.id}
               onChange={(event) => setCommunityId(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 px-3 py-2"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-ink dark:border-slate-600 dark:bg-slate-950"
             >
               {countyCommunities.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -148,7 +150,7 @@ export default function ResourcePlanningPage() {
             <select
               value={disasterTypeId}
               onChange={(event) => setDisasterTypeId(event.target.value)}
-              className="w-full rounded-xl border border-slate-200 px-3 py-2"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-ink dark:border-slate-600 dark:bg-slate-950"
             >
               {DISASTER_TYPES.map((item) => (
                 <option key={item.id} value={item.id}>
@@ -166,16 +168,16 @@ export default function ResourcePlanningPage() {
       {scenarioCompare ? (
         <section
           id="what-changed"
-          className="scroll-mt-24 rounded-3xl border border-amber-200 bg-amber-50/70 p-5 shadow-sm"
+          className="scroll-mt-24 rounded-3xl border border-amber-200 bg-amber-50/70 p-5 shadow-sm dark:border-amber-800/60 dark:shadow-none"
         >
-          <h2 className="text-xl font-semibold text-amber-950">
+          <h2 className="text-xl font-semibold text-amber-950 dark:text-amber-100">
             What changed for {scenarioCompare.currentLabel}
           </h2>
-          <p className="mt-1 text-sm text-amber-900/90">
+          <p className="mt-1 text-sm text-amber-900/90 dark:text-amber-200/90">
             Switching the disaster scenario only changes MODEL rates for{" "}
             {scenarioCompare.communityName}. {scenarioCompare.unchangedNote}
           </p>
-          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-amber-950">
+          <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-amber-950 dark:text-amber-100">
             {scenarioCompare.bullets.map((item) => (
               <li key={item.label}>
                 <span className="font-semibold">{item.label}. </span>
@@ -183,9 +185,9 @@ export default function ResourcePlanningPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-4 overflow-x-auto rounded-2xl bg-white/80">
-            <table className="min-w-full text-left text-xs">
-              <thead className="bg-amber-100/80 text-[10px] uppercase tracking-wide text-amber-900">
+          <div className="mt-4 overflow-x-auto rounded-2xl bg-white/80 dark:bg-slate-950/70">
+            <table className="min-w-full text-left text-xs text-ink">
+              <thead className="bg-amber-100/80 text-[10px] uppercase tracking-wide text-amber-900 dark:bg-amber-950/80 dark:text-amber-200">
                 <tr>
                   <th className="px-3 py-2">Scenario</th>
                   <th className="px-3 py-2">Shelter rate</th>
@@ -200,8 +202,10 @@ export default function ResourcePlanningPage() {
                 {scenarioCompare.rows.map((row) => (
                   <tr
                     key={row.id}
-                    className={`border-t border-amber-100 ${
-                      row.isCurrent ? "bg-amber-100/60 font-semibold" : ""
+                    className={`border-t border-amber-100 dark:border-amber-900/50 ${
+                      row.isCurrent
+                        ? "bg-amber-100/60 font-semibold dark:bg-amber-900/40"
+                        : ""
                     }`}
                   >
                     <td className="px-3 py-2">
@@ -225,9 +229,9 @@ export default function ResourcePlanningPage() {
       {hazardExposure?.selected ? (
         <section
           id="hazard-tract-demand"
-          className="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm"
+          className="scroll-mt-24 rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none"
         >
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-xl font-semibold text-ink">
             Hazard ∩ tract AFN demand ({hazardExposure.hazardLabel})
           </h2>
           <p className="mt-1 text-sm text-muted">
@@ -295,8 +299,11 @@ export default function ResourcePlanningPage() {
       ) : null}
 
       {acs ? (
-        <section id="vulnerability" className="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm">
-          <h2 className="text-xl font-semibold">Population vulnerability (ACS)</h2>
+        <section
+          id="vulnerability"
+          className="scroll-mt-24 rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none"
+        >
+          <h2 className="text-xl font-semibold text-ink">Population vulnerability (ACS)</h2>
           <p className="mt-1 text-sm text-muted">
             {placeAcs
               ? `${community?.name} uses ${placeAcs.censusName}.`
@@ -362,7 +369,7 @@ export default function ResourcePlanningPage() {
       ) : null}
 
       {assessment ? (
-        <section className="rounded-3xl bg-white p-5 shadow-sm">
+        <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
           <h2 className="font-semibold">Estimated needs and documented assumptions</h2>
           <p className="mt-1 text-xs text-amber-800">
             Shortages use sample community capacity, not verified open shelter beds.
@@ -448,7 +455,7 @@ export default function ResourcePlanningPage() {
         </section>
       ) : null}
 
-      <section className="rounded-3xl bg-white p-5 shadow-sm">
+      <section className="rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
         <h2 className="font-semibold">Designated shelter / refuge locations</h2>
         <p className="mt-1 text-sm text-muted">
           {shelters.length} publicly listed planning facilities for{" "}
@@ -512,8 +519,8 @@ export default function ResourcePlanningPage() {
         </p>
       </section>
 
-      <section id="coordination" className="scroll-mt-24 rounded-3xl bg-white p-5 shadow-sm">
-        <h2 className="text-xl font-semibold">Coordinated response framework</h2>
+      <section id="coordination" className="scroll-mt-24 rounded-3xl border border-transparent bg-white p-5 shadow-sm dark:border-slate-800 dark:shadow-none">
+        <h2 className="text-xl font-semibold text-ink">Coordinated response framework</h2>
         {summary ? <p className="mt-3 text-sm leading-6 text-slate-700">{summary.text}</p> : null}
         <p className="mt-3 text-xs text-muted">
           {summary?.aiGenerated ? "AI summary" : "Deterministic planning summary — not AI-generated."}
@@ -588,9 +595,9 @@ export default function ResourcePlanningPage() {
 
 function Stat({ label, value }) {
   return (
-    <article className="rounded-2xl border border-slate-100 p-4">
+    <article className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-950/60">
       <p className="text-xs text-muted">{label}</p>
-      <p className="mt-1 text-lg font-semibold">{value}</p>
+      <p className="mt-1 text-lg font-semibold text-ink">{value}</p>
     </article>
   );
 }

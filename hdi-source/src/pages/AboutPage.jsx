@@ -9,7 +9,12 @@ import { NWS_ALERTS_ENDPOINT } from "../services/nwsAlerts";
 
 function SourceLink({ href, children }) {
   return (
-    <a className="text-forest hover:underline" href={href} target="_blank" rel="noreferrer">
+    <a
+      className="font-medium text-forest underline-offset-2 hover:underline"
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+    >
       {children}
     </a>
   );
@@ -19,7 +24,9 @@ export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-8 px-4 py-10 sm:px-6">
       <header>
-        <h1 className="text-3xl font-bold text-forest">About & Sources</h1>
+        <h1 className="text-3xl font-bold text-forest dark:text-emerald-300">
+          About & Sources
+        </h1>
         <p className="mt-3 text-muted">
           Hawaiʻi Disaster Intelligence is a 2026 Hawaiʻi AI Challenge prototype for
           DHS Enhanced ESF-6 planning. It supports mass-care planning. It does not
@@ -193,8 +200,8 @@ petSupport   = round((pop÷2.92) × 0.39 × shelterRate × 1.7)
 function Section({ id, title, children }) {
   return (
     <section id={id} className="scroll-mt-24 space-y-3">
-      <h2 className="text-xl font-semibold">{title}</h2>
-      <div className="space-y-3 text-sm leading-6 text-slate-700 [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1">
+      <h2 className="text-xl font-semibold text-ink">{title}</h2>
+      <div className="space-y-3 text-sm leading-6 text-slate-700 dark:text-slate-300 [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-5 [&_strong]:text-ink [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1 dark:[&_code]:bg-slate-800 dark:[&_code]:text-slate-100">
         {children}
       </div>
     </section>
