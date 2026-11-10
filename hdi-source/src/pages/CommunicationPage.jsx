@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Check, Copy, Languages, Megaphone } from "lucide-react";
+import { Check, Copy, Languages, MapPin, Megaphone } from "lucide-react";
 import DisclaimerBanner from "../components/DisclaimerBanner";
+import { COMMUNITIES } from "../data/communities";
 import { COUNTIES } from "../data/counties";
 import {
   buildLanguageAccessBriefing,
@@ -13,8 +14,10 @@ import {
   PRIORITY_LANGUAGES,
   templatesFor,
 } from "../data/communicationPathways";
-import { sheltersForCounty } from "../data/shelters";
+import { sheltersForCounty, suggestSheltersNearQuery } from "../data/shelters";
 import { DISASTER_TYPES } from "../lib/resourceCalculator";
+
+const DEFAULT_LANG_IDS = PRIORITY_LANGUAGES.map((lang) => lang.id);
 
 export default function CommunicationPage() {
   const [params] = useSearchParams();
@@ -28,6 +31,7 @@ export default function CommunicationPage() {
   const [countyId, setCountyId] = useState(initialCounty);
   const [templateId, setTemplateId] = useState("");
   const [shelterId, setShelterId] = useState("");
+  const [selectedLangIds, setSelectedLangIds] = useState(DEFAULT_LANG_IDS);
   const [fields, setFields] = useState(() =>
     defaultComposerFields(COUNTIES.find((c) => c.id === initialCounty))
   );
@@ -37,6 +41,19 @@ export default function CommunicationPage() {
   const hazard = DISASTER_TYPES.find((d) => d.id === hazardId);
   const phaseMeta = PHASES.find((p) => p.id === phase);
   const countyShelters = useMemo(() => sheltersForCounty(countyId), [countyId]);
+  const placePicks = useMemo(
+    () =>
+      COMMUNITIES.filter((item) => item.countyId === countyId).map((item) => ({
+        id: item.id,
+        name: item.name,
+      })),
+    [countyId]
+  );
+
+  const suggestedShelters = useMemo(
+    () => suggestSheltersNearQuery(fields.zone, countyId, { limit: 8 }),
+    [fields.zone, countyId]
+  );
 
   const templates = useMemo(
     () => templatesFor({ phase, hazardId }),
@@ -71,6 +88,11 @@ export default function CommunicationPage() {
   }, [shelterId, countyShelters]);
 
   const messageBody = selected ? fillTemplate(selected.body, fields) : "";
+  const nearbyNames = suggestedShelters
+    .filter((item) => item.id !== shelterId)
+    .slice(0, 5)
+    .map((item) => item.name);
+
   const advisory = buildPublicAdvisoryDraft({
     county,
     hazardLabel: hazard?.label,
@@ -78,6 +100,8 @@ export default function CommunicationPage() {
     fields,
     messageBody,
     audience: selected?.audience,
+    priorityLanguageIds: selectedLangIds,
+    nearbyShelterNames: nearbyNames,
   });
 
   async function copyText(id, text) {
@@ -92,6 +116,31 @@ export default function CommunicationPage() {
 
   function updateField(key, value) {
     setFields((current) => ({ ...current, [key]: value }));
+  }
+
+  function pickPlace(name) {
+    setShelterId("");
+    setFields((current) => ({
+      ...current,
+      zone: name,
+      area: name,
+      facility: "",
+      address: "",
+    }));
+  }
+
+  function pickSuggestedShelter(shelter) {
+    setShelterId(shelter.id);
+  }
+
+  function toggleLanguage(id) {
+    if (id === "en") return;
+    setSelectedLangIds((current) => {
+      if (current.includes(id)) {
+        return current.filter((item) => item !== id);
+      }
+      return [...current, id];
+    });
   }
 
   return (
@@ -120,8 +169,8 @@ export default function CommunicationPage() {
             <div>
               <h2 className="text-xl font-semibold text-ink">Advisory draft builder</h2>
               <p className="mt-1 text-sm text-muted">
-                Choose county + hazard, optionally a designated shelter, write the
-                blanks, then copy one message partners can localize and send.
+                Type a neighborhood (for example ʻEwa Beach) to see nearby designated
+                shelters like Campbell High, fill the blanks, then copy one advisory.
               </p>
             </div>
           </div>
@@ -194,6 +243,98 @@ export default function CommunicationPage() {
           </label>
         </div>
 
+        <div className="mt-4 space-y-3">
+          <label className="block text-xs text-muted">
+            Zone / neighborhood (where this affects)
+            <input
+              value={fields.zone || ""}
+              onChange={(event) => {
+                updateField("zone", event.target.value);
+                updateField("area", event.target.value);
+              }}
+              placeholder="e.g. Ewa Beach, Kapolei, Kāneʻohe"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
+            />
+          </label>
+
+          {placePicks.length > 0 ? (
+            <div>
+              <p className="text-[11px] font-medium uppercase tracking-wide text-muted">
+                Quick places in this county
+              </p>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {placePicks.map((place) => {
+                  const active =
+                    normalizeLoose(fields.zone) === normalizeLoose(place.name);
+                  return (
+                    <li key={place.id}>
+                      <button
+                        type="button"
+                        onClick={() => pickPlace(place.name)}
+                        className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                          active
+                            ? "bg-forest text-white"
+                            : "border border-slate-200 text-ink hover:bg-forest-soft dark:border-slate-700"
+                        }`}
+                      >
+                        {place.name}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ) : null}
+
+          {suggestedShelters.length > 0 ? (
+            <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/60 p-3 dark:border-emerald-900 dark:bg-emerald-950/30">
+              <div className="flex items-start gap-2">
+                <MapPin className="mt-0.5 shrink-0 text-forest" size={16} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-semibold text-forest dark:text-emerald-300">
+                    Possible shelters near “{fields.zone}”
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-muted">
+                    Click one to put it in the advisory. Open status is never confirmed
+                    here — County still announces openings.
+                  </p>
+                  <ul className="mt-2 flex flex-wrap gap-2">
+                    {suggestedShelters.map((shelter) => {
+                      const active = shelterId === shelter.id;
+                      return (
+                        <li key={shelter.id}>
+                          <button
+                            type="button"
+                            onClick={() => pickSuggestedShelter(shelter)}
+                            className={`max-w-full rounded-full px-3 py-1.5 text-left text-xs transition ${
+                              active
+                                ? "bg-forest text-white"
+                                : "border border-emerald-300/80 bg-white text-ink hover:border-forest dark:border-emerald-800 dark:bg-slate-950"
+                            }`}
+                            title={shelter.address || shelter.name}
+                          >
+                            <span className="font-semibold">{shelter.name}</span>
+                            {shelter.address ? (
+                              <span className="mt-0.5 block truncate text-[10px] opacity-80">
+                                {shelter.address}
+                              </span>
+                            ) : null}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ) : fields.zone && String(fields.zone).trim().length >= 3 ? (
+            <p className="text-[11px] text-muted">
+              No address match yet for “{fields.zone}” in this county inventory. Try a
+              town name (ʻEwa Beach, Kapolei) or pick from the full list below.
+            </p>
+          ) : null}
+        </div>
+
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           <label className="text-xs text-muted md:col-span-2">
             Where to get help — designated shelter (optional)
@@ -216,20 +357,19 @@ export default function CommunicationPage() {
             </span>
           </label>
           <label className="text-xs text-muted">
-            Zone / neighborhood detail
-            <input
-              value={fields.zone || ""}
-              onChange={(event) => updateField("zone", event.target.value)}
-              placeholder="e.g. south shore tsunami evacuation zone"
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
-            />
-          </label>
-          <label className="text-xs text-muted">
             Transport pickup point
             <input
               value={fields.location || ""}
               onChange={(event) => updateField("location", event.target.value)}
               placeholder="e.g. community center lot"
+              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
+            />
+          </label>
+          <label className="text-xs text-muted">
+            Official update channel
+            <input
+              value={fields.officialChannel || ""}
+              onChange={(event) => updateField("officialChannel", event.target.value)}
               className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
             />
           </label>
@@ -252,15 +392,7 @@ export default function CommunicationPage() {
               className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
             />
           </label>
-          <label className="text-xs text-muted">
-            Official update channel
-            <input
-              value={fields.officialChannel || ""}
-              onChange={(event) => updateField("officialChannel", event.target.value)}
-              className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-ink dark:border-slate-600 dark:bg-slate-950"
-            />
-          </label>
-          <label className="text-xs text-muted">
+          <label className="text-xs text-muted md:col-span-2">
             Transport / paratransit line
             <input
               value={fields.transportLine || ""}
@@ -280,7 +412,7 @@ export default function CommunicationPage() {
         </div>
 
         <p className="mt-3 text-xs text-muted">
-          Needs estimates stay on{" "}
+          Numbers and the downloadable ESF-6 planning report live on{" "}
           <Link
             className="font-medium text-forest hover:underline"
             to={`/resource-planning?county=${countyId}`}
@@ -307,14 +439,19 @@ export default function CommunicationPage() {
                 Priority languages for mass care
               </h2>
               <p className="mt-1 text-sm text-muted">
-                Included automatically in the advisory above. Copy a separate partner
-                briefing if you want a checkbox-style ask to interpreters.
+                Click to include or drop languages from the advisory above. Copy the
+                partner briefing when you want a checkbox ask for interpreters.
               </p>
             </div>
           </div>
           <button
             type="button"
-            onClick={() => copyText("language-briefing", buildLanguageAccessBriefing())}
+            onClick={() =>
+              copyText(
+                "language-briefing",
+                buildLanguageAccessBriefing(selectedLangIds)
+              )
+            }
             className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 px-3 py-1.5 text-xs font-semibold text-forest hover:bg-forest-soft dark:border-slate-600"
           >
             {copiedId === "language-briefing" ? <Check size={14} /> : <Copy size={14} />}
@@ -324,17 +461,38 @@ export default function CommunicationPage() {
           </button>
         </div>
         <ul className="mt-4 flex flex-wrap gap-2">
-          {PRIORITY_LANGUAGES.map((lang) => (
-            <li
-              key={lang.id}
-              className="rounded-full border border-slate-200 px-3 py-1 text-xs text-ink dark:border-slate-700"
-              title={lang.role}
-            >
-              {lang.label}
-            </li>
-          ))}
+          {PRIORITY_LANGUAGES.map((lang) => {
+            const active = selectedLangIds.includes(lang.id);
+            const locked = lang.id === "en";
+            return (
+              <li key={lang.id}>
+                <button
+                  type="button"
+                  disabled={locked}
+                  onClick={() => toggleLanguage(lang.id)}
+                  title={lang.role}
+                  className={`rounded-full px-3 py-1 text-xs transition ${
+                    active
+                      ? "bg-forest text-white"
+                      : "border border-slate-200 text-ink hover:bg-forest-soft dark:border-slate-700"
+                  } ${locked ? "cursor-default opacity-90" : ""}`}
+                >
+                  {lang.label}
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </div>
   );
+}
+
+function normalizeLoose(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[ʻ''`]/g, "")
+    .toLowerCase()
+    .trim();
 }

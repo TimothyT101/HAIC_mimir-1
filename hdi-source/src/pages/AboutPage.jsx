@@ -444,14 +444,12 @@ export default function AboutPage() {
 
       <Card icon={Languages} title="Communication pathways">
         <p>
-          The Communication page builds a copy-ready advisory draft: where the hazard
-          affects, where to get help (optional designated shelter), priority languages
-          for mass care, and a trauma-informed English message. County PIO still owns
-          public release; partners localize — this app does not machine-translate.
-          Templates are trauma-informed (lead with safety; affirm that seeking shelter is
-          about safety) and must be localized by County language-access partners — this
-          prototype does not machine-translate. Official alerts remain NWS / HIEMA /
-          county products.
+          The Communication page builds a copy-ready advisory draft: type a neighborhood
+          (for example ʻEwa Beach) to surface nearby designated shelters, choose where to
+          get help, toggle priority languages for mass care, and copy a trauma-informed
+          English message. County PIO still owns public release; partners localize — this
+          app does not machine-translate. Official alerts remain NWS / HIEMA / county
+          products.
         </p>
       </Card>
 

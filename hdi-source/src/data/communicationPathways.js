@@ -30,10 +30,14 @@ export const PRIORITY_LANGUAGES = [
 ];
 
 /** Copy-ready briefing for County / VOAD language-access partners (no PII). */
-export function buildLanguageAccessBriefing() {
-  const lines = PRIORITY_LANGUAGES.filter((lang) => lang.id !== "en").map(
-    (lang) => `- [ ] ${lang.label} — ${lang.role}`
-  );
+export function buildLanguageAccessBriefing(priorityLanguageIds) {
+  const pool =
+    Array.isArray(priorityLanguageIds) && priorityLanguageIds.length
+      ? PRIORITY_LANGUAGES.filter((lang) => priorityLanguageIds.includes(lang.id))
+      : PRIORITY_LANGUAGES;
+  const lines = pool
+    .filter((lang) => lang.id !== "en")
+    .map((lang) => `- [ ] ${lang.label} — ${lang.role}`);
   return [
     "Language-access briefing (ESF-6 planning)",
     "Audience: County EM / language partners / libraries / VOAD",
@@ -256,6 +260,8 @@ export function buildPublicAdvisoryDraft({
   fields,
   messageBody,
   audience,
+  priorityLanguageIds,
+  nearbyShelterNames,
 }) {
   const areaLine =
     fields.zone || fields.area || county?.islandLabel || county?.name || "Hawaiʻi";
@@ -271,6 +277,11 @@ export function buildPublicAdvisoryDraft({
       "- Shelter / refuge: wait for County emergency management to announce which designated sites are open"
     );
   }
+  if (nearbyShelterNames?.length) {
+    helpLines.push(
+      `- Other designated sites near this zone (planning inventory — confirm openings): ${nearbyShelterNames.join("; ")}`
+    );
+  }
   if (fields.location) {
     helpLines.push(`- Transport pickup point: ${fields.location}`);
   }
@@ -284,9 +295,13 @@ export function buildPublicAdvisoryDraft({
     helpLines.push(`- Pets: ${fields.petRule}`);
   }
 
-  const languageLabels = PRIORITY_LANGUAGES.filter((l) => l.id !== "en")
-    .map((l) => l.label)
-    .join(", ");
+  const selectedLangs = (
+    Array.isArray(priorityLanguageIds) && priorityLanguageIds.length
+      ? PRIORITY_LANGUAGES.filter((lang) => priorityLanguageIds.includes(lang.id))
+      : PRIORITY_LANGUAGES
+  ).filter((lang) => lang.id !== "en");
+
+  const languageLabels = selectedLangs.map((lang) => lang.label).join(", ");
 
   return [
     "PLANNING DRAFT — not an official NWS / county alert. County PIO must approve before public release.",
@@ -298,8 +313,8 @@ export function buildPublicAdvisoryDraft({
     "Where to get help:",
     ...helpLines,
     "",
-    "Priority languages for mass care (localize before release; do not machine-translate here):",
-    languageLabels,
+    "Priority languages for mass care (localize with partners before release — this app does not machine-translate):",
+    languageLabels || "(select languages below)",
     "",
     audience ? `Audience focus: ${audience}` : null,
     "Message:",

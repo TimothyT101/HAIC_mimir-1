@@ -3991,3 +3991,75 @@ export function shelterCountByCounty() {
   }, {});
 }
 
+/** Fold diacritics / ʻokina so "Ewa Beach" matches "ʻEwa Beach". */
+function normalizePlaceText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[ʻ''`]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function hasWholeToken(haystack, token) {
+  return new RegExp(`(?:^|\\s)${token}(?:\\s|$)`).test(haystack);
+}
+
+/**
+ * Suggest designated shelters near a typed neighborhood / zone
+ * (e.g. "Ewa Beach" → Campbell High, Ewa Beach Elementary, …).
+ * Matches address + name text within the county. Planning inventory only.
+ */
+export function suggestSheltersNearQuery(query, countyId, { limit = 8 } = {}) {
+  const haystack = normalizePlaceText(query);
+  if (!haystack || haystack.length < 3) return [];
+
+  const tokens = haystack.split(" ").filter((token) => token.length >= 3);
+  if (!tokens.length) return [];
+
+  const scored = sheltersForCounty(countyId)
+    .map((shelter) => {
+      const blob = normalizePlaceText(
+        [shelter.name, shelter.address, shelter.island].filter(Boolean).join(" ")
+      );
+      if (!blob) return null;
+
+      const addressNorm = normalizePlaceText(shelter.address);
+      let score = 0;
+
+      // Full phrase match wins (Campbell High address contains "Ewa Beach").
+      if (blob.includes(haystack)) score += 12;
+      if (addressNorm && addressNorm.includes(haystack)) score += 8;
+
+      let tokenHits = 0;
+      for (const token of tokens) {
+        if (hasWholeToken(blob, token)) {
+          tokenHits += 1;
+          score += 3;
+          if (addressNorm && hasWholeToken(addressNorm, token)) score += 2;
+        }
+      }
+
+      // Require the full phrase OR every significant token as a whole word
+      // so "Ewa" does not match "Kaewai".
+      const phraseHit = blob.includes(haystack) || (addressNorm && addressNorm.includes(haystack));
+      if (!phraseHit && tokenHits < tokens.length) return null;
+      if (score <= 0) return null;
+      return { shelter, score };
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score || a.shelter.name.localeCompare(b.shelter.name));
+
+  const seen = new Set();
+  const out = [];
+  for (const row of scored) {
+    if (seen.has(row.shelter.id)) continue;
+    seen.add(row.shelter.id);
+    out.push(row.shelter);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+

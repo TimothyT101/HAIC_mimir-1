@@ -38,7 +38,7 @@ const FEATURES = [
   {
     icon: Languages,
     title: "Communication pathways",
-    body: "Trauma-informed, multilingual planning templates for before, during, and after.",
+    body: "Draft a public advisory: affected area, nearby shelters, priority languages, and a copy-ready message.",
     to: "/communication",
   },
 ];
