@@ -235,9 +235,9 @@ export default function AboutPage() {
 
       <Card icon={Calculator} title="Planning rates used across the site">
         <p>
-          Resource Planning, reports, and the “What changed” strip all read these
-          rates from one place (<code>planningFactors.js</code>). Changing a rate
-          there changes the MODEL everywhere on the site.
+          Resource Planning, reports, and the scenario-comparison section all read
+          these rates from one place (<code>planningFactors.js</code>). Changing a
+          rate there changes the MODEL everywhere on the site.
         </p>
         <div className="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-700">
           <table className="min-w-full text-left text-xs">
@@ -372,10 +372,11 @@ export default function AboutPage() {
         </p>
         <p>
           Designated shelter / refuge locations on Resource Planning come from public
-          inventories (Open Data CSV 2019, Honolulu DEM FOI list, Kauaʻi KEMA list).
-          Maui and Hawaiʻi Island currently use the Open Data CSV plus county hubs for
-          announcements. Hawaiʻi does not publish a statewide open/closed shelter API —
-          capacities stay blank unless a public source states them.
+          inventories (Open Data CSV last updated Dec 2019, Honolulu DEM FOI list,
+          Kauaʻi KEMA list). Maui and Hawaiʻi Island use that Open Data inventory plus
+          county EMA / Civil Defense hubs for announcements. Hawaiʻi does not publish a
+          statewide open/closed shelter API — capacities stay blank unless a public
+          source states them.
         </p>
       </Card>
 
@@ -428,8 +429,8 @@ export default function AboutPage() {
         <p>
           On Resource Planning, the disaster-scenario dropdown only changes MODEL rates
           (shelter %, days, power intensity) for the selected community. ACS
-          vulnerability cards stay the same. A “What changed” strip compares the
-          current scenario to hurricane on the same town.
+          vulnerability cards stay the same. The scenario-comparison section compares
+          hurricane, wildfire, tsunami, and flood rates for the same town.
         </p>
         <p>
           A separate county panel estimates AFN demand for census tracts that intersect

@@ -141,7 +141,7 @@ export const HONOLULU_SHELTER_LIST_URL =
   "https://uipa.org/files/foi/476/OahuHurricaneEvacuationShelterList18OCT18FINAL.pdf";
 export const KAUAI_SHELTER_LIST_URL =
   "https://www.kauai.gov/files/assets/public/v/1/emergency-management/documents/potential-shelter-list.pdf";
-export const MAUI_EMA_URL = "https://www.mauicounty.gov/76/Emergency-Management";
+export const MAUI_EMA_URL = "https://www.mauicounty.gov/Emergency";
 export const HAWAII_CD_URL = "https://www.hawaiicounty.gov/departments/civil-defense";
 export const OPEN_DATA_SHELTERS_URL =
   "https://opendata.hawaii.gov/dataset/state-civil-defense-hurricane-shelters";

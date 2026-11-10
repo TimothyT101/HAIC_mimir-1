@@ -573,7 +573,7 @@ export const COMMUNITIES = [
       "Air quality and medical support needs",
     ],
     sources: [
-      { label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/76/Emergency-Management" },
+      { label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/Emergency" },
       { label: "Hawaiʻi Emergency Management Agency", url: "https://dod.hawaii.gov/hiema/" },
     ],
     lastUpdated: "2026-10-26T12:00:00-10:00",
@@ -612,7 +612,7 @@ export const COMMUNITIES = [
     incidentDescription: "Exercise card. Kahului is modeled as a logistics hub for Maui County ESF-6 planning.",
     affectedArea: "Kahului",
     potentialImpacts: ["Routine preparedness"],
-    sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/76/Emergency-Management" }],
+    sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/Emergency" }],
     lastUpdated: "2026-10-26T08:00:00-10:00",
     history: [],
     vulnerability: {
@@ -648,7 +648,7 @@ export const COMMUNITIES = [
       "Exercise Unknown status. Molokaʻi does not automatically inherit Maui island classifications.",
     affectedArea: "Not verified",
     potentialImpacts: ["Unknown pending local verification"],
-    sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/76/Emergency-Management" }],
+    sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/Emergency" }],
     lastUpdated: "2026-10-20T10:00:00-10:00",
     history: [],
     vulnerability: {
@@ -683,7 +683,7 @@ export const COMMUNITIES = [
     incidentDescription: "Exercise card. Lānaʻi is classified independently from Maui island communities.",
     affectedArea: "Lānaʻi City",
     potentialImpacts: ["Routine preparedness"],
-    sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/76/Emergency-Management" }],
+    sources: [{ label: "County of Maui Emergency Management Agency", url: "https://www.mauicounty.gov/Emergency" }],
     lastUpdated: "2026-10-26T08:00:00-10:00",
     history: [],
     vulnerability: {

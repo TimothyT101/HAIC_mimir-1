@@ -16,7 +16,7 @@ export const SHELTER_DATASET = {
   openDataUrl: "https://opendata.hawaii.gov/dataset/state-civil-defense-hurricane-shelters",
   honoluluListUrl: "https://uipa.org/files/foi/476/OahuHurricaneEvacuationShelterList18OCT18FINAL.pdf",
   kauaiListUrl: "https://www.kauai.gov/files/assets/public/v/1/emergency-management/documents/potential-shelter-list.pdf",
-  mauiEmaUrl: "https://www.mauicounty.gov/76/Emergency-Management",
+  mauiEmaUrl: "https://www.mauicounty.gov/Emergency",
   hawaiiCdUrl: "https://www.hawaiicounty.gov/departments/civil-defense",
   honoluluLiveStatusUrl: "https://p.veoci.com/hnlshelter",
 };
