@@ -224,7 +224,8 @@ export const PUBLIC_SOURCE_LINKS = [
     id: "red-cross",
     label: "American Red Cross — disaster shelter / mass care",
     url: RED_CROSS_SHELTER_URL,
-    usedFor: "3 meals per person per day mass-care planning practice",
+    usedFor:
+      "Mass-care shelter operations reference; meals use common 3 meals/person/day practice while sheltered",
   },
   {
     id: "pets",

@@ -175,7 +175,7 @@ export default function AboutPage() {
             {
               label: "MATCH",
               to: "/resource-planning#coordination",
-              body: "Partners matched to gaps with roles and decision points, plus trauma-informed multilingual Communication pathways.",
+              body: "Partners matched to estimated gaps with roles and decision points, plus a downloadable ESF-6 planning report. Message drafts live on Communication.",
             },
           ].map((pillar) => (
             <Link
