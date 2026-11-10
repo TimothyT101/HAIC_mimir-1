@@ -580,7 +580,7 @@ export default function ResourcePlanningPage() {
           className="mt-5 inline-flex items-center gap-2 rounded-full bg-forest px-5 py-3 text-sm font-semibold text-white hover:bg-forest-dark"
         >
           <ClipboardList size={16} />
-          Generate planning report
+          Download ESF-6 planning report
         </button>
         {aiNote ? <p className="mt-2 text-xs text-muted">{aiNote}</p> : null}
       </section>

@@ -32,7 +32,7 @@ const FEATURES = [
   {
     icon: Network,
     title: "Coordinated Response",
-    body: "Generate planning reports for more effective emergency coordination.",
+    body: "Match partners and download an ESF-6 planning report for County / State desks.",
     to: "/resource-planning#coordination",
   },
   {
