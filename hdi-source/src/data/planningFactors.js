@@ -154,9 +154,16 @@ export const HONOLULU_LIVE_SHELTER_STATUS_URL = "https://p.veoci.com/hnlshelter"
 export const PUBLIC_SOURCE_LINKS = [
   {
     id: "nws",
-    label: "National Weather Service active alerts (Hawaiʻi)",
+    label: "National Weather Service Honolulu (weather.gov/hfo)",
+    url: "https://www.weather.gov/hfo/",
+    usedFor:
+      "Human-facing NWS office page; Live Map pulls active HI alerts from api.weather.gov",
+  },
+  {
+    id: "nws-api",
+    label: "NWS active alerts API (area=HI)",
     url: "https://api.weather.gov/alerts/active?area=HI",
-    usedFor: "Live Map county alert coloring and alert list",
+    usedFor: "Machine feed for Live Map county colors and alert list (auto-refresh ~3 min)",
   },
   {
     id: "acs",

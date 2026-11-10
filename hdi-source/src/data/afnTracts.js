@@ -13,6 +13,8 @@ export const AFN_TRACT_SOURCE = {
     "https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_15_tract_500k.zip",
   retrievedAt: "2026-11-07",
   vintage: "SVI 2022 (ACS 2018–2022 inputs)",
+  /** Matches public/tracts GeoJSON + hazardTractExposure.json meta.tractCount. */
+  tractCount: 435,
   note: "Tract choropleths are de-identified community proxies for CMIST planning. They do not identify people who need rescue.",
 };
 
