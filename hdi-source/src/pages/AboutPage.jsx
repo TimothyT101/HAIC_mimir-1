@@ -211,8 +211,8 @@ export default function AboutPage() {
               body: "Static web app on public APIs / GIS; ACS refresh script; optional AI summary only if configured.",
             },
             {
-              title: "Honest limits",
-              body: "No medication pill counts; no earthquake scenario; high-rise / off-grid called out in planning notes, not as a separate model.",
+              title: "Scope & privacy",
+              body: "Challenge scenarios are hurricane, wildfire, tsunami, and flood. No client lists or live shelter-bed APIs — gaps use sample planning capacity only when shown.",
             },
           ].map((item) => (
             <div

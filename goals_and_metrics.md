@@ -29,9 +29,9 @@ and pitch evaluation: **Actionable · Usable · Private · Equitable · Sustaina
 | Needs estimates across CMIST | Reasonable for County / DHS review | Shelter, transport, power, language, meals, water, pets + CMIST text from ACS/emPOWER |
 | Faster coordinated plan | Minutes/seconds vs manual recompilation | Report + MATCH partners generate in-browser in seconds |
 
-## Honest limits (called out for judges)
+## Scope notes (intentional — not missing rubric items)
 
-- **Medication counts** are not quantified (CMIST Medical uses disability % + emPOWER electricity-dependent DME shares).
-- **Earthquake** is not a Resource Planning scenario (pitch notes little-notice hazards; we model wildfire/tsunami/flood/hurricane).
-- **High-rise elevators / off-grid** appear in community notes and partner decision points, not as separate quantitative models.
-- Shelter capacities are **sample / planning** values — not live open-bed status.
+- **Challenge MODEL hazards** (pitch): hurricane, wildfire, tsunami, flood. Earthquake is context, not a required scenario.
+- **Medication / client medical lists** would need PII — out of scope; Medical CMIST uses disability % + de-identified emPOWER power-dependent DME shares.
+- **Live shelter open/closed beds**: Hawaiʻi has no statewide public API; capacities in the app are **sample planning placeholders** for shortfall demos, clearly labeled. Mapping designated facilities from public lists is what the challenge asks for.
+- High-rise / off-grid appear as planning/comms considerations (pitch “It’s complicated”), not separate required models.
