@@ -107,10 +107,9 @@ export default function ResourcePlanningPage() {
         </h1>
         <p className="mt-2 max-w-3xl text-sm text-muted">
           Pick a county, community, and hazard to estimate ESF-6 needs, match
-          partners, and download a planning report. Extra comparison tables,
-          county-scale tract cues, and the full shelter inventory stay collapsed
-          below so the page stays short. Shelter open status is never confirmed
-          here.
+          partners, and download a planning report. Expand a section below for
+          scenario comparison, county-scale tract cues, or the designated shelter
+          inventory. Shelter open status is never confirmed here.
         </p>
       </div>
       <DisclaimerBanner compact />
@@ -176,8 +175,8 @@ export default function ResourcePlanningPage() {
               Scenario comparison — {scenarioCompare.currentLabel}
             </h2>
             <p className="mt-1 text-sm text-amber-900/90 dark:text-amber-200/90">
-              Optional detail. Open to compare hurricane / wildfire / tsunami / flood rates
-              for {scenarioCompare.communityName}.
+              Compare hurricane, wildfire, tsunami, and flood planning rates for{" "}
+              {scenarioCompare.communityName}.
             </p>
           </summary>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-amber-950 dark:text-amber-100">
@@ -239,7 +238,7 @@ export default function ResourcePlanningPage() {
               County-scale hazard ∩ tract cue ({hazardExposure.hazardLabel})
             </h2>
             <p className="mt-1 text-sm text-muted">
-              Optional detail — separate from the town calculator.{" "}
+              County-scale AFN demand cue (separate from the town calculator):{" "}
               {formatNumber(hazardExposure.selected.tractCount)} /{" "}
               {formatNumber(hazardExposure.allTracts.tractCount)} tracts · shelter cue{" "}
               {formatNumber(hazardExposure.estimatedShelterNeedFromExposedTracts)}.
@@ -472,9 +471,9 @@ export default function ResourcePlanningPage() {
             Designated shelter / refuge inventory
           </h2>
           <p className="mt-1 text-sm text-muted">
-            {shelters.length} planning facilities for{" "}
-            {COUNTIES.find((item) => item.id === countyId)?.name} — open to browse the full
-            list. Not confirmed open.
+            {shelters.length} designated or potential planning facilities for{" "}
+            {COUNTIES.find((item) => item.id === countyId)?.name}. Expand to review the
+            inventory — open status is not confirmed here.
           </p>
         </summary>
         <p className="mt-3 text-xs text-amber-800">
