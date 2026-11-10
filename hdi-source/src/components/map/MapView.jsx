@@ -155,10 +155,10 @@ function MapButtons({ countyId }) {
   const map = useMap();
 
   return (
-    <div className="absolute left-3 top-3 z-[1000] flex flex-col overflow-hidden rounded-xl bg-white shadow">
+    <div className="absolute left-3 top-3 z-[1000] flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow dark:border-slate-700 dark:shadow-none">
       <button
         type="button"
-        className="p-2 hover:bg-slate-50"
+        className="p-2 text-ink hover:bg-slate-50 dark:hover:bg-slate-800"
         onClick={() => map.zoomIn()}
         aria-label="Zoom in"
       >
@@ -166,7 +166,7 @@ function MapButtons({ countyId }) {
       </button>
       <button
         type="button"
-        className="border-t border-slate-100 p-2 hover:bg-slate-50"
+        className="border-t border-slate-100 p-2 text-ink hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
         onClick={() => map.zoomOut()}
         aria-label="Zoom out"
       >
@@ -174,7 +174,7 @@ function MapButtons({ countyId }) {
       </button>
       <button
         type="button"
-        className="border-t border-slate-100 p-2 hover:bg-slate-50"
+        className="border-t border-slate-100 p-2 text-ink hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
         onClick={() => applyCountyView(map, getCounty(countyId), { animate: true })}
         aria-label="Reset island view"
       >
@@ -232,7 +232,7 @@ export default function MapView({
         attributionControl
         scrollWheelZoom
       >
-        <LayersControl position="topright">
+        <LayersControl position="bottomright">
           <LayersControl.BaseLayer checked name="OpenStreetMap">
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -285,7 +285,7 @@ export default function MapView({
         <p className="text-xs text-white/80">{county.name}</p>
         {zoneNote ? <p className="mt-1 text-[11px] leading-4 text-amber-100">{zoneNote}</p> : null}
       </div>
-      <div className="pointer-events-auto absolute right-3 top-14 z-[1000] w-[220px] sm:w-[260px]">
+      <div className="pointer-events-auto absolute right-3 top-3 z-[1000] w-[220px] sm:w-[260px]">
         <HazardSwitcher hazards={hazards} onChange={setHazards}>
           <AfNSwitcher
             enabled={afnEnabled}

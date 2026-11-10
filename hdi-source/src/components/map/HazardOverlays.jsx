@@ -144,8 +144,10 @@ export function HazardSwitcher({ hazards, onChange, children = null }) {
   }
 
   return (
-    <div className="max-h-[340px] overflow-y-auto rounded-2xl bg-white/95 p-3 text-xs shadow-lg sm:max-h-none">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">Hazard layers</p>
+    <div className="max-h-[340px] overflow-y-auto rounded-2xl border border-slate-200/80 bg-white/95 p-3 text-xs shadow-lg sm:max-h-none dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+        Hazard layers
+      </p>
       <p className="mt-1 text-[11px] leading-4 text-muted">
         These are places, not people. A zone is where to go or avoid if officials
         say so — not a list of who must evacuate.

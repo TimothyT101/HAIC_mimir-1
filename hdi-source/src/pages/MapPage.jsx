@@ -121,6 +121,7 @@ export default function MapPage() {
               error={liveFeed.error}
               fetchedAt={liveFeed.fetchedAt}
               stale={liveFeed.stale}
+              refreshMs={liveFeed.refreshMs}
               onReload={liveFeed.reload}
               onViewDetails={handleAlertDetails}
             />

@@ -1,6 +1,15 @@
 import { ExternalLink, RefreshCw } from "lucide-react";
 import { formatTimestamp } from "../../lib/format";
-import { NWS_PUBLIC_URL } from "../../services/nwsAlerts";
+import { NWS_ALERTS_ENDPOINT, NWS_PUBLIC_URL } from "../../services/nwsAlerts";
+
+function statusLabel({ status, stale }) {
+  if (status === "loading") return "Loading…";
+  if (status === "refreshing") return "Refreshing…";
+  if (status === "error") return "Offline";
+  if (stale || status === "stale") return "Stale";
+  if (status === "empty") return "Live · no alerts";
+  return "Live";
+}
 
 export default function LiveAlertsPanel({
   alerts = [],
@@ -8,9 +17,13 @@ export default function LiveAlertsPanel({
   error,
   fetchedAt,
   stale,
+  refreshMs = 3 * 60 * 1000,
   onReload,
   onViewDetails,
 }) {
+  const refreshMinutes = Math.round(refreshMs / 60000);
+  const feedLabel = statusLabel({ status, stale });
+
   return (
     <section className="flex h-full min-h-0 flex-col rounded-3xl border border-transparent bg-white p-4 shadow-sm dark:border-slate-800 dark:shadow-none">
       <div className="flex items-start justify-between gap-3">
@@ -32,19 +45,36 @@ export default function LiveAlertsPanel({
         </a>
       </div>
 
-      <p className="mt-2 text-[11px] text-muted">
-        Last successful refresh: {fetchedAt ? formatTimestamp(fetchedAt) : "—"}.
-        {stale ? " Feed may be stale." : ""} Source:{" "}
-        <a
-          href={NWS_PUBLIC_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="font-medium text-forest underline-offset-2 hover:underline"
-        >
-          weather.gov/hfo
-        </a>
-        .
-      </p>
+      <div className="mt-2 space-y-1 text-[11px] text-muted">
+        <p>
+          <span className="font-semibold text-ink">{feedLabel}</span>
+          {" · "}
+          Last refresh: {fetchedAt ? formatTimestamp(fetchedAt) : "—"}
+          {stale ? " (older than 10 min)" : ""}.
+        </p>
+        <p>
+          Auto-refreshes every {refreshMinutes} min. Use Refresh now to pull
+          immediately. Compare with{" "}
+          <a
+            href={NWS_PUBLIC_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-forest underline-offset-2 hover:underline"
+          >
+            weather.gov/hfo
+          </a>{" "}
+          or the{" "}
+          <a
+            href={NWS_ALERTS_ENDPOINT}
+            target="_blank"
+            rel="noreferrer"
+            className="font-medium text-forest underline-offset-2 hover:underline"
+          >
+            live HI alerts API
+          </a>
+          .
+        </p>
+      </div>
 
       <ul className="mt-3 min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
         {status === "loading" ? (
@@ -62,7 +92,9 @@ export default function LiveAlertsPanel({
         ) : null}
         {status === "empty" || (status === "ready" && alerts.length === 0) ? (
           <li className="rounded-2xl bg-slate-50 p-3 text-sm text-muted dark:bg-slate-950/60">
-            No active NWS alerts for Hawaiʻi.
+            No active NWS alerts for Hawaiʻi right now — that usually matches a
+            quiet day on weather.gov. If the office page shows a new watch/warning
+            and this panel does not, click Refresh now.
           </li>
         ) : null}
         {alerts.map((alert) => (
@@ -114,8 +146,8 @@ export default function LiveAlertsPanel({
         onClick={onReload}
         className="mt-3 inline-flex items-center gap-2 text-xs text-muted hover:text-forest"
       >
-        <RefreshCw size={12} />
-        Refresh now
+        <RefreshCw size={12} className={status === "refreshing" ? "animate-spin" : undefined} />
+        {status === "refreshing" ? "Refreshing…" : "Refresh now"}
       </button>
     </section>
   );
