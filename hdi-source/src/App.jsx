@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
+import { ThemeProvider } from "./hooks/useTheme";
 import AboutPage from "./pages/AboutPage";
 import CommunicationPage from "./pages/CommunicationPage";
 import HomePage from "./pages/HomePage";
@@ -8,18 +9,20 @@ import ResourcePlanningPage from "./pages/ResourcePlanningPage";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/map" element={<MapPage />} />
-          <Route path="/resource-planning" element={<ResourcePlanningPage />} />
-          <Route path="/communication" element={<CommunicationPage />} />
-          <Route path="/methodology" element={<Navigate to="/about#sources" replace />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<Navigate to="/map" replace />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/map" element={<MapPage />} />
+            <Route path="/resource-planning" element={<ResourcePlanningPage />} />
+            <Route path="/communication" element={<CommunicationPage />} />
+            <Route path="/methodology" element={<Navigate to="/about#sources" replace />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="*" element={<Navigate to="/map" replace />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

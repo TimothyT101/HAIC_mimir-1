@@ -8,6 +8,21 @@
       name="description"
       content="Prototype disaster intelligence and ESF-6 resource planning dashboard for Hawaiʻi. Not an official emergency warning system."
     />
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("hdi-theme");
+          var theme =
+            stored === "dark" || stored === "light"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          if (theme === "dark") document.documentElement.classList.add("dark");
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
