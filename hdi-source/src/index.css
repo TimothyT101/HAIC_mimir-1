@@ -196,6 +196,92 @@ html.dark .leaflet-control-layers-expanded {
   font-size: 10px;
 }
 
+/* Kill the rectangular browser focus box on map paths — we use polygon glow instead */
+.leaflet-container path.leaflet-interactive:focus,
+.leaflet-container path.leaflet-interactive:focus-visible {
+  outline: none;
+}
+
+.afn-tract-selected {
+  filter: drop-shadow(0 0 6px rgba(254, 240, 138, 0.95))
+    drop-shadow(0 0 14px rgba(251, 191, 36, 0.65));
+  transition: fill-opacity 0.15s ease, stroke-width 0.15s ease;
+}
+
+.afn-tract-popup-wrap .leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgb(15 23 42 / 0.28);
+  border: 1px solid rgb(251 191 36 / 0.45);
+}
+
+.afn-tract-popup-wrap .leaflet-popup-tip {
+  box-shadow: none;
+}
+
+.afn-tract-popup {
+  font-size: 12px;
+  line-height: 1.45;
+  color: #15231c;
+}
+
+.afn-tract-popup strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 13px;
+}
+
+.afn-tract-popup-meta {
+  margin-top: 0.35rem;
+  opacity: 0.7;
+  font-size: 11px;
+}
+
+html.dark .afn-tract-popup {
+  color: #e2e8f0;
+}
+
+html.dark .afn-tract-popup-wrap .leaflet-popup-content-wrapper {
+  background: #0f172a;
+  color: #e2e8f0;
+  border-color: rgb(251 191 36 / 0.35);
+}
+
+html.dark .afn-tract-popup-wrap .leaflet-popup-tip {
+  background: #0f172a;
+}
+
+/* County cards: soft glow on hover / stronger when selected */
+.county-card {
+  --county-glow: #1f4d3a;
+}
+
+.county-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--county-glow) 35%, transparent),
+    0 8px 22px color-mix(in srgb, var(--county-glow) 22%, transparent);
+}
+
+.county-card-active,
+.county-card-active:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--county-glow) 50%, transparent),
+    0 10px 28px color-mix(in srgb, var(--county-glow) 30%, transparent);
+}
+
+.county-card:active {
+  transform: translateY(0);
+}
+
+.county-chip:hover {
+  box-shadow: 0 8px 20px rgb(31 77 58 / 0.18);
+}
+
+.county-chip-active {
+  box-shadow: 0 10px 24px rgb(31 77 58 / 0.28);
+}
+
 .community-marker {
   background: transparent;
   border: none;

@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { GeoJSON, useMap } from "react-leaflet";
+import L from "leaflet";
 import {
   AFN_METRICS,
   AFN_TRACT_SOURCE,
@@ -8,13 +9,65 @@ import {
   tractGeoUrl,
 } from "../../data/afnTracts";
 
+const BASE_STROKE = "#7c2d12";
+
+function baseStyle(feature, metric) {
+  const value = feature?.properties?.[metric.id];
+  return {
+    color: BASE_STROKE,
+    weight: 0.7,
+    opacity: 0.75,
+    fillColor: afnFillColor(value, metric.unit),
+    fillOpacity: 0.55,
+  };
+}
+
+function hoverStyle(feature, metric) {
+  return {
+    ...baseStyle(feature, metric),
+    weight: 2,
+    color: "#fbbf24",
+    fillOpacity: 0.72,
+  };
+}
+
+function selectedStyle(feature, metric) {
+  return {
+    ...baseStyle(feature, metric),
+    weight: 3.5,
+    color: "#fef08a",
+    opacity: 1,
+    fillOpacity: 0.82,
+    className: "afn-tract-selected",
+  };
+}
+
+function popupHtml(feature, metric) {
+  const p = feature.properties || {};
+  const label = p.name || `Tract ${p.geoid}`;
+  const value = formatAfnValue(p[metric.id], metric.unit);
+  const pop =
+    p.population == null ? "—" : Math.round(p.population).toLocaleString();
+  return `<div class="afn-tract-popup">
+    <strong>${label}</strong>
+    <div>${metric.label}: <strong>${value}</strong></div>
+    <div>Pop: ${pop}</div>
+    <div class="afn-tract-popup-meta">${AFN_TRACT_SOURCE.vintage}</div>
+  </div>`;
+}
+
 /**
  * Census-tract AFN choropleth for the selected county.
- * Loads simplified GeoJSON from /public/tracts (SVI 2022 joined to Census boundaries).
+ * Click highlights the actual polygon outline (not a browser bounding-box focus ring).
  */
 export default function AfNTracts({ countyId, metricId, enabled }) {
   const [collection, setCollection] = useState(null);
   const map = useMap();
+  const selectedLayerRef = useRef(null);
+  const metricRef = useRef(null);
+
+  const metric = AFN_METRICS.find((item) => item.id === metricId) ?? AFN_METRICS[0];
+  metricRef.current = metric;
 
   useEffect(() => {
     if (!enabled) {
@@ -23,6 +76,7 @@ export default function AfNTracts({ countyId, metricId, enabled }) {
     }
     let cancelled = false;
     setCollection(null);
+    selectedLayerRef.current = null;
     fetch(tractGeoUrl(countyId))
       .then((response) => (response.ok ? response.json() : null))
       .then((geojson) => {
@@ -36,25 +90,15 @@ export default function AfNTracts({ countyId, metricId, enabled }) {
     };
   }, [countyId, enabled]);
 
-  const metric = AFN_METRICS.find((item) => item.id === metricId) ?? AFN_METRICS[0];
-
-  const styleFn = useMemo(() => {
-    return (feature) => {
-      const value = feature?.properties?.[metric.id];
-      return {
-        color: "#7c2d12",
-        weight: 0.7,
-        opacity: 0.7,
-        fillColor: afnFillColor(value, metric.unit),
-        fillOpacity: 0.55,
-      };
-    };
-  }, [metric]);
+  const styleFn = useMemo(() => (feature) => baseStyle(feature, metric), [metric]);
 
   useEffect(() => {
-    // ensure redraw when metric changes
     map.invalidateSize({ animate: false });
   }, [metricId, map]);
+
+  useEffect(() => {
+    selectedLayerRef.current = null;
+  }, [metricId, countyId]);
 
   if (!enabled || !collection?.features?.length) return null;
 
@@ -64,15 +108,51 @@ export default function AfNTracts({ countyId, metricId, enabled }) {
       data={collection}
       style={styleFn}
       onEachFeature={(feature, layer) => {
-        const p = feature.properties || {};
-        const label = p.name || `Tract ${p.geoid}`;
-        const value = formatAfnValue(p[metric.id], metric.unit);
-        layer.bindTooltip(
-          `<strong>${label}</strong><br/>${metric.label}: ${value}<br/>Pop: ${
-            p.population == null ? "—" : Math.round(p.population).toLocaleString()
-          }<br/><span style="opacity:.8">${AFN_TRACT_SOURCE.vintage}</span>`,
-          { sticky: true }
-        );
+        const currentMetric = () => metricRef.current;
+
+        layer.on({
+          mouseover: (event) => {
+            if (selectedLayerRef.current === layer) return;
+            const target = event.target;
+            target.setStyle(hoverStyle(feature, currentMetric()));
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+              target.bringToFront();
+            }
+          },
+          mouseout: (event) => {
+            if (selectedLayerRef.current === layer) return;
+            event.target.setStyle(baseStyle(feature, currentMetric()));
+          },
+          click: (event) => {
+            L.DomEvent.stopPropagation(event);
+            const m = currentMetric();
+            const prev = selectedLayerRef.current;
+            if (prev && prev !== layer) {
+              try {
+                prev.setStyle(baseStyle(prev.feature, m));
+                prev.closePopup();
+              } catch {
+                /* layer may have been removed */
+              }
+            }
+
+            selectedLayerRef.current = layer;
+            layer.setStyle(selectedStyle(feature, m));
+            layer.bringToFront();
+
+            if (!layer.getPopup()) {
+              layer.bindPopup(popupHtml(feature, m), {
+                className: "afn-tract-popup-wrap",
+                maxWidth: 260,
+                autoPan: true,
+                closeButton: true,
+              });
+            } else {
+              layer.setPopupContent(popupHtml(feature, m));
+            }
+            layer.openPopup(event.latlng);
+          },
+        });
       }}
     />
   );
@@ -88,7 +168,7 @@ export function AfNSwitcher({ enabled, metricId, onEnabledChange, onMetricChange
           </p>
           <p className="mt-1 text-[11px] leading-4 text-muted">
             Census tracts colored by Access &amp; Functional Needs proxies (SVI / ACS).
-            Aggregates only — not a list of people.
+            Aggregates only — not a list of people. Click a tract to highlight it.
           </p>
         </div>
         <button
@@ -121,9 +201,9 @@ export function AfNSwitcher({ enabled, metricId, onEnabledChange, onMetricChange
             value={metricId}
             onChange={(event) => onMetricChange(event.target.value)}
           >
-            {AFN_METRICS.map((metric) => (
-              <option key={metric.id} value={metric.id}>
-                {metric.label}
+            {AFN_METRICS.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.label}
               </option>
             ))}
           </select>

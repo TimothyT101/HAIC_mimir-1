@@ -20,9 +20,9 @@ export default function CountySelector({ value, onChange, variant = "cards", liv
               key={county.id}
               type="button"
               onClick={() => onChange(county.id)}
-              className={`flex items-center justify-center gap-3 rounded-2xl px-4 py-4 text-sm font-semibold shadow-sm transition ${
+              className={`county-chip flex items-center justify-center gap-3 rounded-2xl px-4 py-4 text-sm font-semibold shadow-sm transition duration-200 ${
                 active
-                  ? "bg-forest text-white"
+                  ? "county-chip-active bg-forest text-white"
                   : "bg-white text-ink ring-1 ring-slate-100 hover:ring-forest/30"
               }`}
             >
@@ -44,22 +44,25 @@ export default function CountySelector({ value, onChange, variant = "cards", liv
       {COUNTIES.map((county) => {
         const active = county.id === value;
         const status = liveStatuses?.[county.id];
+        const accent = status?.color || "#1f4d3a";
         return (
           <button
             key={county.id}
             type="button"
             onClick={() => onChange(county.id)}
-            className={`flex items-center gap-3 rounded-2xl border bg-white px-4 py-3 text-left transition ${
-              active ? "shadow-sm ring-2 ring-forest/20" : "hover:border-slate-200"
+            className={`county-card group flex items-center gap-3 rounded-2xl border bg-white px-4 py-3 text-left transition duration-200 ${
+              active ? "county-card-active" : ""
             }`}
             style={{
-              borderColor: status?.color || (active ? "#1f4d3a" : "transparent"),
-              boxShadow: status ? `inset 6px 0 0 ${status.color}` : undefined,
+              borderColor: active ? accent : status?.color || "transparent",
+              borderLeftWidth: status ? 6 : undefined,
+              borderLeftColor: status?.color,
+              ["--county-glow"]: accent,
             }}
           >
             <IslandSilhouette
               island={ISLAND_KEY[county.id]}
-              className="h-9 w-9 shrink-0"
+              className="h-9 w-9 shrink-0 transition duration-200 group-hover:scale-105"
               style={{ color: status?.color || (active ? "#1f4d3a" : "#94a3b8") }}
             />
             <span className="min-w-0 flex-1">
