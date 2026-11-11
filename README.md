@@ -2,8 +2,9 @@
 
 **HAIC 2026** · DHS challenge: *Enhancing ESF-6 Planning Through AI-Supported Insights*  
 **Category:** AI-Developed Planning and Improvement Challenge (coded prototype)  
-**HAIC registered team name:** Mimir  
-**Project / product name:** Hawaiʻi Disaster Intelligence (HDI)  
+**HAIC registered team name:** Ethos  
+**Project name:** Mimir  
+**Website / product:** Hawaiʻi Disaster Intelligence (HDI)  
 **Repository:** https://github.com/TimothyT101/HAIC_mimir-1  
 **Live demo (judges):** https://haic-mimir-1.vercel.app/
 
