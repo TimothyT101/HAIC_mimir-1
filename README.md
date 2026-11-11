@@ -91,7 +91,7 @@ Optional: `VITE_AI_SUMMARY_URL` for a server summary — **not required**; demo 
 - Prototype badge + disclaimers: not an official alert channel
 - Secrets: never commit `.env` / `.env.local` (see `.gitignore` and `hdi-source/.env.example`)
 
-Paste-ready form text (≤300 words): [`SECURITY_PRIVACY.md`](./SECURITY_PRIVACY.md)
+Full write-up: [`SECURITY_PRIVACY.md`](./SECURITY_PRIVACY.md)
 
 ---
 
