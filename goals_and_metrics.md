@@ -3,6 +3,8 @@
 Aligned to the DHS challenge **Enhancing ESF-6 Planning Through AI-Supported Insights**
 and pitch evaluation: **Actionable · Usable · Private · Equitable · Sustainable**.
 
+**Live demo:** https://haic-mimir-1.vercel.app/ · **Judge README:** [README.md](./README.md) · **Security/privacy form draft:** [SECURITY_PRIVACY.md](./SECURITY_PRIVACY.md)
+
 ## Challenge pillars (MAP · MODEL · MATCH)
 
 | Pillar | Deliverable in this prototype |

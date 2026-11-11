@@ -1,28 +1,35 @@
-# Hawaiʻi Disaster Intelligence
+# Hawaiʻi Disaster Intelligence — application source
 
-Prototype dashboard for the 2026 Hawaiʻi Annual Innovation Challenge (Challenge 2: ESF-6 planning). **Not an official emergency warning system.**
+This folder is the **Vite + React** app. For the full HAIC judge guide (live URL, MAP·MODEL·MATCH, privacy, limitations), see the **[repository root README](../README.md)**.
 
-## Run locally
+**Live demo:** https://haic-mimir-1.vercel.app/
+
+## Local development
 
 ```bash
+# from repo root
 cd hdi-source
 npm install
 npm run dev
 ```
 
-Then open the URL Vite prints (usually `http://localhost:5173`).
+Requires **Node.js 20+**.
+
+| Script | Description |
+| :--- | :--- |
+| `npm run dev` | Dev server |
+| `npm run build` | Production build → `dist/` |
+| `npm run preview` | Serve the production build |
+| `npm run acs` | Optional ACS data refresh |
+
+## Configuration
+
+Copy `.env.example` to `.env.local` only if you need optional tooling:
+
+- `CENSUS_API_KEY` — for `npm run acs` (never commit the key)
+- `VITE_AI_SUMMARY_URL` — optional; app runs without it
 
 ## Vercel
 
-This app lives in `hdi-source`. In Vercel Project Settings set:
-
-- **Production Branch:** `main`
 - **Root Directory:** `hdi-source`
-
-Do not use branch `cursor/hawaii-disaster-intelligence` for production. That branch is an older snapshot of the app at the repo root, which is why preview failed with “Root Directory hdi-source does not exist.”
-
-## Scripts
-
-- `npm run dev` — local development server
-- `npm run build` — production build
-- `npm run preview` — preview the production build
+- **Production Branch:** `main`
