@@ -200,7 +200,7 @@ export default function AboutPage() {
             },
             {
               title: "Private",
-              body: "We respect privacy: only de-identified community statistics — no names, addresses, client lists, or medical registries.",
+              body: "We do not use personal data — only openly published community statistics and maps. No names, addresses, or private case files.",
             },
             {
               title: "Equitable",
@@ -211,8 +211,8 @@ export default function AboutPage() {
               body: "Built as a simple website on public data and clear formulas, so Counties and partners can keep using it after the challenge.",
             },
             {
-              title: "Scope & privacy",
-              body: "Scenarios: hurricane, wildfire, tsunami, and flood. We do not use personal data — only openly published community statistics and maps.",
+              title: "Scope",
+              body: "Planning scenarios covered: hurricane, wildfire, tsunami, and flood — across Hawaiʻi’s counties and communities.",
             },
           ].map((item) => (
             <div
