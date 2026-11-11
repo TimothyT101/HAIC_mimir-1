@@ -62,37 +62,37 @@ const FORMULAS = [
   {
     name: "Shelter shortfall",
     expression: "max(0, estimatedShelterNeed − sampleCapacity)",
-    note: "Sample community capacity is not verified open beds.",
+    note: "Sample planning capacity only — not a verified live open-bed count.",
   },
   {
     name: "Transport assistance",
     expression: "round(residentShelter × ACS no-vehicle %) + visitorShelter",
-    note: "Visitors are assumed to need transport help (HIEMA).",
+    note: "Residents without a vehicle plus visitors who may need a ride (HIEMA).",
   },
   {
     name: "Electricity backup cue",
     expression: "round(county emPOWER × placePop/countyPop × outageIntensity)",
-    note: "Medicare DME county totals only — undercounts non-Medicare users.",
+    note: "Public county counts of electricity-dependent medical equipment (Medicare) — not a patient or medicine list.",
   },
   {
     name: "Communication support",
     expression: "round(estimatedShelterNeed × ACS limited-English %)",
-    note: "Language-access contacts for people expected in public shelter.",
+    note: "Language-access planning for people expected in public shelter.",
   },
   {
     name: "Water / meals",
     expression: "need × 1 gal × days · need × 3 meals × days",
-    note: "Ready.gov water + mass-care meal practice.",
+    note: "Ready.gov water guidance and common mass-care meal practice.",
   },
   {
     name: "Pet support",
     expression: `round((pop ÷ ${PERSONS_PER_HOUSEHOLD}) × 0.39 × shelterRate × ${AVG_PETS_PER_PET_HOUSEHOLD})`,
-    note: "Hawaiʻi Health Survey indoor companion-animal HH rate — not a pet registry.",
+    note: "Hawaiʻi Health Survey indoor pet household rate — not a pet owner registry.",
   },
   {
     name: "Hazard ∩ tract shelter cue",
     expression: "round(exposedTractPopulation × shelterRate)",
-    note: "County-scale polygon proxy. No visitor split — different from the town MODEL above.",
+    note: "County-scale estimate for tracts overlapping hazard areas. Does not add the visitor share used in the town calculator.",
   },
 ];
 
@@ -146,36 +146,36 @@ export default function AboutPage() {
           About & Sources
         </h1>
         <p className="mt-3 text-muted">
-          Hawaiʻi Disaster Intelligence is a 2026 Hawaiʻi AI Challenge prototype for
-          DHS Enhanced ESF-6 planning. It supports mass-care planning. It does not
-          replace official alerts, evacuation orders, or county emergency operations
-          plans.
+          Hawaiʻi Disaster Intelligence is a 2026 Hawaiʻi AI Challenge prototype to help
+          Counties and State ESF-6 plan mass care for people with Access and Functional
+          Needs. It is a planning aid only — not an official alert system, evacuation
+          order, or replacement for county emergency plans.
         </p>
       </header>
 
       <DisclaimerBanner />
 
-      <Card icon={Shield} title="HAIC challenge fit (MAP · MODEL · MATCH)">
+      <Card icon={Shield} title="How this meets the HAIC challenge (MAP · MODEL · MATCH)">
         <p>
-          Built against the DHS 2026 HAIC challenge: strengthen County-led ESF-6 mass
-          care with State support — using only de-identified public data.
+          Built for the DHS 2026 challenge: help Counties lead mass care, with State
+          ESF-6 support, using public community-level data — never personal case files.
         </p>
         <div className="grid gap-3 md:grid-cols-3">
           {[
             {
               label: "MAP",
               to: "/map",
-              body: "Live NWS alerts, hazard overlays, shelter inventories, and tract AFN choropleths for all four counties (435 census tracts).",
+              body: "See live weather alerts, hazard areas, shelters, and neighborhood vulnerability across all four counties (435 census tracts).",
             },
             {
               label: "MODEL",
               to: "/resource-planning",
-              body: "Hazard scenarios (hurricane, wildfire, tsunami, flood) estimate shelter, water, meals, transport, backup power, language support, and pets — with CMIST notes from ACS + emPOWER.",
+              body: "For hurricane, wildfire, tsunami, or flood, estimate shelter, water, meals, rides, backup power, language support, and pets — plus CMIST notes for Access and Functional Needs.",
             },
             {
               label: "MATCH",
               to: "/resource-planning#coordination",
-              body: "Partners matched to estimated gaps with roles and decision points, plus a downloadable ESF-6 planning report. Message drafts live on Communication.",
+              body: "Match estimated gaps to agencies and partners with clear roles and decision points, download a planning report, and draft public messages on Communication.",
             },
           ].map((pillar) => (
             <Link
@@ -192,27 +192,27 @@ export default function AboutPage() {
           {[
             {
               title: "Actionable",
-              body: "Cited rates and formulas Counties / DHS can review before an event.",
+              body: "Planning rates and formulas are cited so Counties and DHS can review them before an event.",
             },
             {
               title: "Usable",
-              body: "Roles, decision points, Communication templates, and a downloadable planning report.",
+              body: "Clear partner roles, decision points, message drafts, and a downloadable ESF-6 planning report.",
             },
             {
               title: "Private",
-              body: "ACS, SVI, and emPOWER aggregates only — no PII, no AFN registries.",
+              body: "We respect privacy: only de-identified community statistics — no names, addresses, client lists, or medical registries.",
             },
             {
               title: "Equitable",
-              body: "Every county and neighbor-island communities; LEP + ASL priority languages; immigrant-safety messaging.",
+              body: "All islands and rural communities; priority languages including ASL; messaging that seeking shelter is safe.",
             },
             {
               title: "Sustainable",
-              body: "Static web app on public APIs / GIS; ACS refresh script; optional AI summary only if configured.",
+              body: "Runs on public data and a simple website. Core reports use clear formulas; an AI rewrite is optional and not required.",
             },
             {
               title: "Scope & privacy",
-              body: "Challenge scenarios are hurricane, wildfire, tsunami, and flood. No client lists or live shelter-bed APIs — gaps use sample planning capacity only when shown.",
+              body: "Scenarios: hurricane, wildfire, tsunami, and flood. We do not store personal medicine or patient lists. Shelter bed counts are planning samples when shown — Hawaiʻi has no statewide live open/closed bed feed.",
             },
           ].map((item) => (
             <div
@@ -235,9 +235,9 @@ export default function AboutPage() {
 
       <Card icon={Calculator} title="Planning rates used across the site">
         <p>
-          Resource Planning, reports, and the scenario-comparison section all read
-          these rates from one place (<code>planningFactors.js</code>). Changing a
-          rate there changes the MODEL everywhere on the site.
+          Resource Planning, the downloadable report, and the scenario comparison all
+          use the same published rates below — so the MODEL stays consistent across
+          the site.
         </p>
         <div className="overflow-x-auto rounded-2xl border border-slate-100 dark:border-slate-700">
           <table className="min-w-full text-left text-xs">
@@ -293,8 +293,9 @@ export default function AboutPage() {
 
       <Card id="formulas" icon={BookOpen} title="Resource formulas">
         <p>
-          Exact expressions used by the Resource Planning calculator. Hazard ∩ tract
-          demand on that page uses a simpler county-scale formula (called out below).
+          Exact math behind the Resource Planning calculator. A separate county-scale
+          “hazard ∩ tract” estimate on that page uses the simpler formula noted at the
+          bottom of this list.
         </p>
         <div className="grid gap-3 md:grid-cols-2">
           {FORMULAS.map((item) => (
@@ -314,8 +315,8 @@ export default function AboutPage() {
 
       <Card id="sources" icon={Shield} title="Data sources">
         <p>
-          Every public dataset and planning document used by this prototype is linked
-          below. Click through to the originating agency page or PDF.
+          Every public dataset and planning document used here is linked below. Open
+          any link to see the original agency page or PDF.
         </p>
         <div className="space-y-5">
           {SOURCE_GROUPS.map((group) => (
@@ -367,24 +368,28 @@ export default function AboutPage() {
           ))}
         </div>
         <p>
-          Census ACS place and county tables require an activated Census Data API key in{" "}
-          <code>.env.local</code> only. The key is never shipped to the browser.
+          Updating Census tables for developers needs a free Census key stored only on
+          the builder’s computer — never in the public website. The live site already
+          includes the downloaded community statistics, so visitors do not need a key.
         </p>
         <p>
-          Designated shelter / refuge locations on Resource Planning come from public
-          inventories (Open Data CSV last updated Dec 2019, Honolulu DEM FOI list,
-          Kauaʻi KEMA list). Maui and Hawaiʻi Island use that Open Data inventory plus
-          county EMA / Civil Defense hubs for announcements. Hawaiʻi does not publish a
-          statewide open/closed shelter API — capacities stay blank unless a public
-          source states them.
+          Shelter and refuge locations come from public county and state lists (Open
+          Data inventory last updated Dec 2019, Honolulu DEM list, Kauaʻi KEMA list).
+          Maui and Hawaiʻi Island also point to county emergency hubs for announcements.
+          Because there is no statewide live “beds open right now” feed, capacity
+          numbers in this prototype are planning samples when shown — not verified
+          open-bed counts.
         </p>
       </Card>
 
       <Card icon={Map} title="What the numbers mean">
         <p>
-          County and place ACS values are aggregates. They describe groups, not
-          people. They must not be used to target individuals for rescue or to build a
-          medical registry. CMIST notes are written from those percents.
+          Numbers describe communities as a whole — not named people. They must not be
+          used to target individuals for rescue or to build a personal medical list.
+          CMIST notes are plain-language planning cues written from those group
+          percentages. We also do not invent prescription or medicine counts; medical
+          planning uses public power-dependent equipment estimates and CMIST notes
+          only.
         </p>
         <ul className="list-disc space-y-1 pl-5">
           {ACS_SOURCE.notes.map((note) => (
@@ -392,12 +397,14 @@ export default function AboutPage() {
           ))}
         </ul>
         <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-950/50">
-          <p className="font-semibold text-ink">Tract-level AFN mapping</p>
+          <p className="font-semibold text-ink">Neighborhood vulnerability on the map</p>
           <p className="mt-1">
             Live Map can color all {AFN_TRACT_SOURCE.tractCount} Hawaiʻi census tracts
-            using {AFN_TRACT_SOURCE.name} ({AFN_TRACT_SOURCE.vintage}). Toggle “Show
-            tract AFN choropleth” and choose a CMIST-related metric.{" "}
-            {AFN_TRACT_SOURCE.note}
+            using {AFN_TRACT_SOURCE.name} ({AFN_TRACT_SOURCE.vintage}). Turn on Tract
+            AFN map and pick a metric such as overall vulnerability, disability, or
+            limited English. Some tracts show Unknown or very small populations when
+            Census/SVI data is sparse (for example special land-use areas) — that is
+            the source data, not a missing feature. {AFN_TRACT_SOURCE.note}
           </p>
           <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
             <SourceLink href={AFN_TRACT_SOURCE.csvUrl}>SVI CSV</SourceLink>
@@ -411,54 +418,56 @@ export default function AboutPage() {
 
       <Card icon={Map} title="Live Map alerts">
         <p>
-          Live Map county colors follow NWS severity at county scale: Fine/Minor
-          (green), Moderate (yellow), Severe (red), Extreme (dark red). Town markers
-          are locations only — most NWS products name a county or zone, not a single
-          community. Hazard layers and tract AFN overlays are toggled on the map.
-          ESF-6 needs modeling lives on Resource Planning (scenario dropdown), not as
-          a second map mode.
+          County colors follow National Weather Service severity: Fine/Minor (green),
+          Moderate (yellow), Severe (red), Extreme (dark red). Green town markers are
+          place locations — most official alerts name a county or forecast zone, not
+          one neighborhood. Use the map toggles for tsunami, flood, wildfire, and
+          tract vulnerability. Detailed ESF-6 needs estimates are on Resource Planning.
         </p>
         <p>
-          Alerts auto-refresh about every 3 minutes from{" "}
-          <code>{NWS_ALERTS_ENDPOINT}</code>. Compare with{" "}
+          Alerts refresh about every 3 minutes from the public NWS Hawaiʻi feed (
+          <code className="break-all text-[11px]">{NWS_ALERTS_ENDPOINT}</code>
+          ). Always cross-check{" "}
           <SourceLink href={NWS_PUBLIC_URL}>weather.gov/hfo</SourceLink>.
         </p>
       </Card>
 
-      <Card icon={Calculator} title="Scenario differences and hazard ∩ tract demand">
+      <Card icon={Calculator} title="Scenarios and hazard-area demand">
         <p>
-          On Resource Planning, the disaster-scenario dropdown only changes MODEL rates
-          (shelter %, days, power intensity) for the selected community. ACS
-          vulnerability cards stay the same. The scenario-comparison section compares
-          hurricane, wildfire, tsunami, and flood rates for the same town.
+          On Resource Planning, changing the hazard only changes planning rates
+          (how many may need shelter, how many days, power stress) for the selected
+          town. Community vulnerability cards stay the same. Expand scenario comparison
+          to see hurricane, wildfire, tsunami, and flood side by side for that town.
         </p>
         <p>
-          A separate county panel estimates AFN demand for census tracts that intersect
-          public hazard polygons (tsunami evacuation zones, DFIRM SFHA, fire risk
-          areas). Hurricane is treated as countywide. That panel uses{" "}
-          <code>exposedTractPopulation × shelterRate</code> only — it does{" "}
-          <strong className="text-ink">not</strong> apply the 15% visitor split used in
-          the town calculator. These are planning proxies from tract polygons — not
-          parcel risk and not a registry of people.
+          A separate county section estimates demand for census tracts that overlap
+          published hazard areas (tsunami evacuation zones, flood hazard areas, fire
+          risk). Hurricane is treated as countywide. That estimate uses exposed tract
+          population × shelter rate only — it does{" "}
+          <strong className="text-ink">not</strong> add the 15% visitor share used in
+          the town calculator. These are planning proxies, not parcel-by-parcel risk
+          and not a list of people.
         </p>
       </Card>
 
       <Card icon={Languages} title="Communication pathways">
         <p>
-          The Communication page builds a copy-ready advisory draft: pick a town, optionally
-          choose a designated shelter from the county inventory, include Hawaiʻi’s priority
-          languages for mass care, and copy a trauma-informed English message. County PIO
-          still owns public release; partners localize — this app does not machine-translate.
-          Official alerts remain NWS / HIEMA / county products.
+          Communication builds a copy-ready English advisory: choose a town, optionally
+          pick a designated shelter, keep Hawaiʻi’s priority languages for mass care in
+          view, and copy a calm, trauma-informed message. County public information
+          officers still approve anything released to the public; trusted partners
+          localize — this site does not auto-translate. Official alerts remain NWS,
+          HIEMA, and county products.
         </p>
       </Card>
 
-      <Card icon={Shield} title="Coordination and AI">
+      <Card icon={Shield} title="Reports and AI">
         <p>
-          The planning summary on the Resource Planning page is assembled from the
-          selected community, scenario rates, and county ACS indicators. It is not
-          labeled as AI unless a server-side endpoint is configured with{" "}
-          <code>VITE_AI_SUMMARY_URL</code>. No API keys are stored in the frontend.
+          The Resource Planning summary and downloadable report are built from your
+          selected town, hazard rates, and public community statistics — clear formulas,
+          not a black-box model. The site does not call an AI service unless a separate
+          secure server address is configured later. No secret keys are stored in the
+          public website.
         </p>
       </Card>
     </div>
