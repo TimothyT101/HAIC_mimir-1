@@ -348,8 +348,7 @@ export default function AboutPage() {
                         {id === "acs" ? (
                           <>
                             {" "}
-                            ({ACS_SOURCE.name}, retrieved {ACS_SOURCE.retrievedAt}. Refresh
-                            with <code>node scripts/fetch-acs.mjs</code>.)
+                            ({ACS_SOURCE.name}, retrieved {ACS_SOURCE.retrievedAt}.)
                           </>
                         ) : null}
                         {id === "svi" ? (
@@ -367,11 +366,6 @@ export default function AboutPage() {
             </div>
           ))}
         </div>
-        <p>
-          Updating Census tables for developers needs a free Census key stored only on
-          the builder’s computer — never in the public website. The live site already
-          includes the downloaded community statistics, so visitors do not need a key.
-        </p>
         <p>
           Shelter and refuge locations come from public county and state lists (Open
           Data inventory last updated Dec 2019, Honolulu DEM list, Kauaʻi KEMA list).
@@ -403,8 +397,9 @@ export default function AboutPage() {
             using {AFN_TRACT_SOURCE.name} ({AFN_TRACT_SOURCE.vintage}). Turn on Tract
             AFN map and pick a metric such as overall vulnerability, disability, or
             limited English. Some tracts show Unknown or very small populations when
-            Census/SVI data is sparse (for example special land-use areas) — that is
-            the source data, not a missing feature. {AFN_TRACT_SOURCE.note}
+            the public SVI source leaves values blank (for example special land-use
+            areas) — that is the source data, not a missing feature.{" "}
+            {AFN_TRACT_SOURCE.note}
           </p>
           <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
             <SourceLink href={AFN_TRACT_SOURCE.csvUrl}>SVI CSV</SourceLink>
