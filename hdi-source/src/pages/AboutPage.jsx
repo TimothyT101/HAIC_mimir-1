@@ -208,11 +208,11 @@ export default function AboutPage() {
             },
             {
               title: "Sustainable",
-              body: "Runs on public data and a simple website. Core reports use clear formulas; an AI rewrite is optional and not required.",
+              body: "Built as a simple website on public data and clear formulas, so Counties and partners can keep using it after the challenge.",
             },
             {
               title: "Scope & privacy",
-              body: "Scenarios: hurricane, wildfire, tsunami, and flood. We do not store personal medicine or patient lists. Shelter bed counts are planning samples when shown — Hawaiʻi has no statewide live open/closed bed feed.",
+              body: "Scenarios: hurricane, wildfire, tsunami, and flood. We do not use personal data — only openly published community statistics and maps.",
             },
           ].map((item) => (
             <div
