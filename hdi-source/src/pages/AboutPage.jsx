@@ -192,7 +192,7 @@ export default function AboutPage() {
           {[
             {
               title: "Actionable",
-              body: "Planning rates and formulas are cited so Counties and DHS can review them before an event.",
+              body: "Gives Counties and DHS concrete needs estimates and cited rates they can use to plan before a disaster — not vague advice.",
             },
             {
               title: "Usable",
@@ -204,7 +204,7 @@ export default function AboutPage() {
             },
             {
               title: "Equitable",
-              body: "All islands and rural communities; priority languages including ASL; messaging that seeking shelter is safe.",
+              body: "Built for every island and community — including rural areas, people who need languages other than English (and ASL), and residents who need to know seeking shelter is safe.",
             },
             {
               title: "Sustainable",
