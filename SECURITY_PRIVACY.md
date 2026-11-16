@@ -1,7 +1,6 @@
 # Security & Privacy Description
 
-**For the HAIC Project Submission Form** (limit 300 words). Copy or adapt the text below.
-
+**For the HAIC Project Submission Form**
 ---
 
 Hawaiʻi Disaster Intelligence is a public planning prototype for HAIC 2026. It is designed around de-identified data and does not collect, store, or display personally identifiable information.
