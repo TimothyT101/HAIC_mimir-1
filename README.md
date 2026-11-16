@@ -6,9 +6,22 @@
 **Project name:** Mimir  
 **Website / product:** Hawaiʻi Disaster Intelligence (HDI)  
 **Repository:** https://github.com/TimothyT101/HAIC_mimir-1  
-**Live demo (judges):** https://haic-mimir-1.vercel.app/
+**Live demo (judges):** https://haic-mimir-1.vercel.app/  
+**Demo video (walkthrough):** https://youtu.be/LGWZ6OejGAw
 
 > **Not an official emergency warning system.** Always follow NWS, HIEMA, and County emergency management.
+
+---
+
+## Demo video
+
+Watch the full project walkthrough:
+
+**https://youtu.be/LGWZ6OejGAw**
+
+[![Hawaiʻi Disaster Intelligence — HAIC 2026 walkthrough](https://img.youtube.com/vi/LGWZ6OejGAw/maxresdefault.jpg)](https://youtu.be/LGWZ6OejGAw)
+
+The video covers **MAP · MODEL · MATCH**, Resource Planning, the ESF-6 report download, Communication advisories, and About & Sources.
 
 ---
 
@@ -28,15 +41,25 @@ More detail: [`goals_and_metrics.md`](./goals_and_metrics.md) · sources & formu
 
 ---
 
-## Quick start for judges (preferred)
+## Project walkthrough (MAP → MODEL → MATCH)
 
-1. Open the live site: **https://haic-mimir-1.vercel.app/**
-2. Suggested walkthrough (MAP → MODEL → MATCH):
-   - **Live Map** — pick a county; toggle AFN tracts / hazards / shelters
-   - **Resource Planning** — pick county, community, hazard → review estimates & **CMIST**
-   - Scroll to **Coordinated response framework** — partners, “Matched to,” decision points
-   - Click **Download ESF-6 planning report**
-   - **Communication** — build a copy-ready advisory (languages included)
+1. Open the live site: **https://haic-mimir-1.vercel.app/**  
+   Or watch: **https://youtu.be/LGWZ6OejGAw**
+2. **MAP — Live Map**
+   - County status cards update from live National Weather Service products
+   - Toggle tsunami / flood / wildfire layers
+   - Turn on **Tract AFN map** and click a tract for population + SVI details
+   - Optional satellite basemap
+3. **MODEL — Resource Planning**
+   - Pick county, community, and hazard (example: Honolulu → ʻEwa Beach → Hurricane)
+   - Review **Scenario comparison**, county-scale hazard cues, and **Population vulnerability (ACS)**
+   - Check **CMIST** notes and **Estimated needs** (shelter, transport, power, language, water, meals, pets)
+4. **MATCH — Coordinated response + Communication**
+   - Review **Designated shelter / refuge inventory** (open status is not public / not confirmed here)
+   - Scroll to **Coordinated response framework** — partners, “Matched to” gaps, decision points
+   - Click **Download ESF-6 planning report** for a shareable text report
+   - Open **Communication** — build an advisory, **Copy** it, and review priority languages for mass care
+5. **About & Sources** — formulas, planning rates, and public data links
 
 No login. No API keys required for the deployed demo.
 
