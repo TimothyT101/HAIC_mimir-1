@@ -139,15 +139,50 @@ export default function HazardOverlays({ countyId, hazards }) {
 }
 
 export function HazardSwitcher({ hazards, onChange, children = null }) {
+  const [open, setOpen] = useState(false);
+
   function toggle(key) {
     onChange({ ...hazards, [key]: !hazards[key] });
   }
 
+  const activeCount =
+    Number(hazards.tsunami) + Number(hazards.flood) + Number(hazards.wildfire);
+
+  // Collapsed by default so the panel does not cover town markers (e.g. east Kauaʻi).
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="rounded-2xl border border-slate-200/80 bg-white/95 px-3 py-2 text-left text-xs shadow-lg dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none"
+        aria-expanded="false"
+        aria-label="Open hazard layers panel"
+      >
+        <span className="block text-[11px] font-semibold uppercase tracking-wide text-muted">
+          Hazard layers
+        </span>
+        <span className="mt-0.5 block text-[11px] text-ink">
+          {activeCount} on · tap to open
+        </span>
+      </button>
+    );
+  }
+
   return (
-    <div className="max-h-[340px] overflow-y-auto rounded-2xl border border-slate-200/80 bg-white/95 p-3 text-xs shadow-lg sm:max-h-none dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
-        Hazard layers
-      </p>
+    <div className="max-h-[min(340px,70vh)] overflow-y-auto rounded-2xl border border-slate-200/80 bg-white/95 p-3 text-xs shadow-lg dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none">
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+          Hazard layers
+        </p>
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="rounded-md px-1.5 py-0.5 text-[11px] font-semibold text-forest hover:bg-forest-soft dark:hover:bg-slate-800"
+          aria-label="Minimize hazard layers panel"
+        >
+          Minimize
+        </button>
+      </div>
       <p className="mt-1 text-[11px] leading-4 text-muted">
         These are places, not people. A zone is where to go or avoid if officials
         say so — not a list of who must evacuate.
