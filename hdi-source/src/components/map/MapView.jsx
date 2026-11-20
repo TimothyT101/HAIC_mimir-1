@@ -280,13 +280,12 @@ export default function MapView({
         </LayerGroup>
         <SelectedTownLabel community={communities.find((item) => item.id === selectedId)} />
       </MapContainer>
-      <div className="pointer-events-none absolute bottom-10 right-3 max-w-xs rounded-xl bg-slate-900/70 px-3 py-2 text-white">
+      <div className="pointer-events-none absolute bottom-10 left-3 max-w-xs rounded-xl bg-slate-900/70 px-3 py-2 text-white">
         <p className="text-sm font-semibold">{county.islandLabel}</p>
         <p className="text-xs text-white/80">{county.name}</p>
         {zoneNote ? <p className="mt-1 text-[11px] leading-4 text-amber-100">{zoneNote}</p> : null}
       </div>
-      {/* Left side under zoom controls so east-island towns stay clickable */}
-      <div className="pointer-events-auto absolute left-3 top-[7.25rem] z-[1000] w-[200px] sm:w-[230px]">
+      <div className="pointer-events-auto absolute right-3 top-3 z-[1000] w-[220px] sm:w-[250px]">
         <HazardSwitcher hazards={hazards} onChange={setHazards}>
           <AfNSwitcher
             enabled={afnEnabled}

@@ -139,82 +139,117 @@ export default function HazardOverlays({ countyId, hazards }) {
 }
 
 export function HazardSwitcher({ hazards, onChange, children = null }) {
+  const [open, setOpen] = useState(false);
+
   function toggle(key) {
     onChange({ ...hazards, [key]: !hazards[key] });
   }
 
   return (
-    <div className="max-h-[min(360px,calc(100%-5.5rem))] overflow-y-auto rounded-2xl border border-slate-200/80 bg-white/95 p-3 text-xs shadow-lg dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
-        Hazard layers
-      </p>
-      <p className="mt-1 text-[11px] leading-4 text-muted">
-        Places to go or avoid if officials say so — not a list of people.
-      </p>
-      <div className="mt-2 space-y-1.5">
-        <label className="flex cursor-pointer items-center gap-2">
-          <input
-            type="checkbox"
-            checked={hazards.tsunami}
-            onChange={() => toggle("tsunami")}
-          />
-          Tsunami evacuation zones
-        </label>
-        <label className="flex cursor-pointer items-center gap-2">
-          <input
-            type="checkbox"
-            checked={hazards.flood}
-            onChange={() => toggle("flood")}
-          />
-          Flood hazard (FEMA SFHA)
-        </label>
-        <label className="flex cursor-pointer items-center gap-2">
-          <input
-            type="checkbox"
-            checked={hazards.wildfire}
-            onChange={() => toggle("wildfire")}
-          />
-          Wildfire risk areas
-        </label>
-      </div>
-      <p className="mt-3 text-[11px] font-semibold uppercase tracking-wide text-muted">Legend</p>
-      <ul className="mt-1 space-y-1 text-[11px] text-ink">
-        {hazards.tsunami ? (
-          <>
+    <div className="rounded-2xl border border-slate-200/80 bg-white/95 text-xs shadow-lg dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none">
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left"
+        aria-expanded={open}
+        aria-controls="hazard-layers-panel"
+      >
+        <span>
+          <span className="block text-[11px] font-semibold uppercase tracking-wide text-muted">
+            Hazard layers
+          </span>
+          <span className="mt-0.5 block text-[11px] text-ink">
+            {open ? "Hide panel to click towns" : "Show layers & AFN map"}
+          </span>
+        </span>
+        <span className="shrink-0 rounded-full bg-forest px-2.5 py-1 text-[11px] font-semibold text-white">
+          {open ? "Hide" : "Show"}
+        </span>
+      </button>
+
+      {open ? (
+        <div
+          id="hazard-layers-panel"
+          className="max-h-[min(320px,55vh)] space-y-2 overflow-y-auto border-t border-slate-100 px-3 pb-3 pt-2 dark:border-slate-700"
+        >
+          <p className="text-[11px] leading-4 text-muted">
+            Places to go or avoid if officials say so — not a list of people.
+          </p>
+          <div className="space-y-1.5">
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={hazards.tsunami}
+                onChange={() => toggle("tsunami")}
+              />
+              Tsunami evacuation zones
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={hazards.flood}
+                onChange={() => toggle("flood")}
+              />
+              Flood hazard (FEMA SFHA)
+            </label>
+            <label className="flex cursor-pointer items-center gap-2">
+              <input
+                type="checkbox"
+                checked={hazards.wildfire}
+                onChange={() => toggle("wildfire")}
+              />
+              Wildfire risk areas
+            </label>
+          </div>
+          <p className="pt-1 text-[11px] font-semibold uppercase tracking-wide text-muted">
+            Legend
+          </p>
+          <ul className="space-y-1 text-[11px] text-ink">
+            {hazards.tsunami ? (
+              <>
+                <li className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-sm bg-[#3b82f6]/70" />
+                  Tsunami evacuation
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-sm bg-[#b91c1c]/80" />
+                  Extreme tsunami evacuation
+                </li>
+              </>
+            ) : null}
+            {hazards.flood ? (
+              <li className="flex items-center gap-2">
+                <span className="h-3 w-3 rounded-sm bg-[#38bdf8]/80" />
+                1% annual-chance flood (A / AE / VE)
+              </li>
+            ) : null}
+            {hazards.wildfire ? (
+              <>
+                <li className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-sm bg-[#ea580c]" />
+                  High wildfire risk
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-sm bg-[#fbbf24]" />
+                  Other mapped wildfire risk
+                </li>
+              </>
+            ) : null}
             <li className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm bg-[#3b82f6]/70" />
-              Tsunami evacuation
+              <span className="h-3 w-3 rounded-full bg-[#1f4d3a]" />
+              Town location
             </li>
-            <li className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm bg-[#b91c1c]/80" />
-              Extreme tsunami evacuation
-            </li>
-          </>
-        ) : null}
-        {hazards.flood ? (
-          <li className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-sm bg-[#38bdf8]/80" />
-            1% annual-chance flood (A / AE / VE)
-          </li>
-        ) : null}
-        {hazards.wildfire ? (
-          <>
-            <li className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm bg-[#ea580c]" />
-              High wildfire risk
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded-sm bg-[#fbbf24]" />
-              Other mapped wildfire risk
-            </li>
-          </>
-        ) : null}
-        <li className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded-full bg-[#1f4d3a]" />
-          Town location
-        </li>
-      </ul>
-      {children}
+          </ul>
+          {children}
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="mt-1 w-full rounded-xl bg-forest px-3 py-2 text-[11px] font-semibold text-white hover:bg-forest-dark"
+          >
+            Done — hide panel
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }
